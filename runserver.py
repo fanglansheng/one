@@ -1,0 +1,4 @@
+from trip_planner import app
+
+app.run(debug=True, port=5002)
+

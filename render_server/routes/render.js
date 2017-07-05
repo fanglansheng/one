@@ -3,7 +3,7 @@ import React from 'react'
 import { createStore } from 'redux'
 import { Provider } from 'react-redux';
 
-export const handleRender = (req, res) => {
+export const handleRender = (req, res, next) => {
   // Create a new Redux store instance
   // const store = createStore(counterApp);
 
@@ -19,15 +19,18 @@ export const handleRender = (req, res) => {
   // const preloadedState = store.getState();
 
   // Send the rendered page back to the client
+  console.log('using middleware');
+
   res.send(renderFullPage(html, {}));//preloadedState));
+  // next();
 };
 
 const renderFullPage = (html, preloadedState) => {
   return `
-    <!doctype html>
+    <!DOCTYPE html>
     <html>
       <head>
-        <title>Redux Universal Example</title>
+        <title>Trip Planner</title>
       </head>
       <body>
         <div id="root">${html}</div>
@@ -39,5 +42,5 @@ const renderFullPage = (html, preloadedState) => {
         <script src="/static/bundle.js"></script>
       </body>
     </html>
-    `;
+  `;
 };

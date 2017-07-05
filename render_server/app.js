@@ -4,11 +4,14 @@ import path from 'path';
 import logger from 'morgan';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
+import request from 'request';
 
+import Config from '../app.config';
 import index from './routes/index'
 import users from './routes/users';
 import spider from './routes/crawler';
-import { handleRender } from './routes/render_server';
+import { handleRender } from './routes/render';
+
 
 const app = express();
 const port = 3000;
@@ -23,14 +26,21 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '../dist')));
 
-app.use(handleRender);
+// app.use(handleRender);
 
 
-app.use('/', index);
+// app.use('/', index);
 app.use('/users', users);
-app.use('/crawler', spider);
+
+app.get('/google_map_api.js', (req, res, next) => {
+
+  const url = Config.GOOGLE_API_URL;
+  // http request to get the file
+  req.pipe(request(url)).pipe(res);
+
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

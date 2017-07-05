@@ -10,7 +10,7 @@ module.exports = {
     dashboard : [
       'react-hot-loader/patch',
       'webpack/hot/only-dev-server',
-      './entry.js'
+      './client/entry.js'
     ],
 
     common : [
