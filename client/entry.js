@@ -5,7 +5,12 @@ import 'babel-polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import thunkMiddleware from 'redux-thunk';
-// import { Router, Route, IndexRoute, hashHistory } from 'react-router';
+import {
+	Router,
+	Route,
+	IndexRoute,
+	hashHistory
+} from 'react-router';
 
 import { createStore, applyMiddleware } from 'redux';
 import { createLogger } from 'redux-logger';
@@ -19,11 +24,13 @@ import { Provider } from 'react-redux';
 
 import rootReducer from './reducer';
 
-import App from './containers/App';
-// import TripMap from './components/TripMap';
+import rootApp from './routes/Home';
+const { Home, TripBox } = rootApp;
 
+import tripPlan from './routes/TripPlan';
+const { TripPlan } = tripPlan;
 
-// import 'react-dates/lib/css/_datepicker.css';
+import 'react-dates/lib/css/_datepicker.css';
 import './scss/mapStyle.scss';
 
 const loggerMiddleware = createLogger();
@@ -39,7 +46,14 @@ const store = createStore(
 
 ReactDOM.render(
 	<Provider store={store}>
-		<App/>
+		<Router history={hashHistory}>
+			<Route path="/" component={Home}>
+				<IndexRoute component={TripBox}/>
+				<Route path="trip" component={TripBox}/>
+				<Route path="map" component={null}/>
+			</Route>
+			<Route path="/trip/:tripId" component={TripPlan}/>
+		</Router>
 	</Provider>,
 	document.getElementById('app')
 );

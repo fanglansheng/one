@@ -5,16 +5,28 @@ import logger from 'morgan';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import request from 'request';
+import { MongoClient } from 'mongodb';
 
 import Config from '../app.config';
 import index from './routes/index'
 import users from './routes/users';
+// import trip from './routes/trip';
 import spider from './routes/crawler';
 import { handleRender } from './routes/render';
 
 
 const app = express();
 const port = 3000;
+const dbUrl = "mongodb://localhost:27017/tripdb";
+let db;
+
+// setup database
+MongoClient.connect(dbUrl, (err, database) => {
+  if (err) throw err;
+  db = database;
+  console.log("Database linked!");
+  // database.close();
+});
 
 // // view engine setup
 // app.set('views', path.join(__dirname, 'views'));
@@ -30,16 +42,19 @@ app.use(express.static(path.join(__dirname, '../dist')));
 
 // app.use(handleRender);
 
+// make database accessiable to routes
+app.use((req, res, next)=>{
+  req.db = db;
+  next();
+});
 
 // app.use('/', index);
 app.use('/users', users);
+// app.use('/trip', trip);
 
 app.get('/google_map_api.js', (req, res, next) => {
-
   const url = Config.GOOGLE_API_URL;
-  // http request to get the file
   req.pipe(request(url)).pipe(res);
-
 });
 
 // catch 404 and forward to error handler

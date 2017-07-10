@@ -6,7 +6,8 @@ import {
 
 export default class DetailBox extends Component {
 	static propTypes = {
-		place: PropTypes.any.isRequired
+		place : PropTypes.any.isRequired,
+    handleAddPlace : PropTypes.func.isRequired
   }
 
   constructor(props){
@@ -17,12 +18,16 @@ export default class DetailBox extends Component {
 
   render(){
   	const {
-  		place
+  		place,
+      handleAddPlace
   	} = this.props;
+    if(!place.name) return null;
   	return(
-  		<div className="info-contianer">
-  			<h4>{place.name}</h4>
-  			<button>Add to trip</button>
+  		<div className="info-container">
+  			<h4>{place.name} {place.rating}</h4>
+        <a href={place.url}>Open in GoogleMap</a>
+        <p>{place.formatted_address}</p>
+  			<button onClick={handleAddPlace}>Add to trip</button>
   		</div>
   	);
   }

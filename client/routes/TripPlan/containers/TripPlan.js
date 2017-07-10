@@ -11,17 +11,17 @@ import {
 
 import {
   // fetchCurrentLocation
-  getPlaceDetail
-} from '../defaultActions';
+  fetchTrip,
+  addPlaceToTrip
+} from '../../../defaultActions';
 
+import PlanBox from '../components/PlanBox';
 import MapContainer from './MapContainer';
-import PlaceDetail from '../components/PlaceDetail';
 
-
-export class App extends React.Component {
+class App extends React.Component {
 
 	static propTypes = {
-		dispatch : PropTypes.func.isRequired
+		dispatch : PropTypes.func.isRequired,
 	}
 
 	constructor(props) {
@@ -30,43 +30,25 @@ export class App extends React.Component {
 
 	componentWillMount() {
 		const { dispatch, params } = this.props;
-		
+		dispatch(fetchTrip(params.tripId));
 	}
 
 	componentWillReceiveProps(nextProps) {
 		const { dispatch, params } = nextProps;
 	}
 
-
 	render() {
-		const {
-			dispatch,
-			places,
-			selectedPlace
-		} = this.props;
-
 		return (
-			<div className='app-container'>
+			<div className='full-height'>
+				{/* Map */}
 				<MapContainer/>
-				<PlaceDetail
-					place={selectedPlace}
-				/>
+				{/* Information and itineray */}
+				<PlanBox/>
 			</div>
 		);
 	}
 }
 
-const mapStateToProps = (state, props) => {
-	const {
-		places,
-		selectedPlace
-	} = state;
-	return {
-		places,
-		selectedPlace
-	};
-};
-
 export default connect(
-	mapStateToProps, 
+	null
 )(App);

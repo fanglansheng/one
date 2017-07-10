@@ -16,8 +16,7 @@ import SearchBox from 'react-google-maps/lib/places/SearchBox';
 const ContainerBox = (<div className="map-container" />);
 const MapBox = (<div style={{ height: `100%` }} />);
 
-// window['ww']=(SearchBox);
-const GettingStartedGoogleMap = withGoogleMap(props => (
+const TripMap = withGoogleMap(props => (
   <GoogleMap
     ref={props.onMapLoad}
     defaultZoom={8}
@@ -33,26 +32,27 @@ const GettingStartedGoogleMap = withGoogleMap(props => (
       controlPosition={google.maps.ControlPosition.TOP_RIGHT}
       onPlacesChanged={props.onPlacesChanged}
     />
-    {props.markers.map( (marker, key) => (
+    {props.places.map( (place, key) => (
       <Marker
-        {...marker}
-        key={key}
-        onClick={() => props.onClickMarker(marker.place)}
-        onRightClick={() => props.onMarkerRightClick(marker)}
+        defaultAnimation={2}
+        position={place.geometry.location}
+        key={place.place_id}
+        onClick={() => props.onClickMarker(place)}
+        onRightClick={() => props.onMarkerRightClick(place)}
       />
     ))}
   </GoogleMap>
 ));
 
-export default class GettingStartedExample extends Component {
+export default class TripMapBox extends Component {
   static propTypes = {
-    getPlaceDetail: PropTypes.func.isRequired
+    selectMarker: PropTypes.func.isRequired
   }
 
   constructor(props){
     super(props);
     this.state = {
-      markers: [],
+      places: [],
       bounds: new google.maps.LatLngBounds()
     };
   }
@@ -69,10 +69,6 @@ export default class GettingStartedExample extends Component {
     }
   }
 
-  /*
-   * This is called when you click on the map.
-   * Go and try click now.
-   */
   handleMapClick = (event) => {
     // const nextMarkers = [
     //   ...this.state.markers,
@@ -85,14 +81,6 @@ export default class GettingStartedExample extends Component {
     // this.setState({
     //   markers: nextMarkers,
     // });
-
-    // const icon = {
-    //     url: place.icon,
-    //     size: new google.maps.Size(71, 71),
-    //     origin: new google.maps.Point(0, 0),
-    //     anchor: new google.maps.Point(17, 34),
-    //     scaledSize: new google.maps.Size(25, 25)
-    //   };
 
     // if (nextMarkers.length === 3) {
     //   this.props.toast(
@@ -123,17 +111,16 @@ export default class GettingStartedExample extends Component {
   }
 
   handlePlaceChanged = () => {
-    const places = this._searchBoxComponent.getPlaces();
-    if (places.length == 0) return;
+    const searchedPlaces = this._searchBoxComponent.getPlaces();
+    if (searchedPlaces.length == 0) return;
 
     // Clear old markers
-    this.setState({ markers: [] });
+    this.setState({ places: [] });
 
     // For each place, get the icon, name and location.
-    let markers = [];
+    let places = [];
     let bounds = new google.maps.LatLngBounds();
-    places.forEach((place) => {
-      // console.log(place);
+    searchedPlaces.forEach((place) => {
 
       if (!place.geometry) {
         console.log("Returned place contains no geometry");
@@ -148,16 +135,12 @@ export default class GettingStartedExample extends Component {
       }
 
       // Create a marker for each place.
-      markers.push({
-        defaultAnimation: 2,
-        place: place,
-        position: place.geometry.location
-      });
+      places.push(place);
 
     });
-    this.setState({markers});
-    this._mapComponent.fitBounds(bounds);
 
+    this.setState({places});
+    this._mapComponent.fitBounds(bounds);
   }
 
   // Bias the SearchBox results towards current map's viewport.
@@ -168,17 +151,17 @@ export default class GettingStartedExample extends Component {
 
   handleClickMarker = (place) => {
     console.log(place.place_id);
-    this.props.getPlaceDetail(place);
+    this.props.selectMarker(place);
   }
 
   render() {
     return (
-      <GettingStartedGoogleMap
+      <TripMap
         containerElement={ContainerBox}
         mapElement={MapBox}
         onMapLoad={this.handleMapLoad}
         onMapClick={this.handleMapClick}
-        markers={this.state.markers}
+        places={this.state.places}
         onMarkerRightClick={this.handleMarkerRightClick}
         onSearchBoxLoad={this.handleSearchBoxLoad}
         onPlacesChanged={this.handlePlaceChanged}

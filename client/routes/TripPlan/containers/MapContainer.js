@@ -10,8 +10,8 @@ import {
 
 import {
   // fetchCurrentLocation
-  getPlaceDetail
-} from '../defaultActions';
+  selectMarker
+} from '../../../defaultActions';
 
 import TripMap from '../components/TripMap';
 
@@ -29,8 +29,8 @@ const mapStateToProps = (state, props) => {
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		getPlaceDetail : (place) => {
-			dispatch(getPlaceDetail(place));
+		selectMarker : (place) => {
+			dispatch(selectMarker(place));
 		}
 	};
 }

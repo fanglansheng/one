@@ -8,13 +8,33 @@ html, body {
 	padding: 0;
 }
 
-.app-container {
+.full-height {
 	height: 100%;
+}
+
+.column{
+	display: inline-block;
+	float: left;
+	height: 100%;
+	padding: 10px;
+}
+
+.navigation{
+	@extend .column;
+	width: 20%;
+	.nav-item{
+		margin-bottom: 20px;
+	}
+}
+
+.content-box{
+	@extend .column;
+	width: 80%;
 }
 
 .map-container{
 	height: 100%;
-	width: 65%;
+	width: 70%;
 	display: inline-block;
 }
 
@@ -23,8 +43,14 @@ html, body {
 	height:30px;
 }
 
-.info-contianer{
-	height: 100%;
-	width: 35%;
+.plan-box{
 	display: inline-block;
+	width: 30%;
+	float: right;
 }
+
+// .info-container{
+// 	height: 100%;
+// 	width: 35%;
+// 	display: inline-block;
+// }

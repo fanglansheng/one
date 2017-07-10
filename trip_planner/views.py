@@ -1,21 +1,18 @@
 import os
+import sys
+import requests
 from flask import jsonify, render_template, request, make_response
-from flask_login import login_required, current_user
+# from flask_login import login_required, current_user
 
 from sqlalchemy import and_, or_
-
-
-from trip_planner import app, CONFIG_AWS
+from trip_planner import app
 from trip_planner.models import *
 
-# from react.render import render_component
-# from react.conf import settings
+if not os.environ.get('GOOGLE_API_KEY'):
+    sys.stderr.write("No GOOGLE_API_KEY environ\n\n")
+    sys.exit(2)
 
-# settings.configure(
-#     RENDER=True,
-#     RENDER_URL='http://127.0.0.1:9001/render',
-# )
-
+GOOGLE_API_URL = 'https://maps.googleapis.com/maps/api/js?key=%s&libraries=places' % os.environ.get('GOOGLE_API_KEY')
 """
 Initializes the database.
 The app.cli.command() decorator registers a new command with the flask script.
@@ -33,29 +30,14 @@ def dropdb_command():
 
 @app.route('/login')
 def login_page():
-    if CONFIG_AWS:
-        return render_template('login.html')
-    else:
-        return render_template('login_local.html')
+    return render_template('login.html')
 
 @app.route('/')
-@login_required
+# @login_required
 def index():
-    if CONFIG_AWS:
-        return render_template('index.html')
-    else:
-        return render_template('index_local.html')
+    return render_template('index.html')
 
-
-# @app.route('/testrender')
-# def render():
-#     path = os.path.join(os.getcwd(), 'three/static/js/file/components/Nav.js')
-#     rendered = render_component(
-#         path,
-#         {
-#             'username': 'sdfadfs',
-#             'email':'example@123.com'
-#         },
-#         to_static_markup=True
-#     )
-#     return render_template('index.html', rendered=rendered)
+@app.route('/google_map_api.js')
+def get_google_api():
+    file = requests.get(GOOGLE_API_URL).content
+    return file
