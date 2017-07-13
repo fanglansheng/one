@@ -16,6 +16,7 @@ import SearchBox from 'react-google-maps/lib/places/SearchBox';
 const ContainerBox = (<div className="map-container" />);
 const MapBox = (<div style={{ height: `100%` }} />);
 
+
 const TripMap = withGoogleMap(props => (
   <GoogleMap
     ref={props.onMapLoad}
@@ -46,7 +47,9 @@ const TripMap = withGoogleMap(props => (
 
 export default class TripMapBox extends Component {
   static propTypes = {
-    selectMarker: PropTypes.func.isRequired
+    currentItineraryId : PropTypes.number.isRequired,
+    selectMarker: PropTypes.func.isRequired,
+    addActivity: PropTypes.func.isRequired
   }
 
   constructor(props){
@@ -55,10 +58,6 @@ export default class TripMapBox extends Component {
       places: [],
       bounds: new google.maps.LatLngBounds()
     };
-  }
-
-  componentWillMount(){
-
   }
 
   // save the map object
@@ -138,6 +137,17 @@ export default class TripMapBox extends Component {
       places.push(place);
 
     });
+
+    if(places.length == 1){
+      const {currentItineraryId, addActivity} = this.props;
+      const place = places[0];
+
+      addActivity(currentItineraryId, {
+        place_id: place.place_id,
+        name: place.name,
+        address: place.formatted_address
+      });
+    }
 
     this.setState({places});
     this._mapComponent.fitBounds(bounds);

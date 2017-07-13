@@ -2,24 +2,9 @@
 import fetch from 'isomorphic-fetch';
 import {
 	ActionTypes,
-	Host
+	Host,
+	handleResponse
 } from './constants';
-
-
-export const selectMarker = (place) => {
-	return {
-		type: ActionTypes.CLICK_MARKER,
-		place
-	}
-};
-
-export const addPlaceToTrip = (place, trip) => {
-	return {
-		type: ActionTypes.ADD_PLACE,
-		place,
-		trip
-	};
-};
 
 const receiveTrips = (json) => ({
 	type: ActionTypes.RECEIVE_TRIPS,
@@ -30,6 +15,7 @@ export const addTrip = (trip) => ({
 	type: ActionTypes.ADD_TRIP,
 	trip
 });
+
 
 export const selectTrip = (trip) => ({
 	type: ActionTypes.SELECT_TRIP,
@@ -65,27 +51,9 @@ export const fetchAllTrips = () => dispatch => {
 	dispatch({type: ActionTypes.REQUEST_TRIPS});
 
 	return fetch(`${Host}/trip`, {})
-		.then(response => {
-			if(response.ok) {
-				return response.json();
-			}
-			throw new Error('Network response was not ok.');
-		})
+		.then(handleResponse)
 		.then(json => {
 			dispatch(receiveTrips(json));
-		});
-};
-
-export const fetchTrip = (tripId) => dispatch => {
-	return fetch(`${Host}/trip/${tripId}/itinerary`, {})
-		.then(response => {
-			if(response.ok) {
-				return response.json();
-			}
-			throw new Error('Network response was not ok.');
-		})
-		.then(json => {
-			dispatch(selectTrip(json.trip));
 		});
 };
 
@@ -100,13 +68,20 @@ export const fetchCreateTrip = (postData) => dispatch => {
 	};
 
 	return fetch(`${Host}/trip`, init)
-		.then(response => {
-			if(response.ok) {
-				return response.json();
-			}
-			throw new Error('Network response was not ok.');
-		})
+		.then(handleResponse)
 		.then(json => {
 			dispatch(addTrip(json));
+		});
+};
+
+export const fetchDeleteTrip = tripId => dispatch => {
+	const init = { method : 'DELETE' };
+	return fetch(`${Host}/trip/${tripId}`, init)
+		.then(handleResponse)
+		.then(json => {
+			dispatch({
+				type: ActionTypes.DEL_TRIP,
+				tripId
+			});
 		});
 };

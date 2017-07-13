@@ -10,10 +10,8 @@ import {
 } from 'react-redux';
 
 import {
-  // fetchCurrentLocation
-  fetchTrip,
-  addPlaceToTrip
-} from '../../../defaultActions';
+  fetchTripIfNeeded
+} from '../tripActions';
 
 import PlanBox from '../components/PlanBox';
 import MapContainer from './MapContainer';
@@ -30,7 +28,7 @@ class App extends React.Component {
 
 	componentWillMount() {
 		const { dispatch, params } = this.props;
-		dispatch(fetchTrip(params.tripId));
+		dispatch(fetchTripIfNeeded(params.tripId));
 	}
 
 	componentWillReceiveProps(nextProps) {

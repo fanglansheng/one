@@ -10,8 +10,12 @@ from trip_planner.models import *
 
 # POST /trip
 #		Create a new trip
-# GET /trip
-# 	Get all trips
+#		json : {
+#			title:'',
+#			days: number,
+#		}
+
+# GET /trip 	- Get all trips
 @app.route('/trip', methods=['POST', 'GET'])
 def trip():
 	if request.method == 'POST':
@@ -37,6 +41,36 @@ def trip():
 	trips = Trip.query.all()
 	dic = {}
 	dic['trips'] = [trip.to_json() for trip in trips]
+	return jsonify(dic)
+
+
+# GET /trip/<id> 	- Get trip data
+# DELETE /trip/<id> - Delete trip by id
+# POST /trip/<id> - Edit tirp
+#		json : {
+#			title:'',
+# 		memo: ''
+#		}
+@app.route('/trip/<int:trip_id>', methods=['POST', 'GET', 'DELETE'])
+def edit_trip(trip_id):
+	trip = Trip.query.get_or_404(trip_id)
+	dic = {}
+	# DELETE
+	if request.method == 'DELETE':
+		db.session.delete(trip)
+		db.session.commit()
+		return make_response('',200)
+	# EDIT
+	if request.method == 'POST':
+		data = request.json
+		if 'title' in data:
+			trip.title = data['title']
+			db.session.commit()
+		if 'memo' in data:
+			trip.memo = data['memo']
+			db.session.commit()
+	# GET
+	dic['trip'] = trip.to_json()
 	return jsonify(dic)
 
 
@@ -66,7 +100,6 @@ def get_itinerary_or_create(trip_id, date_str):
 def itinerary(trip_id):
 	trip = Trip.query.get_or_404(trip_id)
 	dic = {}
-
 	if request.method == 'POST':
 		data = request.json
 		# check form field
@@ -106,4 +139,7 @@ def edit_itinerary(it_id):
 	return jsonify({ 'initerary': itinerary.to_json() })
 
 
+@app.route('/trip/<int:trip_id>/itinerary', methods=['POST'])
+def activity():
+	return 
 

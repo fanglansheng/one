@@ -79,4 +79,5 @@ class Itinerary(db.Model):
 		data['date'] = self.date
 		data['memo'] = self.memo
 		data['trip_id'] = self.trip_id
+		data['activities'] = []
 		return data

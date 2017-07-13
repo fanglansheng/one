@@ -12,10 +12,17 @@ import {
 	connect
 } from 'react-redux';
 
-import {
+import core from '../../core';
+const {
   fetchCreateTrip,
+  fetchDeleteTrip,
   selectTrip
-} from '../../../defaultActions';
+} = core;
+
+import trip from '../../trip';
+const {
+	makeGetAllTrips
+} = trip.selector;
 
 import moment from 'moment';
 
@@ -35,6 +42,7 @@ const TripItem = (props) => {
 				to={`/trip/${props.id}`}
 				onClick={props.handleClick}
 			> {title} </Link>
+			<button onClic={props.handleDelete}></button>
 			<div> {props.memo} </div>
 		</div>
 	);
@@ -42,8 +50,11 @@ const TripItem = (props) => {
 
 class TripBox extends React.Component {
 	static propTypes = {
+		isFetching : PropTypes.bool.isRequired,
 		trips : PropTypes.array.isRequired,
+
 		selectTrip : PropTypes.func.isRequired,
+		deleteTrip : PropTypes.func.isRequired,
 		addTrip : PropTypes.func.isRequired
 	}
 
@@ -60,13 +71,17 @@ class TripBox extends React.Component {
 	render(){
 		const {
 			trips,
+			isFetching,
 			addTrip,
-			selectTrip
+			selectTrip,
+			deleteTrip
 		} = this.props;
 
 		const {
 			showCreateForm
 		} = this.state;
+
+		if(isFetching) return null;
 
 		return (
 			<div className='content-box'>
@@ -82,13 +97,12 @@ class TripBox extends React.Component {
 				<div>
 					{trips.map((trip,key) => 
 						<TripItem
-							{...trip}
+							{...trip} key={key}
 							handleClick={() => selectTrip(trip)}
-							key={key}
+							handleDelete={() => deleteTrip(trip.id)}
 						/>
 					)}
 				</div>
-
 			</div>
 		);
 	}
@@ -96,18 +110,20 @@ class TripBox extends React.Component {
 
 const mapStateToProps = (state, props) => {
 	const {
-		trips
-	} = state;
+		isFetching
+	} = state.trips;
 
+	const getAllTrips = makeGetAllTrips();
 	return {
-		trips
+		isFetching,
+		trips : getAllTrips(state)
 	};
 };
 
 const mapDispatchToProps = (dispatch) => {
 	return {
 		selectTrip : (tripData) => dispatch(selectTrip(tripData)),
-		deleteTrip : () => {},
+		deleteTrip : (tripId) => dispatch(fetchDeleteTrip(tripId)),
 		addTrip : (tripData) => dispatch(fetchCreateTrip(tripData))
 	};
 }

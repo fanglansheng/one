@@ -13,11 +13,8 @@ import {
 	Link
 } from 'react-router';
 
-import {
-  // fetchCurrentLocation
-  fetchAllTrips,
-  addPlaceToTrip
-} from '../../../defaultActions';
+import core from '../../core';
+const { actions } = core;
 
 import Navigation from './Navigation';
 
@@ -33,7 +30,7 @@ class Home extends React.Component {
 
 	componentWillMount() {
 		const { dispatch, params } = this.props;
-		dispatch(fetchAllTrips());
+		dispatch(actions.fetchAllTrips());
 	}
 
 	componentWillReceiveProps(nextProps) {

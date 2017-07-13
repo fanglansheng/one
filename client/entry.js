@@ -21,14 +21,13 @@ import { Provider } from 'react-redux';
 //   Route,
 //   Link
 // } from 'react-router-dom';
+import rootReducer from './core/reducer';
 
-import rootReducer from './reducer';
-
-import rootApp from './routes/Home';
+import rootApp from './home';
 const { Home, TripBox } = rootApp;
 
-import tripPlan from './routes/TripPlan';
-const { TripPlan } = tripPlan;
+import trip from './trip';
+const { TripPlan } = trip;
 
 import 'react-dates/lib/css/_datepicker.css';
 import './scss/mapStyle.scss';

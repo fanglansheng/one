@@ -13,6 +13,7 @@
   },
   "author": "Chuan Zhou",
   "dependencies": {
+    "babel-jest": "^20.0.3",
     "babel-polyfill": "^6.23.0",
     "babel-preset-react": "^6.24.1",
     "babelify": "^7.3.0",
@@ -20,11 +21,14 @@
     "cookie-parser": "~1.4.3",
     "crawler": "^1.0.5",
     "debug": "~2.6.3",
+    "expect": "^1.20.2",
     "express": "~4.15.2",
+    "jest": "^20.0.4",
     "keymirror": "^0.1.1",
     "moment": "^2.18.1",
     "mongodb": "^2.2.29",
     "morgan": "~1.8.1",
+    "normalizr": "^3.2.3",
     "pug": "~2.0.0-beta11",
     "react": "^15.6.1",
     "react-addons-shallow-compare": "^15.6.0",
@@ -36,6 +40,7 @@
     "redux": "^3.7.1",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0",
+    "reselect": "^3.0.1",
     "serve-favicon": "~2.4.2"
   },
   "devDependencies": {

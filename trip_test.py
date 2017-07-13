@@ -9,8 +9,9 @@ from trip_planner.models import *
 from flask import url_for, Flask, jsonify
 from sqlalchemy import distinct, and_
 
-def print_response(res):
-    print res.data
+def print_response(res, msg=''):
+    print msg
+    print res.data, '\n'
 
 
 class AppTestCase(unittest.TestCase):
@@ -48,48 +49,41 @@ class AppTestCase(unittest.TestCase):
     def test_trip(self):
         print('# test_trip\n')
         assert len(Trip.query.all()) == 1
+
         #### post to create a new trip
         trip = dict(
             title='Las Vegas Road Trip', 
             memo='', 
-            days=4
+            days=2
         )
         rv = self.app.post('/trip',
-                        data=json.dumps(trip),
-                        follow_redirects=True,
-                        content_type='application/json')
+                    data=json.dumps(trip),
+                    follow_redirects=True,
+                    content_type='application/json')
         assert rv.status_code == 200
-        res = json.loads(rv.data)
-        trip_id = str(res['id'])
+        assert len(Trip.query.all()) == 2
+        # print_response(rv)
+
 
         #### get all trips
         req = self.app.get('/trip')
         assert req.status_code == 200
+        print_response(req, 'trips: ')
+        
 
-        res = json.loads(req.data)
-        print "trips: ", req.data
-        assert len(res['trips']) == 2
+        #### edit trip
+        trip = dict( title='New title', memo='hahahah')
+        req = self.app.post('/trip/2',
+                    data=json.dumps(trip),
+                    follow_redirects=True,
+                    content_type='application/json')
+        assert rv.status_code == 200
+        print_response(req, 'edited trip: ')
 
-        itineraries = Itinerary.query.all()
-
-        # # delete
-        # rv2 =self.app.delete('/fs/collection/'+coll_id, follow_redirects=True)
-        # coll_count2 = len(Collection.query.all())
-        # assert rv2.status_code == 200
-        # assert coll_count1 == coll_count2
-
-        # # post collection and
-        # coll = dict(
-        #     name='Test', 
-        #     description='', 
-        #     logic='and', 
-        #     rules = ['tag:2','tag:1', 'size:1:5']
-        # )
-        # rv = self.app.post('/fs/collection',
-        #                     data=json.dumps(coll),
-        #                     follow_redirects=True,
-        #                     content_type='application/json')
-        # assert rv.status_code == 200
+        #### delete
+        del_req = self.app.delete('/trip/2', follow_redirects=True)
+        assert del_req.status_code == 200
+        assert len(Trip.query.all()) == 1
 
         # rv1 = self.app.get('/fs/query/collection/3')
         # assert rv1.status_code == 200
@@ -101,6 +95,7 @@ class AppTestCase(unittest.TestCase):
         # self.app.get('/login/test1@genecloud.com')
         # rv3 =self.app.get('/fs/collection/1', follow_redirects=True)
         # assert rv3.status_code == 400
+
     def test_itinerary(self):
         print '# test_itinerary\n'
         # post to create a new ititnerary
