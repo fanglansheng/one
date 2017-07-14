@@ -8,6 +8,8 @@ from sqlalchemy import and_, or_
 from trip_planner import app
 from trip_planner.models import *
 
+
+
 # POST /trip
 #		Create a new trip
 #		json : {
@@ -24,18 +26,10 @@ def trip():
 			return make_response('Missing feilds!', 400)
 
 		# create the new trip
-		new_trip = Trip(data['title'], data['memo'])
+		new_trip = Trip(data['title'],'')
 		db.session.add(new_trip)
-
-		# set itineraries
-		if data['days']:
-			itineraries = []
-			for index in range(int(data['days'])):
-				itinerary = Itinerary(new_trip.id)
-				db.session.add(itinerary)
-				itineraries.append(itinerary)
-			new_trip.itineraries = itineraries
 		db.session.commit()
+		# redirect to the page to edit
 		return jsonify(new_trip.to_json())
 
 	trips = Trip.query.all()
@@ -74,56 +68,57 @@ def edit_trip(trip_id):
 	return jsonify(dic)
 
 
-# get an itinerary by tripId and date.
+# get an activity by tripId and date.
 # If cannot find, create a new one
-def get_itinerary_or_create(trip_id, date_str):
+def get_activity_or_create(trip_id, date_str):
 	# get date object
 	it_date = datetime.strptime(date_str, "%Y%m%d").date()
-	# check is itinerary exist
-	initerary = Itinerary.query.filter_by(
+	# check is activity exist
+	activity = Activity.query.filter_by(
 								trip_id=trip_id, 
 								date=it_date).one_or_none()
 	# create a new one if not exist
-	if initerary is None:
-		itinerary = Itinerary(trip_id, it_date)
+	if activity is None:
+		activity = Activity(trip_id, it_date)
 		trip = Trip.query.get_or_404(trip_id)
-		trip.itineraries.append(itinerary)
-		db.session.add(itinerary)
+		trip.activities.append(activity)
+		db.session.add(activity)
 		db.session.commit()
-	return itinerary
+	return activity
 
 
-# POST /trip/<int:trip_id>/itinerary
-#		Add a initerary to trip
+# POST /trip/<int:trip_id>/activity
+#		Add a activity to trip
 #		json: {date:'20170709'}
-@app.route('/trip/<int:trip_id>/itinerary', methods=['POST', 'GET'])
-def itinerary(trip_id):
+@app.route('/trip/<int:trip_id>/activity', methods=['POST', 'GET'])
+def activity(trip_id):
 	trip = Trip.query.get_or_404(trip_id)
 	dic = {}
 	if request.method == 'POST':
 		data = request.json
 		# check form field
-		if 'date' in data: 
-			itinerary = get_itinerary_or_create(trip.id, data['date'])
+		if not 'place_id' in data:
+			return make_response('Missing feilds!', 400)
 		else:
-			itinerary = Itinerary(trip.id)
-			trip.itineraries.append(itinerary)
-			db.session.add(itinerary)
+			print data['place_id']
+			activity = Activity(data['place_id'])
+			trip.activities.append(activity)
+			db.session.add(activity)
 			db.session.commit()
-		dic['initerary'] = itinerary.to_json()
+		dic['activity'] = activity.to_json()
 		return jsonify(dic)
 	# GET return the trip information
 	dic['trip'] = trip.to_json()
 	return jsonify(dic)
 
-# POST /itinerary/<int:it_id>
-#		edit itinerary by id.
-#		json : {'date':'20170907', memo: '..'}
-@app.route('/itinerary/<int:it_id>', methods=['POST', 'DELETE'])
-def edit_itinerary(it_id):
-	itinerary = Itinerary.query.get_or_404(it_id)
+# POST /activity/<int:it_id>
+#		edit activity by id.
+#		json : {'date':'20170907', memo: '..', duration: 60}
+@app.route('/activity/<int:it_id>', methods=['POST', 'DELETE'])
+def edit_activity(it_id):
+	activity = Activity.query.get_or_404(it_id)
 	if request.method == 'DELETE':
-		db.session.delete(itinerary)
+		db.session.delete(activity)
 		db.session.commit()
 		return make_response('',200)
 
@@ -131,15 +126,13 @@ def edit_itinerary(it_id):
 		data = request.json
 		# check form field
 		if 'date' in data: 
-			it_date = datetime.strptime(data['date'], "%Y%m%d").date()
-			itinerary.date = it_date
+			act_datetime = datetime.strptime(data['date'], "%Y%m%d").date()
+			activity.date = act_datetime
 		if 'memo' in data:
-			itinerary.memo = data['memo']
+			activity.memo = data['memo']
+		if 'duration' in data:
+			activity.duration = data['duration']
+
 		db.session.commit()
-	return jsonify({ 'initerary': itinerary.to_json() })
-
-
-@app.route('/trip/<int:trip_id>/itinerary', methods=['POST'])
-def activity():
-	return 
+	return jsonify({ 'activity': activity.to_json() })
 

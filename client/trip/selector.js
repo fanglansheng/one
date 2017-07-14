@@ -4,12 +4,10 @@ import { createSelector } from 'reselect';
 const getTripsById = (state) => state.trips.byId;
 const getTripIdList = (state) => state.trips.allItems;
 
-const getItinerariesById = (state) => state.itineraries.byId;
-const getItineraryIdList = (state) => state.itineraries.allItems;
-const getItineraryItem = (state, props) => state.itineraries.byId[props.itineraryId]
 
 const getActivitiesById = (state) => state.activities.byId;
 const getActivityIdList = (state) => state.activities.allItems;
+const getActivityItem = (state, props) => state.activities.byId[props.activityId]
 
 ///////////// Utility Functions
 // construct to map entity ids to object with content
@@ -27,45 +25,26 @@ export const getAllActivities = mapIdsToObjects(
   getActivitiesById
 );
 
-// get Itinerary by id.
-// export const getItineray = (itineraryId) => createSelector(
-//   [
-    
-//     getActivitiesById
-//   ],
-//   (itinerary, activitiesById) => {
-//     const activities = itinerary.activities.map(id => activitiesById(id));
-//     return {
-//       ...itinerary,
-//       activities
-//     }
-//   }
-// );
-
-// Get all activity objects.
-// export const getAllItineraries = mapIdsToObjects(
-//   getItineraryIdList,
-//   getItineray
-// );
+// get all trips without detail
+export const getAllTrips = mapIdsToObjects(
+  getTripIdList,
+  getTripsById
+);
 
 // Generate a selector to get a trip by Id
 export const makeGetTrip = (tripId) => createSelector(
   [ 
     (state) => state.trips.byId[tripId], 
-    getItinerariesById
+    getActivitiesById
   ],
-  (trip, itinerariesById) => {
+  (trip, activitiesById) => {
     if(!trip) return null;
-    const itineraries = trip.itineraries.map(id => itinerariesById[id]);
+    const activities = trip.activities.map(id => activitiesById[id]);
     return {
       ...trip,
-      itineraries
+      activities
     };
   }
 );
 
-// get all trips without detail
-export const makeGetAllTrips = mapIdsToObjects(
-  getTripIdList,
-  getTripsById
-);
+

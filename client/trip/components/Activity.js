@@ -35,20 +35,12 @@ const EditableBox = (props) => {
 	}
 };
 
-const ActivityItem = (props) => (
-	<div>
-		<p>{props.name}</p>
-		<p>{props.address}</p>
-	</div>
-);
-
-export default class Itinerary extends React.Component {
+export default class ActivityItem extends React.Component {
 
 	static propTypes = {
 		date : PropTypes.any,
 		memo : PropTypes.string,
-		activities : PropTypes.array,
-		dayIndex : PropTypes.number.isRequired,
+		place : PropTypes.object.isRequired,
 
 		handleDelete: PropTypes.func.isRequired,
 		handleEdit: PropTypes.func.isRequired
@@ -88,8 +80,7 @@ export default class Itinerary extends React.Component {
 
 	render() {
 		const {
-			dayIndex,
-			activities,
+			place,
 			handleDelete
 		} = this.props;
 
@@ -101,8 +92,7 @@ export default class Itinerary extends React.Component {
 		} = this.state;
 
 		return (
-			<div className='itinerary-item'>
-				<div>{dayIndex}</div>
+			<div className='activity-item'>
 				<SingleDatePicker
 					numberOfMonths={1}
 					date={date}
@@ -110,6 +100,7 @@ export default class Itinerary extends React.Component {
 					onDateChange={this.handleDateSubmit}
 					onFocusChange={({focused}) => this.setState({ dateFocused:focused })}
 				/>
+				<h5>{place.name}</h5>
 				<EditableBox
 					focused={memoFocused}
 					value={memo}
@@ -119,9 +110,6 @@ export default class Itinerary extends React.Component {
 					showEditInput={() => this.setState({memoFocused: true})}
 				/>
 				<button onClick={handleDelete}>delete</button>
-				{activities.map((act,key) =>
-					<ActivityItem key={key} {...act}/>
-				)}
 			</div>
 		);
 	}

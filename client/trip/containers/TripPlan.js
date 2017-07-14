@@ -39,8 +39,10 @@ class App extends React.Component {
 		return (
 			<div className='full-height'>
 				{/* Map */}
-				<MapContainer/>
-				{/* Information and itineray */}
+				<MapContainer
+					tripId={this.props.params.tripId}
+				/>
+				{/* Information and activity */}
 				<PlanBox/>
 			</div>
 		);

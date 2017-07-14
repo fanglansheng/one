@@ -31,26 +31,26 @@ const allItems = (state=[], action) => {
 	}
 };
 
-const addItinerary = (state, action) => {
-	const { tripId, itinerary } = action;
+const addActivity = (state, action) => {
+	const { tripId, activity } = action;
 	const trip = state[tripId];
 	return {
 		...state,
 		[tripId] : {
 			...trip,
-			itineraries: trip.itineraries.concat(itinerary.id)
+			activities: trip.activities.concat(activity.id)
 		}
 	};
 };
 
-const deleteItinerary = (state, action) => {
-	const { tripId, itineraryId } = action;
+const deleteActivity = (state, action) => {
+	const { tripId, activityId } = action;
 	const trip = state[tripId];
 	return {
 		...state,
 		[tripId] : {
 			...trip,
-			itineraries: trip.itineraries.filter(id => id != itineraryId)
+			activities: trip.activities.filter(id => id != activityId)
 		}
 	};
 };
@@ -59,7 +59,6 @@ const byId = (state={}, action) => {
 	const { type } = action;
 	switch (type) {
 		case ActionTypes.RECEIVE_TRIPS:
-			console.log(action.trips);
 			return action.trips;
 		
 		case ActionTypes.ADD_TRIP:
@@ -77,11 +76,11 @@ const byId = (state={}, action) => {
 				return result;
 			}, {});
 
-		case ActionTypes.ADD_DAY:
-			return addItinerary(state, action);
+		case ActionTypes.ADD_ACTIVITY:
+			return addActivity(state, action);
 
-		case ActionTypes.DEL_DAY:
-			return deleteItinerary(state, action);
+		case ActionTypes.DEL_ACTIVITY:
+			return deleteActivity(state, action);
 
 		default:
 			return state;

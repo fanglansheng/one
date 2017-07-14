@@ -10,24 +10,33 @@ import {
 
 import {
   selectMarker,
-  addActivity
+  fetchCreateActivity
 } from '../tripActions';
+
+import { makeGetTrip } from '../selector.js';
 
 import TripMap from '../components/TripMap';
 
 
+
 const mapStateToProps = (state, props) => {
 	const {
-		places,
 		selectedPlace,
-		itineraries
 	} = state;
 
-	const {currentItineraryId} = itineraries;
+	const getTrip = makeGetTrip(props.tripId);
+	const trip = getTrip(state);
+	if(!trip){
+		return {
+			places: [],
+			selectedPlace
+		}
+	}
+	const places = trip.activities.map(a => a.place);
 	return {
+		...props,
 		places,
 		selectedPlace,
-		currentItineraryId
 	};
 };
 
@@ -35,8 +44,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 	const {tripId} = ownProps;
 	return {
 		selectMarker : (place) => dispatch(selectMarker(place)),
-		addActivity : (itineraryId, activity ) => {
-			dispatch(addActivity(itineraryId, activity));
+		addActivity : (activity ) => {
+			dispatch(fetchCreateActivity(tripId, activity));
 		}
 	};
 }

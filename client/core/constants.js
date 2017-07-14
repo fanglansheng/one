@@ -10,27 +10,27 @@ export const ActionTypes = keyMirror({
 	CLICK_MARKER: null,
 
 	// trip
+	SET_CURRENT_TRIP: null,
 	REQUEST_TRIPS: null,
 	RECEIVE_TRIPS: null,
-	
-	SET_CURRENT_TRIP: null,
 	ADD_TRIP: null,
 	DEL_TRIP: null,
 	EDIT_TRIP: null,
-
-	// itinerary
-	SET_CURRENT_DAY: null,
-	ADD_DAY: null,
-	DEL_DAY: null,
-	EDIT_DAY: null,
 
 	// activity
 	SET_CURRENT_ACTIVITY: null,
 	ADD_ACTIVITY: null,
 	DEL_ACTIVITY: null,
-	EDIT_ACTIVITY: null
+	EDIT_ACTIVITY: null,
+
+	SHOW_PLACE_SEARCH: null
 
 });
+
+export const DefaultCenter = {
+	lat: 39.9375346,
+	lng: 115.837023
+};
 
 export const ReducerFactory = {
 	createToggle : (toggleType = '') => (state = false, action) => {

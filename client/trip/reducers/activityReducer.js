@@ -12,14 +12,22 @@ const {
 	createCurrentIdWithName
 } = ReducerFactory;
 
+
 const allItems = (state=[], action) => {
 	const { type } = action;
 	const activityIds = mapKeysToIds(action.activities);
 
 	switch (type) {
 		case ActionTypes.RECEIVE_TRIPS:
-			return activityIds;
-			
+			return activityIds || state;
+
+		case ActionTypes.ADD_TRIP:
+			return [...state, ...activityIds];
+
+		case ActionTypes.DEL_TRIP:
+			const remainIds = action.activityIds.filter(d => !state.includes(d));
+			return remainIds;
+
 		case ActionTypes.ADD_ACTIVITY:
 			return [
 				...state,
@@ -39,10 +47,15 @@ const byId = (state={}, action) => {
 	switch (type) {
 		case ActionTypes.RECEIVE_TRIPS:
 			// return state to prevent action.activities is undefined
-			return action.activities || {};
+			return action.activities || state;
 		
+		case ActionTypes.ADD_TRIP:
+			return {
+				...state,
+				...action.activities
+			};
+
 		case ActionTypes.ADD_ACTIVITY:
-		case ActionTypes.EDIT_ACTIVITY:
 			return {
 				...state,
 				[action.activityId]: action.activity
@@ -50,11 +63,11 @@ const byId = (state={}, action) => {
 
 		case ActionTypes.DEL_ACTIVITY:
 			return Object.keys(state).reduce((result, key) => {
-				if (key !== action.activityId) {
+				if (key !== action.activityId.toString()) {
 					result[key] = state[key];
 				}
 				return result;
-			}, state);
+			}, {});
 
 		default:
 			return state;
@@ -62,7 +75,7 @@ const byId = (state={}, action) => {
 };
 
 export default combineReducers({
-	currentActivityId : createCurrentIdWithName('ACTIVITY'),
+	currentActivityId : createCurrentIdWithName('ACTIVIYT'),
 	allItems,
 	byId
 });

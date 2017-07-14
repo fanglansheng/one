@@ -53,8 +53,7 @@ class AppTestCase(unittest.TestCase):
         #### post to create a new trip
         trip = dict(
             title='Las Vegas Road Trip', 
-            memo='', 
-            days=2
+            memo=''
         )
         rv = self.app.post('/trip',
                     data=json.dumps(trip),
@@ -96,10 +95,10 @@ class AppTestCase(unittest.TestCase):
         # rv3 =self.app.get('/fs/collection/1', follow_redirects=True)
         # assert rv3.status_code == 400
 
-    def test_itinerary(self):
-        print '# test_itinerary\n'
+    def test_activity(self):
+        print '# test_activity\n'
         # post to create a new ititnerary
-        req = self.app.post('/trip/1/itinerary',
+        req = self.app.post('/trip/1/activity',
                         data=json.dumps({'date':'20170904'}),
                         follow_redirects=True,
                         content_type='application/json')
@@ -107,19 +106,19 @@ class AppTestCase(unittest.TestCase):
         print_response(req)
 
         # edit the itineray
-        req = self.app.post('itinerary/1',
+        req = self.app.post('activity/1',
                         data=json.dumps({'date':'20171010', 'memo':'abc'}),
                         follow_redirects=True,
                         content_type='application/json')
         assert req.status_code == 200
         print_response(req)
 
-        # delete the itinerary
-        req = self.app.delete('/itinerary/1', follow_redirects=True)
+        # delete the activity
+        req = self.app.delete('/activity/1', follow_redirects=True)
         assert req.status_code == 200
         
         # get trip's itineraies
-        req = self.app.get('/trip/1/itinerary')
+        req = self.app.get('/trip/1/activity')
         assert req.status_code == 200
         print_response(req)
 

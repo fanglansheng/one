@@ -10,6 +10,11 @@ import {
   Marker,
 } from "react-google-maps";
 
+import core from '../../core';
+const {
+  DefaultCenter
+} = core.constants;
+
 
 import SearchBox from 'react-google-maps/lib/places/SearchBox';
 
@@ -21,7 +26,7 @@ const TripMap = withGoogleMap(props => (
   <GoogleMap
     ref={props.onMapLoad}
     defaultZoom={8}
-    defaultCenter={{ lat: 25.0112183, lng: 121.5206757 }}
+    center={props.center}
     onClick={props.onMapClick}
     onBoundsChanged={props.onSetBounds}
   >
@@ -47,7 +52,6 @@ const TripMap = withGoogleMap(props => (
 
 export default class TripMapBox extends Component {
   static propTypes = {
-    currentItineraryId : PropTypes.number.isRequired,
     selectMarker: PropTypes.func.isRequired,
     addActivity: PropTypes.func.isRequired
   }
@@ -55,9 +59,29 @@ export default class TripMapBox extends Component {
   constructor(props){
     super(props);
     this.state = {
+      center : DefaultCenter,
       places: [],
       bounds: new google.maps.LatLngBounds()
     };
+
+    if (navigator.geolocation) {
+      const handleSuccess = (position) => {
+        const center = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        };
+        this.setState({center});
+      };
+
+      const handleError = () => {
+        console.error("Error: The Geolocation service failed.");
+      };
+
+      navigator.geolocation.getCurrentPosition(handleSuccess, handleError);
+
+    } else {
+      console.error('Error: Your browser doesn\'t support geolocation.');
+    }
   }
 
   // save the map object
@@ -139,14 +163,9 @@ export default class TripMapBox extends Component {
     });
 
     if(places.length == 1){
-      const {currentItineraryId, addActivity} = this.props;
       const place = places[0];
 
-      addActivity(currentItineraryId, {
-        place_id: place.place_id,
-        name: place.name,
-        address: place.formatted_address
-      });
+      this.props.addActivity(place.place_id);
     }
 
     this.setState({places});
@@ -169,6 +188,7 @@ export default class TripMapBox extends Component {
       <TripMap
         containerElement={ContainerBox}
         mapElement={MapBox}
+        center={this.state.center}
         onMapLoad={this.handleMapLoad}
         onMapClick={this.handleMapClick}
         places={this.state.places}

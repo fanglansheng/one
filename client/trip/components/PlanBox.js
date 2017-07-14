@@ -10,16 +10,16 @@ import {
 } from 'react-redux';
 
 import {
-	fetchCreateDay,
-	fetchDeleteDay,
-	fetchEditDay,
+	fetchCreateActivity,
+	fetchDeleteActivity,
+	fetchEditActivity,
 	addPlaceToTrip
 } from '../tripActions';
 
 import core from '../../core';
 const { PlaceDetail } = core;
 
-import Itinerary from './Itinerary';
+import ActivityItem from './Activity';
 import { makeGetTrip } from '../selector.js';
 
 class PlanBox extends React.Component {
@@ -30,10 +30,10 @@ class PlanBox extends React.Component {
 		id : PropTypes.number.isRequired,
 		title : PropTypes.string.isRequired,
 		memo : PropTypes.string.isRequired,
-		itineraries : PropTypes.array.isRequired,
+		activities : PropTypes.array.isRequired,
 
-		addDay : PropTypes.func.isRequired,
-		deleteDay : PropTypes.func.isRequired
+		addActivity : PropTypes.func.isRequired,
+		deleteActivity : PropTypes.func.isRequired
 	}
 
 	constructor(props) {
@@ -61,11 +61,11 @@ class PlanBox extends React.Component {
 			id,
 			title,
 			memo,
-			itineraries,
+			activities,
 			selectedPlace,
-			addDay,
-			editDay,
-			deleteDay
+			addActivity,
+			editActivity,
+			deleteActivity
 		} = this.props;
 
 		if(isFetching) return null;
@@ -76,17 +76,18 @@ class PlanBox extends React.Component {
 					place={selectedPlace}
 					handleAddPlace={this.handleAddPlace}
 				/>
-				{/*<h4>{title}</h4>*/}
+				<h4>{title}</h4>
 				<p>{memo}</p>
-				{ itineraries.map( (it,index) => 
-					<Itinerary {...it}
+				<button 
+					onClick={() => addActivity(id, selectedPlace.place_id)}
+				>Add Activity</button>
+				{ activities.map( (it,index) => 
+					<ActivityItem {...it}
 						key={index}
-						dayIndex={index+1}
-						handleDelete={() => deleteDay(id, it.id)}
-						handleEdit={(data) => editDay(id, it.id, data)}
+						handleDelete={() => deleteActivity(id, it.id)}
+						handleEdit={(data) => editActivity(id, it.id, data)}
 					/>
 				)}
-				<button onClick={() => addDay(id, {})}>Add a day</button>
 			</div>
 		);
 	}
@@ -105,7 +106,7 @@ const mapStateToProps = (state, props) => {
 		id: -1,
 		title: '',
 		memo: '',
-		itineraries: []
+		activities: []
 	};
 
 	return {
@@ -118,9 +119,15 @@ const mapStateToProps = (state, props) => {
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		addDay : (tripId, data) => dispatch(fetchCreateDay(tripId, data)),
-		editDay: (tripId, itId, data) => dispatch(fetchEditDay(tripId, itId, data)),
-		deleteDay : (tripId, itId) => dispatch(fetchDeleteDay(tripId, itId)),
+		addActivity : (tripId, placeId) => {
+			dispatch(fetchCreateActivity(tripId, placeId));
+		},
+		editActivity: (tripId, activityId, data) => {
+			dispatch(fetchEditActivity(tripId, activityId, data));
+		},
+		deleteActivity : (tripId, activityId) => {
+			dispatch(fetchDeleteActivity(tripId, activityId))
+		}
 	}
 };
 

@@ -2,7 +2,6 @@
 import { combineReducers } from 'redux';
 import { ActionTypes } from './constants';
 import tripReducer from '../trip/reducers/tripReducer';
-import itineraryReducer from '../trip/reducers/itineraryReducer';
 import activityReducer from '../trip/reducers/activityReducer';
 
 const places = (state=[], action) => {
@@ -32,7 +31,6 @@ const selectedPlace = (state={}, action) => {
 
 export default combineReducers({
 	trips: tripReducer,
-	itineraries: itineraryReducer,
 	activities: activityReducer,
 	places,
 	selectedPlace,

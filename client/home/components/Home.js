@@ -13,8 +13,10 @@ import {
 	Link
 } from 'react-router';
 
-import core from '../../core';
-const { actions } = core;
+import trip from '../../trip';
+const {
+	fetchAllTripsIfNeeded
+} = trip.action;
 
 import Navigation from './Navigation';
 
@@ -30,7 +32,7 @@ class Home extends React.Component {
 
 	componentWillMount() {
 		const { dispatch, params } = this.props;
-		dispatch(actions.fetchAllTrips());
+		dispatch(fetchAllTripsIfNeeded());
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -38,7 +40,6 @@ class Home extends React.Component {
 	}
 
 	render() {
-
 		return (
 			<div className='full-height'>
 				<Navigation />

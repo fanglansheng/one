@@ -12,37 +12,31 @@ import {
 	connect
 } from 'react-redux';
 
-import core from '../../core';
+import trip from '../../trip';
+const {
+	getAllTrips
+} = trip.selector;
+
 const {
   fetchCreateTrip,
   fetchDeleteTrip,
   selectTrip
-} = core;
-
-import trip from '../../trip';
-const {
-	makeGetAllTrips
-} = trip.selector;
+} = trip.action;
 
 import moment from 'moment';
-
-import CreateTripForm from './CreateTripForm';
 
 const formatDate = date => moment(date).local().format('MM/DD/YYYY');
 
 const TripItem = (props) => {
 	// const start = formatDate(props.startDate);
 	// const end = formatDate(props.endDate);
-	const dayLength = props.itineraries.length;
-	const suffix = dayLength > 1 ? 's' : '';
-	const title = `${dayLength} day${suffix} Trip ${props.title}`;
 	return (
 		<div>
 			<Link
 				to={`/trip/${props.id}`}
 				onClick={props.handleClick}
-			> {title} </Link>
-			<button onClic={props.handleDelete}></button>
+			> {props.title} </Link>
+			<button onClick={props.handleDelete}>Delete</button>
 			<div> {props.memo} </div>
 		</div>
 	);
@@ -61,13 +55,15 @@ class TripBox extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			showCreateForm : false
+			title : ''
 		};
 	}
 
-	handleShowForm = () => this.setState({showCreateForm: true})
-	handleHideForm = () => this.setState({showCreateForm: false})
-
+	handleSubmit = () => {
+		const { title } = this.state;
+		this.props.addTrip({title});
+	}
+	
 	render(){
 		const {
 			trips,
@@ -78,22 +74,22 @@ class TripBox extends React.Component {
 		} = this.props;
 
 		const {
-			showCreateForm
+			title
 		} = this.state;
 
 		if(isFetching) return null;
 
 		return (
 			<div className='content-box'>
-				<button onClick={this.handleShowForm}>
-					Create New Trip
-				</button>
-				{ showCreateForm && 
-					<CreateTripForm 
-						onSubmit={addTrip}
-						onClose={this.handleHideForm}
+				<div>
+					<label>New Trip</label>
+					<input
+						type="text"
+						value={title}
+						onChange={e => this.setState({title:e.target.value})}
 					/>
-				}
+					<button onClick={this.handleSubmit}>Create</button>
+				</div>
 				<div>
 					{trips.map((trip,key) => 
 						<TripItem
@@ -113,7 +109,6 @@ const mapStateToProps = (state, props) => {
 		isFetching
 	} = state.trips;
 
-	const getAllTrips = makeGetAllTrips();
 	return {
 		isFetching,
 		trips : getAllTrips(state)

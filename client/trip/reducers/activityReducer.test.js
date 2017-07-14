@@ -4,16 +4,16 @@ const {
 	ReducerFactory
 } = core.constants;
 
-import itineraries from './itineraryReducer';
+import activities from './activityReducer';
 import expect from 'expect';
 
 const initialState = {
-	currentItineraryId: -1,
+	currentActivityId: -1,
 	allItems: [],
 	byId: {},
 };
 
-const mockItineray = {
+const mockActivity = {
 	"id": 1, 
 	"date": "2017-01-01", 
 	"trip_id": 1,
@@ -24,54 +24,54 @@ const mockTrip= {
 	"name": 'Hello', 
 	"memo": 'momo',
 	"id": 1, 
-	"itineraries": [1]
+	"activities": [1]
 };
 
-describe('itineray reducer', () => {
+describe('activity reducer', () => {
 
 	test('should return initial state', () => {
-		expect(itineraries(undefined, {})).toEqual(initialState);
+		expect(activities(undefined, {})).toEqual(initialState);
 	});
 
 	test('should handle RECEIVE_TRIPS', () => {
 
-		expect(itineraries(initialState, {
+		expect(activities(initialState, {
 			type: ActionTypes.RECEIVE_TRIPS,
 			allItems: [1],
 			trips: {'1': mockTrip },
-			itineraries: {'1': mockItineray}
+			activities: {'1': mockActivity}
 		})).toEqual({
 			...initialState,
 			allItems: [1],
-			byId: {'1': mockItineray}
+			byId: {'1': mockActivity}
 		});
 	});
 
-	test('should handle ADD_DAY, add new day to trip', () => {
+	test('should handle ADD_ACTIVITY, add new one to trip', () => {
 		expect(
-			itineraries(initialState, {
-				type: ActionTypes.ADD_DAY,
-				itinerary: mockItineray,
-				itineraryId: 1,
+			activities(initialState, {
+				type: ActionTypes.ADD_ACTIVITY,
+				activity: mockActivity,
+				activityId: 1,
 				tripId: 1
 			})
 		).toEqual({
 			...initialState,
 			allItems:[1],
-			byId : { '1': mockItineray }
+			byId : { '1': mockActivity }
 		});
 	});
 
-	test('should handle DEL_DAY', () => {
+	test('should handle DEL_ACTIVITY', () => {
 		expect(
-			itineraries({
+			activities({
 				...initialState,
 				allItems:[1],
-				byId : { '1': mockItineray }
+				byId : { '1': mockActivity }
 			}, {
-				type: ActionTypes.DEL_DAY,
+				type: ActionTypes.DEL_ACTIVITY,
 				tripId: 1,
-				itineraryId: 1
+				activityId: 1
 			})
 		).toEqual(initialState);
 	});

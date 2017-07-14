@@ -30,6 +30,7 @@
     "morgan": "~1.8.1",
     "normalizr": "^3.2.3",
     "pug": "~2.0.0-beta11",
+    "rc-time-picker": "^2.4.1",
     "react": "^15.6.1",
     "react-addons-shallow-compare": "^15.6.0",
     "react-dates": "^8.2.1",

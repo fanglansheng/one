@@ -1,4 +1,4 @@
-// import * as action from './fileActions';
+import * as action from './tripActions';
 import * as selector from './selector';
 // containers
 // import App from './containers/App';
@@ -9,6 +9,7 @@ import TripPlan from './containers/TripPlan';
 
 export default {
 	selector,
+	action,
 	
 	TripPlan
 };

@@ -15,7 +15,7 @@ const initialState = {
 	byId: {},
 };
 
-const mockItineray = {
+const mockActivity = {
 	"id": 1, 
 	"date": "2017-01-01", 
 	"trip_id": 1,
@@ -26,7 +26,7 @@ const mockTrip= {
 	"name": 'Hello', 
 	"memo": 'momo',
 	"id": 1, 
-	"itineraries": [1]
+	"activities": [1]
 };
 
 describe('trip reducer', () => {
@@ -51,7 +51,7 @@ describe('trip reducer', () => {
 			type: ActionTypes.RECEIVE_TRIPS,
 			allItems: [1],
 			trips: normalizedTrips,
-			itineraries: {'1': mockItineray}
+			activities: {'1': mockActivity}
 		})).toEqual({
 			...initialState,
 			allItems: [1],
@@ -59,15 +59,15 @@ describe('trip reducer', () => {
 		});
 	});
 
-	test('should handle ADD_DAY, add new day to trip', () => {
+	test('should handle ADD_ACTIVITY, add new day to trip', () => {
 		expect(
 			trips({
 				...initialState,
 				allItems: [1],
 				byId: {'1': mockTrip }
 			}, {
-				type: ActionTypes.ADD_DAY,
-				itinerary: { ...mockItineray, id: 2},
+				type: ActionTypes.ADD_ACTIVITY,
+				activity: { ...mockActivity, id: 2},
 				tripId: 1
 			})
 		).toEqual({
@@ -76,13 +76,13 @@ describe('trip reducer', () => {
 			byId:{
 				'1': { 
 					...mockTrip, 
-					itineraries: [1,2]
+					activities: [1,2]
 				}
 			}
 		});
 	});
 
-	test('should handle DEL_DAY', () => {
+	test('should handle DEL_ACTIVITY', () => {
 		expect(
 			trips({
 				...initialState,
@@ -90,13 +90,13 @@ describe('trip reducer', () => {
 				byId:{
 					'1': { 
 						...mockTrip, 
-						itineraries: [1,2]
+						activities: [1,2]
 					}
 				}
 			}, {
-				type: ActionTypes.DEL_DAY,
+				type: ActionTypes.DEL_ACTIVITY,
 				tripId: 1,
-				itineraryId: 2
+				activityId: 2
 			})
 		).toEqual({
 			...initialState,
