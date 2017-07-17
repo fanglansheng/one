@@ -76,7 +76,7 @@ export const fetchCreateActivity = (tripId, placeId) => dispatch => {
 	return fetch(`${Host}/trip/${tripId}/activity`, init)
 		.then(handleResponse)
 		.then(json => {
-			dispatch(addActivity(tripId, json.initerary));
+			dispatch(addActivity(tripId, json.activity));
 		});
 };
 
@@ -91,7 +91,7 @@ export const fetchEditActivity = (tripId, itId, postData) => dispatch => {
 	return fetch(`${Host}/activity/${itId}`, init)
 		.then(handleResponse)
 		.then(json => {
-			dispatch(editActivity(tripId, json.initerary));
+			dispatch(editActivity(tripId, json.activity));
 		});
 };
 

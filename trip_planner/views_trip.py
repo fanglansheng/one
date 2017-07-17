@@ -3,6 +3,7 @@ import sys
 import requests
 from flask import jsonify, render_template, request, make_response
 # from flask_login import login_required, current_user
+from datetime import datetime,timedelta
 
 from sqlalchemy import and_, or_
 from trip_planner import app
@@ -125,13 +126,20 @@ def edit_activity(it_id):
 	if request.method == 'POST':
 		data = request.json
 		# check form field
-		if 'date' in data: 
-			act_datetime = datetime.strptime(data['date'], "%Y%m%d").date()
-			activity.date = act_datetime
+		if 'datetime' in data: 
+			t = data['datetime']
+			ret = datetime.strptime(t[0:16],'%Y-%m-%dT%H:%M')
+			if t[18]=='+':
+				ret-=timedelta(hours=int(t[19:22]),minutes=int(t[23:]))
+			elif t[18]=='-':
+				ret+=timedelta(hours=int(t[19:22]),minutes=int(t[23:]))
+			activity.date = ret
 		if 'memo' in data:
 			activity.memo = data['memo']
 		if 'duration' in data:
 			activity.duration = data['duration']
+		if 'place_id' in data:
+			activity.place_id = data['place_id']
 
 		db.session.commit()
 	return jsonify({ 'activity': activity.to_json() })

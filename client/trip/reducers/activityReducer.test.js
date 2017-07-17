@@ -52,7 +52,6 @@ describe('activity reducer', () => {
 			activities(initialState, {
 				type: ActionTypes.ADD_ACTIVITY,
 				activity: mockActivity,
-				activityId: 1,
 				tripId: 1
 			})
 		).toEqual({

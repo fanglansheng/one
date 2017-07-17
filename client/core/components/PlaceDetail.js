@@ -22,14 +22,22 @@ export default class DetailBox extends Component {
       handleAddPlace
   	} = this.props;
     if(!place.name) return null;
+
+    const imgURL = place.photos[0].getUrl({'maxWidth': 380});
   	return(
-  		<div className="info-container">
-  			<h4>{place.name}</h4>
-        <p>{place.formatted_address}</p>
-        <p>Rating: {place.rating} </p>
-        <a href={place.url}>Open in GoogleMap</a>
-  			<button onClick={handleAddPlace}>Add to trip</button>
-        <img src={place.photos[0].getUrl({'maxWidth': 300, 'maxHeight': 200})}/>
+  		<div className='info-box'>
+        <div 
+          className='place-header'
+          style={{ backgroundImage: `url(${imgURL})`}}
+        >
+          <h4>{place.name} <i className='fa fa-star'/> {place.rating}</h4>
+        </div>
+        <div className='place-detail'>
+    			
+          <p><i className='fa fa-map-marker'/> {place.formatted_address}</p>
+          <a href={place.url}>Open in GoogleMap</a>
+    			<button onClick={handleAddPlace}>Add to trip</button>
+        </div>
   		</div>
   	);
   }

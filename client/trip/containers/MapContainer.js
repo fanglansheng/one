@@ -13,7 +13,10 @@ import {
   fetchCreateActivity
 } from '../tripActions';
 
-import { makeGetTrip } from '../selector.js';
+import {
+	makeGetTrip,
+	makeGetCenter
+} from '../selector.js';
 
 import TripMap from '../components/TripMap';
 
@@ -24,19 +27,29 @@ const mapStateToProps = (state, props) => {
 		selectedPlace,
 	} = state;
 
-	const getTrip = makeGetTrip(props.tripId);
-	const trip = getTrip(state);
-	if(!trip){
+	if(!state.trips.allItems.length){
 		return {
 			places: [],
-			selectedPlace
+			selectedPlace,
+			center: window.currentLocation,
+			defaultZoom: 5
 		}
 	}
-	const places = trip.activities.map(a => a.place);
+
+	const getTrip = makeGetTrip(props.tripId);
+	const trip = getTrip(state);
+
+	const activityPlaces = trip.activities.map(a => a.place);
+
+	const getCenter = makeGetCenter(props.tripId);
+	const center = getCenter(state) || window.currentLocation;
+
 	return {
 		...props,
-		places,
+		activityPlaces,
 		selectedPlace,
+		center: center
+		// defaultZoom: 
 	};
 };
 

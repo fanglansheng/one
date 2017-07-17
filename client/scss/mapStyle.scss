@@ -1,3 +1,5 @@
+@import 'variables';
+
 #app {
 	height: 100%;
 }
@@ -33,25 +35,93 @@ html, body {
 }
 
 .map-container{
-	height:40px;
-	// height: 100%;
-	width: 40%;
+	height: 100%;
+	width: 80%;
 	display: inline-block;
 }
 
 .searchbox-input{
-	width: 300px;
+	width: $map-sidebar-width - 20px;
 	height:30px;
+	margin: 10px;
+	position: fixed !important;
 }
 
 .plan-box{
-	display: inline-block;
-	width: 30%;
-	float: right;
+	width: $map-sidebar-width;
+	position: fixed;
+	top: 40px;
+	right: 0px;
+	background: white;
+	height: 100%;
+	overflow: auto;
 }
 
-// .info-container{
-// 	height: 100%;
-// 	width: 35%;
-// 	display: inline-block;
-// }
+.plan-header {
+	h4 {
+		padding: 0px 10px;
+	}
+}
+
+.SingleDatePickerInput{
+	border: none;
+	
+}
+.DateInput{
+	line-height: normal;
+	font-size: inherit;
+	padding: 0px;
+	width: 90px;
+}
+
+
+.time-picker{
+	width: 70px;
+	.rc-time-picker-input{
+		font-size: inherit;
+		border: none;
+		cursor: pointer;
+		font-weight: 200;
+    vertical-align: middle;
+	}
+}
+
+
+.activity-item {
+	padding: 15px;
+	border-bottom: 2px solid whitesmoke;
+	position: relative;
+
+	button {
+		position: absolute;
+		right: 20px;
+		top: 20px;
+		background: none;
+		border: none;
+		color: lightgrey;
+		&:hover{
+			color: black;
+		}
+	}
+
+	.activity-info {
+		padding-left: 10px;
+	}
+}
+
+.info-box {
+	width: $map-sidebar-width;
+}
+
+.place-header {
+	height: 200px;
+	position: relative;
+
+	h4{
+		color: white;
+		text-shadow: #4a4a4a 1px 1px 5px;
+		position: absolute;
+		bottom: 10px;
+		padding: 0px 20px;
+	}
+}

@@ -47,12 +47,11 @@ class PlanBox extends React.Component {
 		this.setState({meme: e.target.value});
 	}
 
-	handleAddPlace = () => {
-		const {
-			dispatch,
-			selectedPlace
-		} = this.props;
-		dispatch(addPlaceToTrip(selectedPlace,null));
+	handleDeleteActivity = (activityId, e) => {
+		e.preventDefault();
+		e.stopPropagation();
+		const {id, deleteActivity} = this.props;
+		deleteActivity(id, activityId);
 	}
 
 	render() {
@@ -74,17 +73,16 @@ class PlanBox extends React.Component {
 			<div className='plan-box'>
 				<PlaceDetail
 					place={selectedPlace}
-					handleAddPlace={this.handleAddPlace}
+					handleAddPlace={() => addActivity(id, selectedPlace.place_id)}
 				/>
-				<h4>{title}</h4>
-				<p>{memo}</p>
-				<button 
-					onClick={() => addActivity(id, selectedPlace.place_id)}
-				>Add Activity</button>
+				<div className='plan-header'>
+					<h4>{title}</h4>
+					<p>{memo}</p>
+				</div>
 				{ activities.map( (it,index) => 
 					<ActivityItem {...it}
 						key={index}
-						handleDelete={() => deleteActivity(id, it.id)}
+						handleDelete={e => this.handleDeleteActivity(it.id, e)}
 						handleEdit={(data) => editActivity(id, it.id, data)}
 					/>
 				)}

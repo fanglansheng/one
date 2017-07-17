@@ -7,5 +7,6 @@ export default {
 	constants,
 	action,
 
-	PlaceDetail
+	PlaceDetail,
+
 };

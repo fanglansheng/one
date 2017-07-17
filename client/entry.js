@@ -29,6 +29,7 @@ const { Home, TripBox } = rootApp;
 import trip from './trip';
 const { TripPlan } = trip;
 
+import 'rc-time-picker/assets/index.css';
 import 'react-dates/lib/css/_datepicker.css';
 import './scss/mapStyle.scss';
 
@@ -42,6 +43,30 @@ const store = createStore(
   )
 );
 
+// set default location
+window.currentLocation = {
+	lat: 39.9375346,
+	lng: 115.837023
+};
+
+// get current location
+if (navigator.geolocation) {
+  const handleSuccess = position => {
+    window.currentLocation = {
+      lat: position.coords.latitude,
+      lng: position.coords.longitude
+    };
+    console.log('----');
+  };
+
+  const handleError = () => {
+    console.error("Error: The Geolocation service failed.");
+  };
+
+  navigator.geolocation.getCurrentPosition(handleSuccess, handleError);
+} else {
+  console.error('Error: Your browser doesn\'t support geolocation.');
+}
 
 ReactDOM.render(
 	<Provider store={store}>

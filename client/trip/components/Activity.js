@@ -12,34 +12,40 @@ import {
 import {
 	SingleDatePicker
 } from 'react-dates';
+import TimePicker from 'rc-time-picker';
 
 import moment from 'moment';
+const format = 'h:mm a';
+const defaultTime = moment().hour(9).minute(0);
+const DatetimeFormat = 'YYYYMMDD HH:mm ZZ';
 
-const EditableBox = (props) => {
-	if(props.focused){
-		return (
-			<input
-				type='text'
-				value={props.value}
-				placeholder={props.placeholder}
-				onChange={props.handleChange}
-				onKeyPress={props.handleSubmit}
-			/>
-		);
-	} else {
-		return (
-			<div onClick={props.showEditInput}>
-				{props.value || 'click to edit'}
-			</div>
-		);
-	}
-};
+const EditableBox = (props) => (
+	<div>
+		<i className='fa fa-pencil'/>{' '}
+		{ props.focused ? (
+				<input
+					type='text'
+					value={props.value}
+					placeholder={props.placeholder}
+					onChange={props.handleChange}
+					onKeyPress={props.handleSubmit}
+				/>
+			):(
+				<span onClick={props.showEditInput}>
+					{props.value || 'click to edit'}
+				</span>
+			)
+		}
+	</div>
+);
 
 export default class ActivityItem extends React.Component {
 
 	static propTypes = {
 		date : PropTypes.any,
 		memo : PropTypes.string,
+		duration : PropTypes.number,
+
 		place : PropTypes.object.isRequired,
 
 		handleDelete: PropTypes.func.isRequired,
@@ -48,9 +54,16 @@ export default class ActivityItem extends React.Component {
 
 	constructor(props) {
 		super(props);
+		let dateTime = null;
+		if(props.date){
+			console.log(props.date);
+			dateTime = moment(props.date);
+		}
+
 		this.state = {
-			date : props.date ? moment(props.date) : null,
+			datetime : dateTime,
 			memo : props.memo || '',
+			duration : props.duration || 1,
 			memoFocused: false,
 			dateFocused: false
 		};
@@ -72,10 +85,58 @@ export default class ActivityItem extends React.Component {
 	}
 
 	handleDateSubmit = date => {
-		this.setState({ date });
-		this.props.handleEdit({
-			date: date.format('YYYYMMDD')
-		});
+		// set date of datetime
+		const _y = date.year();
+		const _m = date.month();
+		const _d = date.date();
+
+		const { datetime } = this.state;
+		let newDate;
+
+		if(!datetime){
+			this.setState({ datetime: date });
+			newDate = date;
+
+		} else {
+			newDate = this.state.datetime;
+			newDate.set({ year: _y, month: _m, date: _d });
+
+			this.setState({ datetime: newDate });
+		}
+
+		const offset = this.props.place.utc_offset;
+
+		newDate = newDate.utcOffset(offset).format();
+
+		this.props.handleEdit({ datetime: newDate });
+	}
+
+	handleTimeChange = time => {
+		// change the time of datetime
+		const _h = time.hour();
+		const _m = time.minute();
+
+		const { datetime } = this.state;
+
+		let newTime;
+
+		if(!datetime){
+
+			this.setState({ datetime: time });
+			newTime = time;
+
+		} else {
+			newTime = this.state.datetime;
+			newTime.set({ hour: _h, minute: _m });
+			this.setState({ datetime: newTime });
+		}
+
+		// local to utc
+		const offset = this.props.place.utc_offset;
+
+		newTime = newTime.utcOffset(offset).format();
+
+		this.props.handleEdit({ datetime: newTime });
 	}
 
 	render() {
@@ -85,7 +146,8 @@ export default class ActivityItem extends React.Component {
 		} = this.props;
 
 		const {
-			date,
+			datetime,
+			duration,
 			memo,
 			memoFocused,
 			dateFocused
@@ -93,23 +155,39 @@ export default class ActivityItem extends React.Component {
 
 		return (
 			<div className='activity-item'>
+				<button onClick={handleDelete}>
+					<i className='fa fa-times'/>
+				</button>
+
 				<SingleDatePicker
 					numberOfMonths={1}
-					date={date}
+					date={datetime}
 					focused={dateFocused}
 					onDateChange={this.handleDateSubmit}
 					onFocusChange={({focused}) => this.setState({ dateFocused:focused })}
 				/>
-				<h5>{place.name}</h5>
-				<EditableBox
-					focused={memoFocused}
-					value={memo}
-					placeholder='edit'
-					handleSubmit={this.handleMemoSubmit}
-					handleChange={e => this.setState({memo: e.target.value})}
-					showEditInput={() => this.setState({memoFocused: true})}
+				<TimePicker
+					className='time-picker'
+					placeholder='Time'
+					showSecond={false}
+					value={datetime}
+					onChange={this.handleTimeChange}
+					format={format}
+					use12Hours
 				/>
-				<button onClick={handleDelete}>delete</button>
+
+				<div className='activity-info'>
+					<h5>{place.name}</h5>
+					
+					<EditableBox
+						focused={memoFocused}
+						value={memo}
+						placeholder='edit'
+						handleSubmit={this.handleMemoSubmit}
+						handleChange={e => this.setState({memo: e.target.value})}
+						showEditInput={() => this.setState({memoFocused: true})}
+					/>
+				</div>
 			</div>
 		);
 	}

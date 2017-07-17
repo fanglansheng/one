@@ -47,4 +47,28 @@ export const makeGetTrip = (tripId) => createSelector(
   }
 );
 
+// generate the center of map
+export const makeGetCenter = (tripId) => createSelector(
+  makeGetTrip(tripId),
+  (trip) => {
+    if(!trip) return null;
+
+    const locations = trip.activities.map(a => a.place.geometry.location);
+
+    if(!locations.length) return null;
+
+    let newLoc = locations.reduce((sum, location)=>{
+      return {
+        lat: sum.lat + location.lat,
+        lng: sum.lng + location.lng
+      }
+    }, {lat:0, lng:0});
+
+    newLoc.lng = newLoc.lng / locations.length;
+    newLoc.lat = newLoc.lat / locations.length;
+    return newLoc;
+  }
+);
+
+
 

@@ -31,7 +31,7 @@ const allItems = (state=[], action) => {
 		case ActionTypes.ADD_ACTIVITY:
 			return [
 				...state,
-				action.activityId
+				action.activity.id
 			];
 
 		case ActionTypes.DEL_ACTIVITY:
@@ -58,7 +58,7 @@ const byId = (state={}, action) => {
 		case ActionTypes.ADD_ACTIVITY:
 			return {
 				...state,
-				[action.activityId]: action.activity
+				[action.activity.id]: action.activity
 			};
 
 		case ActionTypes.DEL_ACTIVITY:
