@@ -38,7 +38,10 @@ const addActivity = (state, action) => {
 		...state,
 		[tripId] : {
 			...trip,
-			activities: trip.activities.concat(activity.id)
+			activities: [
+				activity.id,
+				...trip.activities
+			]
 		}
 	};
 };

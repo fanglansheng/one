@@ -1,112 +1,127 @@
-import {
-  default as React,
-  Component,
-  PropTypes
-} from 'react';
+import { default as React, Component, PropTypes } from "react";
 
-import {
-  withGoogleMap,
-  GoogleMap,
-  Marker,
-} from "react-google-maps";
+// components
+import GoogleMapInstance from "./GoogleMapInstance";
 
-import SearchBox from 'react-google-maps/lib/places/SearchBox';
-
-const mapWdith = window.innerWidth - 380;
-
-const ContainerBox = (<div className="map-container" />);
-const MapBox = (
-  <div style={{ height: `100%`, width: `${mapWdith}px`}} />
-);
-
-const SearchBarPosition = google.maps.ControlPosition.TOP_RIGHT;
-
-const StarIcon = {
-  // path: 'M 125,5 155,90 245,90 175,145 200,230 125,180 50,230 75,145 5,90 95,90 z',
-  path: 'M 25,1 31,18 49,18 35,29 40,46 25,36 10,46 15,29 1,18 19,18 z',
-  fillColor: '#fff100',
-  fillOpacity: 1,
-  scale: 0.3,
-  strokeColor: '#e09f30',
-  strokeWeight: 1
+// set default location
+const defaultCenter = {
+  lat: +window.localStorage.getItem("lat") || 39.9375346,
+  lng: +window.localStorage.getItem("lng") || 115.837023
 };
 
-const TripMap = withGoogleMap(props => (
-  <GoogleMap
-    ref={props.onMapLoad}
-    defaultZoom={5}
-    defaultCenter={props.center}
-    onClick={props.onMapClick}
-    onBoundsChanged={props.onSetBounds}
-  >
-    <SearchBox
-      inputClassName='searchbox-input'
-      ref={props.onSearchBoxLoad}
-      bounds={props.bounds}
-      inputPlaceholder="Customized your placeholder"
-      controlPosition={SearchBarPosition}
-      onPlacesChanged={props.onPlacesChanged}
-    />
-    {props.resultPlaces.map( (place, key) => 
-      <Marker
-        defaultAnimation={2}
-        position={place.geometry.location}
-        key={place.place_id}
-        onClick={() => props.onClickMarker(place)}
-        onRightClick={() => props.onMarkerRightClick(place)}
-      />
-    )}
-    {props.activityPlaces.map( (place, key) => 
-      <Marker
-        defaultAnimation={2}
-        position={place.geometry.location}
-        key={place.place_id}
-        icon={StarIcon}
-        label={(key+1).toString()}
-        onClick={() => props.onClickMarker(place)}
-        onRightClick={() => props.onMarkerRightClick(place)}
-      />
-    )}
-  </GoogleMap>
-));
+const PlanBoxWidth = 380;
+const MapWdith = window.innerWidth - PlanBoxWidth;
+
+const compairArray = (a, b) => {
+  if (a.length !== b.length) return false;
+  for (let i = 0; i < a.length; i++) {
+    if (a[i].place_id !== b[i].place_id) {
+      return false;
+    }
+  }
+  return true;
+};
 
 export default class TripMapBox extends Component {
-
   static propTypes = {
-    center: PropTypes.object.isRequired,
-    activityPlaces : PropTypes.array,
+    activityPlaces: PropTypes.array,
 
-    selectMarker: PropTypes.func.isRequired,
-    addActivity: PropTypes.func.isRequired
-  }
+    selectMarker: PropTypes.func.isRequired
+  };
 
-  constructor(props){
+  constructor(props) {
     super(props);
+
     this.state = {
+      zoom: 8,
+      center: defaultCenter,
       // hold search place result
       resultPlaces: [],
       // the search area bound of search box
       bounds: new google.maps.LatLngBounds()
     };
+
+    this.initialMapCenter();
   }
 
+  componentWillReceiveProps(nextProps) {
+    const { activityPlaces } = nextProps;
+    if (!compairArray(activityPlaces, this.props.activityPlaces)) {
+      this.setActivitiesCenter(activityPlaces);
+    }
+  }
+
+  initialMapCenter = () => {
+    // check current location in local storage
+    const lat = window.localStorage.getItem("lat");
+    const lng = window.localStorage.getItem("lng");
+    // get current location if not in local storage
+    if (!lat || (!lat && navigator.geolocation)) {
+      if (!navigator.geolocation) {
+        console.error("Error: Your browser doesn't support geolocation.");
+        return;
+      }
+
+      const handleSuccess = position => {
+        this.setState({
+          center: {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          }
+        });
+
+        try {
+          window.localStorage.setItem("lat", position.coords.latitude);
+          window.localStorage.setItem("lng", position.coords.longitude);
+        } catch (error) {
+          // ignore the error
+          console.log("ignore the error");
+        }
+      };
+
+      const handleError = () => {
+        console.error("The Geolocation service failed.");
+      };
+
+      navigator.geolocation.getCurrentPosition(handleSuccess, handleError);
+    }
+  };
+
+  setActivitiesCenter = activityPlaces => {
+    if (activityPlaces.length === 0) return null;
+
+    let bounds = new google.maps.LatLngBounds();
+
+    activityPlaces.forEach(place => {
+      // Only geocodes have viewport.
+      const positino = place.geometry.location;
+      const location = new google.maps.LatLng(positino.lat, positino.lng);
+      bounds.extend(location);
+    });
+
+    this.setState({
+      center: bounds.getCenter().toJSON(),
+      zoom: 8
+    });
+  };
+
   // save the map object
-  handleMapLoad = (map) => {
+  handleMapLoad = map => {
     this._mapComponent = map;
     if (map) {
       console.log(map.getZoom());
     }
-  }
+  };
 
   // save the searchbox object
-  handleSearchBoxLoad = (searchbox) => {
+  handleSearchBoxLoad = searchbox => {
     this._searchBoxComponent = searchbox;
-    if(searchbox) {
+    if (searchbox) {
       console.log(searchbox);
     }
-  }
+  };
 
-  handleMapClick = (event) => {
+  handleMapClick = event => {
     // const nextMarkers = [
     //   ...this.state.markers,
     //   {
@@ -118,27 +133,28 @@ export default class TripMapBox extends Component {
     // this.setState({
     //   markers: nextMarkers,
     // });
-
     // if (nextMarkers.length === 3) {
     //   this.props.toast(
     //     `Right click on the marker to remove it`,
     //     `Also check the code!`
     //   );
     // }
-  }
+  };
 
-  handleMarkerRightClick = (targetMarker) => {
+  handleMarkerRightClick = targetMarker => {
     /*
      * All you modify is data, and the view is driven by data.
      * This is so called data-driven-development. (And yes, it's now in
      * web front end and even with google maps API.)
      */
-    const nextMarkers = this.state.markers.filter(marker => marker !== targetMarker);
+    const nextMarkers = this.state.markers.filter(
+      marker => marker !== targetMarker
+    );
     this.setState({
-      markers: nextMarkers,
+      markers: nextMarkers
     });
-  }
-  
+  };
+
   handlePlaceChanged = () => {
     const resultPlaces = this._searchBoxComponent.getPlaces();
     if (resultPlaces.length == 0) return;
@@ -149,8 +165,7 @@ export default class TripMapBox extends Component {
     // For each place, get the icon, name and location.
     let bounds = new google.maps.LatLngBounds();
 
-    resultPlaces.forEach((place) => {
-
+    resultPlaces.forEach(place => {
       if (!place.geometry) {
         console.log("Returned place contains no geometry");
         return;
@@ -162,48 +177,45 @@ export default class TripMapBox extends Component {
       } else {
         bounds.extend(place.geometry.location);
       }
-
     });
 
-    this.setState({resultPlaces});
+    this.setState({ resultPlaces });
     this._mapComponent.fitBounds(bounds);
-  }
+  };
 
-  // Bias the SearchBox results towards current map's viewport. 
+  // Bias the SearchBox results towards current map's viewport.
   // Search in current area
   handleBoundChanged = () => {
     const bounds = this._mapComponent.getBounds();
     this.setState({ bounds });
-  }
+  };
 
   render() {
+    const style = { height: `100%`, width: `${MapWdith}px` };
     return (
-      <TripMap
-        containerElement={ContainerBox}
-        mapElement={MapBox}
-
-        center={this.props.center}
+      <GoogleMapInstance
+        containerElement={<div className="map-container" />}
+        mapElement={<div style={style} />}
+        zoom={this.state.zoom}
+        center={this.state.center}
         bounds={this.state.bounds}
+        directions={this.props.directions}
         resultPlaces={this.state.resultPlaces}
         activityPlaces={this.props.activityPlaces}
-
         onMapLoad={this.handleMapLoad}
         onSearchBoxLoad={this.handleSearchBoxLoad}
-
         onMapClick={this.handleMapClick}
-        
         onMarkerRightClick={this.handleMarkerRightClick}
         onClickMarker={this.props.selectMarker}
         // set search place result
         onPlacesChanged={this.handlePlaceChanged}
         // bind google map bound to search range
         onSetBounds={this.handleBoundChanged}
-        
       />
     );
   }
 }
 
 TripMapBox.defaultProps = {
-  activityPlaces : []
+  activityPlaces: []
 };

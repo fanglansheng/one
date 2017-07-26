@@ -1,0 +1,11 @@
+@import '../../scss/variables';
+
+.plan-side-bar {
+  width: $map-sidebar-width;
+  position: fixed;
+  top: 40px;
+  right: 0px;
+  background: white;
+  height: 100%;
+  overflow: auto;
+}

@@ -1,12 +1,7 @@
-import * as constants from './constants';
-import * as action from './defaultActions';
-
-import PlaceDetail from './components/PlaceDetail';
+import * as constants from "./constants";
+import * as action from "./defaultActions";
 
 export default {
-	constants,
-	action,
-
-	PlaceDetail,
-
+  constants,
+  action
 };

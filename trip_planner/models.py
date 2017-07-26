@@ -59,7 +59,7 @@ class Trip(db.Model):
 	# user = db.relationship('User', backref='places')
 	title = db.Column(db.String(80), nullable=False)
 	memo = db.Column(db.String(500), default='')
-	activities = db.relationship('Activity', backref='trip')
+	activities = db.relationship('Activity', backref='trip', lazy='dynamic')
 
 	def __init__(self, title, memo):
 		self.title = title
@@ -73,7 +73,9 @@ class Trip(db.Model):
 		data['id'] = self.id
 		data['title'] = self.title
 		data['memo'] = self.memo
-		data['activities'] = [i.to_json() for i in self.activities]
+		# trips = Trip.query.order_by(desc(File.time)).all()
+		activities = self.activities.order_by(Activity.date.asc()).all()
+		data['activities'] = [i.to_json() for i in activities]
 		return data
 
 class Activity(db.Model):
@@ -93,7 +95,7 @@ class Activity(db.Model):
 			self.date = date
 
 	def __repr__(self):
-		return "<Trip(name='%s')>" % (self.title)
+		return "<Trip(place='%s',time='%s')>" % (self.place_id, self.date)
 
 	def to_json(self):
 		data = dict()

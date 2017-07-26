@@ -4,21 +4,6 @@ import { ActionTypes } from './constants';
 import tripReducer from '../trip/reducers/tripReducer';
 import activityReducer from '../trip/reducers/activityReducer';
 
-const places = (state=[], action) => {
-	const { type } = action;
-	switch (type) {
-
-		case ActionTypes.ADD_PLACE:
-			return [...state, action.place];
-
-		case ActionTypes.RMV_PLACE:
-			return state.filter(place=> place!=action.place);
-
-		default:
-			return state;
-	}
-};
-
 const selectedPlace = (state={}, action) => {
 	const { type } = action;
 	switch (type) {
@@ -32,6 +17,5 @@ const selectedPlace = (state={}, action) => {
 export default combineReducers({
 	trips: tripReducer,
 	activities: activityReducer,
-	places,
 	selectedPlace,
 });

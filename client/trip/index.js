@@ -1,15 +1,15 @@
-import * as action from './tripActions';
-import * as selector from './selector';
+import * as action from "./tripActions";
+import * as selector from "./selector";
 // containers
 // import App from './containers/App';
 
 // compontents
 // import  from './components/Home';
-import TripPlan from './containers/TripPlan';
+import TripPlanContainer from "./containers/TripPlanContainer";
 
 export default {
-	selector,
-	action,
-	
-	TripPlan
+  selector,
+  action,
+
+  TripPlanContainer
 };

@@ -9,8 +9,6 @@ from sqlalchemy import and_, or_
 from trip_planner import app
 from trip_planner.models import *
 
-
-
 # POST /trip
 #		Create a new trip
 #		json : {
@@ -32,10 +30,11 @@ def trip():
 		db.session.commit()
 		# redirect to the page to edit
 		return jsonify(new_trip.to_json())
+	else:
 
-	trips = Trip.query.all()
-	dic = {}
-	dic['trips'] = [trip.to_json() for trip in trips]
+		trips = Trip.query.all()
+		dic = dict()
+		dic['trips'] = [t.to_json() for t in trips]
 	return jsonify(dic)
 
 

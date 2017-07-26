@@ -23,30 +23,6 @@ export const selectMarker = (place) => {
 	}
 };
 
-export const addPlaceToTrip = (place, trip) => {
-	return {
-		type: ActionTypes.ADD_PLACE,
-		place,
-		trip
-	};
-};
-
-export const selectTrip = (tripId) => ({
-	type: ActionTypes.SET_CURRENT_TRIP,
-	id: tripId
-});
-
-const receiveTrips = (allItems, entities) => ({
-	type: ActionTypes.RECEIVE_TRIPS,
-	allItems,
-	...entities
-});
-
-const addTrip = (trip) => ({
-	type: ActionTypes.ADD_TRIP,
-	trip
-});
-
 
 const selectActivity = activityId => ({
 	type: ActionTypes.SET_CURRENT_ACTIVITY,
@@ -117,6 +93,23 @@ export const fetchDeleteActivity = (tripId, activityId) => dispatch => {
 
 
 ////////////////trips
+
+export const selectTrip = (tripId) => ({
+	type: ActionTypes.SET_CURRENT_TRIP,
+	id: tripId
+});
+
+const receiveTrips = (allItems, entities) => ({
+	type: ActionTypes.RECEIVE_TRIPS,
+	allItems,
+	...entities
+});
+
+const addTrip = (trip) => ({
+	type: ActionTypes.ADD_TRIP,
+	trip
+});
+
 export const fetchTripIfNeeded = tripId => (dispatch, getState) => {
 	if (shouldFetch(getState(), 'trips')) {
 		return dispatch(fetchTrip(tripId));
