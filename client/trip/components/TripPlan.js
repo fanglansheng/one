@@ -1,17 +1,22 @@
-import { default as React, PropTypes } from "react";
+import React from "react";
+import PropTypes from "prop-types";
 
 // components
 import TripMap from "./TripMap";
 import Itinerary from "./Itinerary";
 import PlaceInfo from "./PlaceInfo";
 
+import { Tab, Tabs } from "react-bootstrap";
+
 export default class TripPlan extends React.Component {
   static propTypes = {
-    tripId: PropTypes.string.isRequired,
+    currentTrip: PropTypes.object.isRequired,
     activityPlaces: PropTypes.array.isRequired,
     // functions
     selectMarker: PropTypes.func.isRequired,
-    addActivity: PropTypes.func.isRequired
+    addActivity: PropTypes.func.isRequired, //addActivity(object)
+    editActivity: PropTypes.func.isRequired,
+    delActivity: PropTypes.func.isRequired
   };
 
   constructor(props) {
@@ -22,7 +27,7 @@ export default class TripPlan extends React.Component {
     };
   }
 
-  calculateAndDisplayRoute = () => {
+  calculateRoute = travelMode => {
     const { activityPlaces } = this.props;
     const directionsService = new google.maps.DirectionsService();
 
@@ -41,7 +46,7 @@ export default class TripPlan extends React.Component {
       {
         origin: activityPlaces[0].geometry.location,
         destination: activityPlaces[last].geometry.location,
-        travelMode: google.maps.TravelMode.DRIVING,
+        travelMode: travelMode,
         waypoints: waypoints,
         optimizeWaypoints: true,
         provideRouteAlternatives: true
@@ -61,28 +66,45 @@ export default class TripPlan extends React.Component {
 
   render() {
     const { directions } = this.state;
-    const { tripId, activityPlaces, addActivity, selectedPlace } = this.props;
+    const {
+      currentTrip,
+      activityPlaces,
+      addActivity,
+      editActivity,
+      delActivity,
+      selectedPlace,
+      selectMarker
+    } = this.props;
 
+    const routes = directions ? directions.routes[0].legs : [];
     return (
       <div className="full-height">
         {/* Map */}
         <TripMap
           directions={directions}
           activityPlaces={activityPlaces}
-          selectMarker={this.props.selectMarker}
+          selectMarker={selectMarker}
         />
 
         {/* Information and activity */}
-        <div className="plan-side-bar">
-          <div>
-            <button onClick={this.calculateAndDisplayRoute}>show route</button>
-          </div>
-          <PlaceInfo
-            place={selectedPlace}
-            handleAddPlace={() => addActivity(tripId, selectedPlace.place_id)}
-          />
-          <Itinerary directions={directions} />
-        </div>
+        <Tabs id="plan-sidebar" defaultActiveKey={1}>
+          <Tab eventKey={1} title="Itinerary">
+            <Itinerary
+              {...currentTrip}
+              routes={routes}
+              handleEditItinerary={() => {}}
+              editActivity={editActivity}
+              delActivity={delActivity}
+              handleCalculateRoute={this.calculateRoute}
+            />
+          </Tab>
+          <Tab eventKey={2} title="Place Detail">
+            <PlaceInfo
+              place={selectedPlace}
+              handleAddPlace={() => addActivity(selectedPlace.place_id)}
+            />
+          </Tab>
+        </Tabs>
       </div>
     );
   }

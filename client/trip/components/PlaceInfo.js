@@ -1,38 +1,86 @@
-import { default as React, Component, PropTypes } from "react";
+import React from "react";
+import PropTypes from "prop-types";
 
-export default class PlaceInfo extends Component {
+import { Carousel } from "react-bootstrap";
+
+export default class PlaceInfo extends React.Component {
   static propTypes = {
-    place: PropTypes.any.isRequired,
+    // the selected place
+    place: PropTypes.object,
     handleAddPlace: PropTypes.func.isRequired
   };
 
   constructor(props) {
     super(props);
-    this.state = {};
+
+    this.state = {
+      index: 0,
+      direction: null
+    };
+  }
+
+  handleSelectPhoto = (selectedIndex, e) => {
+    this.setState({
+      index: selectedIndex,
+      direction: e.direction
+    });
+  };
+
+  renderPhotos() {
+    const { place } = this.props;
+    if (place.photos) {
+      return place.photos.map((photo, keyIndex) => {
+        const imgURL = photo.getUrl({ maxWidth: 380 });
+        return (
+          <Carousel.Item key={keyIndex}>
+            <img src={imgURL} />
+          </Carousel.Item>
+        );
+      });
+    }
   }
 
   render() {
     const { place, handleAddPlace } = this.props;
-    if (!place.name) return null;
+    const { index, direction } = this.state;
+    if (!place) return <div className="info-box">No place selected</div>;
 
-    const imgURL = place.photos[0].getUrl({ maxWidth: 380 });
     return (
       <div className="info-box">
-        <div
-          className="place-header"
-          style={{ backgroundImage: `url(${imgURL})` }}
+        {/* <div className="place-header">
+            //style={{ backgroundImage: `url(${imgURL})` }}
+            {this.renderPhotos()}
+          </div> */}
+        <Carousel
+          indicators={false}
+          activeIndex={index}
+          direction={direction}
+          obSelect={this.handleSelectPhoto}
         >
+          {this.renderPhotos()}
+        </Carousel>
+
+        <div className="place-detail">
           <h4>
             {place.name} <i className="fa fa-star" /> {place.rating}
           </h4>
-        </div>
-        <div className="place-detail">
           <p>
             <i className="fa fa-map-marker" /> {place.formatted_address}
           </p>
+          <p>
+            {/* website */}
+            <i className="fa fa-map-marker" /> {place.formatted_address}
+          </p>
+          <p>
+            {/* open hour if exit.*/}
+            <i className="fa fa-clock" /> {place.formatted_address}
+          </p>
+
           <a href={place.url}>Open in GoogleMap</a>
-          <button onClick={handleAddPlace}>Add to trip</button>
         </div>
+
+        {/* place type */}
+        <button onClick={handleAddPlace}>Add to trip</button>
       </div>
     );
   }

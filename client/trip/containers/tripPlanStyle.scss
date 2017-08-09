@@ -1,6 +1,6 @@
 @import '../../scss/variables';
 
-.plan-side-bar {
+#plan-sidebar {
   width: $map-sidebar-width;
   position: fixed;
   top: 40px;
@@ -8,4 +8,7 @@
   background: white;
   height: 100%;
   overflow: auto;
+}
+
+.plan-navbar {
 }

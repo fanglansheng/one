@@ -10,6 +10,7 @@ export const ActionTypes = keyMirror({
   // map
   GET_ROUTE: null,
   CLICK_MARKER: null,
+  SET_TRAVEL_MODE: null,
 
   // trip
   SET_CURRENT_TRIP: null,
@@ -31,20 +32,6 @@ export const ActionTypes = keyMirror({
 export const DefaultCenter = {
   lat: 39.9375346,
   lng: 115.837023
-};
-
-export const ReducerFactory = {
-  createToggle: (toggleType = "") => (state = false, action) => {
-    return action.type == toggleType;
-  },
-
-  createCurrentIdWithName: (name = "") => (state = -1, action) => {
-    if (action.type == `SET_CURRENT_${name}`) {
-      return action.id;
-    } else {
-      return state;
-    }
-  }
 };
 
 export const handleResponse = response => {

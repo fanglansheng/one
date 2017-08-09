@@ -6,6 +6,8 @@ import { connect } from "react-redux";
 import {
   selectMarker,
   fetchTripIfNeeded,
+  fetchDeleteActivity,
+  fetchEditActivity,
   fetchCreateActivity
 } from "../tripActions";
 
@@ -14,7 +16,7 @@ import { makeGetTrip, makeGetCenter } from "../selector.js";
 // Components
 import TripPlan from "../components/TripPlan";
 
-import "./tripPlanStyle.scss";
+import "./TripPlanStyle.scss";
 
 class TripPlanContainer extends Component {
   static propTypes = {
@@ -23,21 +25,23 @@ class TripPlanContainer extends Component {
 
   constructor(props) {
     super(props);
-  }
 
-  componentWillMount() {
     const { dispatch, tripId } = this.props;
     dispatch(fetchTripIfNeeded(tripId));
   }
 
   render() {
-    const { dispatch, tripId } = this.props;
-
+    const { dispatch, tripId, isFetching, currentTrip } = this.props;
+    if (isFetching || !currentTrip) return null;
     return (
       <TripPlan
         {...this.props}
         selectMarker={place => dispatch(selectMarker(place))}
-        addActivity={act => dispatch(fetchCreateActivity(tripId, act))}
+        addActivity={placeId => dispatch(fetchCreateActivity(tripId, placeId))}
+        editActivity={(activityId, data) =>
+          dispatch(fetchEditActivity(tripId, activityId, data))}
+        delActivity={activityId =>
+          dispatch(fetchDeleteActivity(tripId, activityId))}
       />
     );
   }
@@ -45,26 +49,22 @@ class TripPlanContainer extends Component {
 
 const mapStateToProps = (state, props) => {
   const { selectedPlace } = state;
-  const { tripId } = props.params;
 
-  if (state.trips.allItems.length == 0) {
-    return {
-      tripId,
-      activityPlaces: [],
-      selectedPlace
-    };
-  }
+  // this is current trip id.
+  const { tripId } = props.params;
+  const { isFetching } = state.trips;
 
   const getTrip = makeGetTrip(tripId);
-  const trip = getTrip(state);
+  const currentTrip = getTrip(state);
 
-  const activityPlaces = trip.activities.map(a => a.place);
-
-  // const getCenter = makeGetCenter(props.tripId);
-  // const center = getCenter(state);
+  const activityPlaces = currentTrip
+    ? currentTrip.activities.map(a => a.place)
+    : [];
 
   return {
+    isFetching,
     tripId,
+    currentTrip,
     activityPlaces,
     selectedPlace
   };

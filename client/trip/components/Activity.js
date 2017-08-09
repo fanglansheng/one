@@ -1,32 +1,23 @@
 /***** component items */
-"use strict";
-import { default as React, PropTypes } from "react";
+import React from "react";
+import PropTypes from "prop-types";
+import moment from "moment";
 
-import { connect } from "react-redux";
-
+// components
 import { SingleDatePicker } from "react-dates";
 import TimePicker from "rc-time-picker";
+import core from "../../core";
+const { EditableBox } = core;
 
-import moment from "moment";
 const format = "h:mm a";
 const defaultTime = moment().hour(9).minute(0);
 const DatetimeFormat = "YYYYMMDD HH:mm ZZ";
 
-const EditableBox = props =>
-  <div>
-    <i className="fa fa-pencil" />{" "}
-    {props.focused
-      ? <input
-          type="text"
-          value={props.value}
-          placeholder={props.placeholder}
-          onChange={props.handleChange}
-          onKeyPress={props.handleSubmit}
-        />
-      : <span onClick={props.showEditInput}>
-          {props.value || "click to edit"}
-        </span>}
-  </div>;
+const defaultProps = {
+  date: null,
+  memo: "",
+  duration: 1
+};
 
 export default class ActivityItem extends React.Component {
   static propTypes = {
@@ -34,9 +25,11 @@ export default class ActivityItem extends React.Component {
     memo: PropTypes.string,
     duration: PropTypes.number,
 
+    // activity place
     place: PropTypes.object.isRequired,
-
+    // delete the activity
     handleDelete: PropTypes.func.isRequired,
+    // called when change the activity data
     handleEdit: PropTypes.func.isRequired
   };
 
@@ -50,9 +43,8 @@ export default class ActivityItem extends React.Component {
 
     this.state = {
       datetime: dateTime,
-      memo: props.memo || "",
-      duration: props.duration || 1,
-      memoFocused: false,
+      memo: props.memo,
+      duration: props.duration,
       dateFocused: false
     };
   }
@@ -60,73 +52,70 @@ export default class ActivityItem extends React.Component {
   handleMemoSubmit = e => {
     e.preventDefault();
     e.stopPropagation();
-
     if (e.charCode !== 13) return;
-
-    this.props.handleEdit({
-      memo: this.state.memo
-    });
-
-    // reset memo edit input focus
-    this.setState({ memoFocused: false });
+    this.props.handleEdit({ memo: this.state.memo });
   };
 
-  handleDateSubmit = date => {
-    // set date of datetime
-    const _y = date.year();
-    const _m = date.month();
-    const _d = date.date();
+  // handleDateSubmit = date => {
+  //   // set date of datetime
+  //   const _y = date.year();
+  //   const _m = date.month();
+  //   const _d = date.date();
 
-    const { datetime } = this.state;
-    let newDate;
+  //   const { datetime } = this.state;
+  //   let newDate;
 
-    if (!datetime) {
-      this.setState({ datetime: date });
-      newDate = date;
-    } else {
-      newDate = this.state.datetime;
-      newDate.set({ year: _y, month: _m, date: _d });
+  //   if (!datetime) {
+  //     this.setState({ datetime: date });
+  //     newDate = date;
+  //   } else {
+  //     newDate = this.state.datetime;
+  //     newDate.set({ year: _y, month: _m, date: _d });
+  //     this.setState({ datetime: newDate });
+  //   }
 
-      this.setState({ datetime: newDate });
-    }
+  //   const offset = this.props.place.utc_offset;
+  //   newDate = newDate.utcOffset(offset).format();
+  //   this.props.handleEdit({ datetime: newDate });
+  // };
 
-    const offset = this.props.place.utc_offset;
+  // handleTimeChange = time => {
+  //   // change the time of datetime
+  //   const _h = time.hour();
+  //   const _m = time.minute();
 
-    newDate = newDate.utcOffset(offset).format();
+  //   const { datetime } = this.state;
+  //   let newTime;
 
-    this.props.handleEdit({ datetime: newDate });
-  };
+  //   if (!datetime) {
+  //     this.setState({ datetime: time });
+  //     newTime = time;
+  //   } else {
+  //     newTime = this.state.datetime;
+  //     newTime.set({ hour: _h, minute: _m });
+  //     this.setState({ datetime: newTime });
+  //   }
+
+  //   // local to utc
+  //   const offset = this.props.place.utc_offset;
+  //   newTime = newTime.utcOffset(offset).format();
+
+  //   this.props.handleEdit({ datetime: newTime });
+  // };
 
   handleTimeChange = time => {
-    // change the time of datetime
-    const _h = time.hour();
-    const _m = time.minute();
-
-    const { datetime } = this.state;
-
-    let newTime;
-
-    if (!datetime) {
-      this.setState({ datetime: time });
-      newTime = time;
-    } else {
-      newTime = this.state.datetime;
-      newTime.set({ hour: _h, minute: _m });
-      this.setState({ datetime: newTime });
-    }
+    this.setState({ datetime: time });
 
     // local to utc
     const offset = this.props.place.utc_offset;
+    const utcTime = time.utcOffset(offset).format();
 
-    newTime = newTime.utcOffset(offset).format();
-
-    this.props.handleEdit({ datetime: newTime });
+    this.props.handleEdit({ datetime: utcTime });
   };
 
   render() {
     const { place, handleDelete } = this.props;
-
-    const { datetime, duration, memo, memoFocused, dateFocused } = this.state;
+    const { datetime, duration, memo, dateFocused } = this.state;
 
     return (
       <div className="activity-item">
@@ -155,19 +144,19 @@ export default class ActivityItem extends React.Component {
 
         <div className="activity-info">
           <h5>
-            {" "}{place.name}{" "}
+            {place.name}
           </h5>
-
           <EditableBox
-            focused={memoFocused}
             value={memo}
+            icon="fa fa-pencil"
             placeholder="edit"
             handleSubmit={this.handleMemoSubmit}
             handleChange={e => this.setState({ memo: e.target.value })}
-            showEditInput={() => this.setState({ memoFocused: true })}
           />
         </div>
       </div>
     );
   }
 }
+
+ActivityItem.defaultProps = defaultProps;

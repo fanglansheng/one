@@ -94,8 +94,8 @@ export default class TripMapBox extends Component {
 
     activityPlaces.forEach(place => {
       // Only geocodes have viewport.
-      const positino = place.geometry.location;
-      const location = new google.maps.LatLng(positino.lat, positino.lng);
+      const position = place.geometry.location;
+      const location = new google.maps.LatLng(position.lat, position.lng);
       bounds.extend(location);
     });
 
@@ -103,6 +103,7 @@ export default class TripMapBox extends Component {
       center: bounds.getCenter().toJSON(),
       zoom: 8
     });
+    console.log(this._mapComponent.getZoom());
   };
 
   // save the map object
@@ -179,7 +180,10 @@ export default class TripMapBox extends Component {
       }
     });
 
-    this.setState({ resultPlaces });
+    this.setState({
+      resultPlaces,
+      zoom: 14
+    });
     this._mapComponent.fitBounds(bounds);
   };
 

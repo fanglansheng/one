@@ -1,0 +1,14 @@
+@import '../../scss/variables';
+
+.plan-header {
+  margin: 5px;
+  .title {
+    font-size: $font-title-size;
+    font-weight: $font-title-weight;
+    margin-top: 5px;
+    margin-bottom: 10px;
+  }
+  .description {
+    margin-bottom: 5px;
+  }
+}
