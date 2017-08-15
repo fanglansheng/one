@@ -1,127 +1,125 @@
 @import 'variables';
 
 #app {
-	height: 100%;
+  height: 100%;
 }
 /* Optional: Makes the sample page fill the window. */
-html, body {
-	height: 100%;
-	margin: 0;
-	padding: 0;
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 .full-height {
-	height: 100%;
+  // height: 100%;
 }
 
-.column{
-	display: inline-block;
-	float: left;
-	height: 100%;
-	padding: 10px;
+.column {
+  display: inline-block;
+  float: left;
+  height: 100%;
+  padding: 10px;
 }
 
-.navigation{
-	@extend .column;
-	width: 20%;
-	.nav-item{
-		margin-bottom: 20px;
-	}
+.navigation {
+  @extend .column;
+  width: 20%;
+  .nav-item {
+    margin-bottom: 20px;
+  }
 }
 
-.content-box{
-	@extend .column;
-	width: 80%;
+.content-box {
+  @extend .column;
+  width: 80%;
 }
 
-.map-container{
-	height: 100%;
-	width: 80%;
-	display: inline-block;
+.map-container {
+  height: 100%;
+  width: 80%;
+  display: inline-block;
 }
 
-.searchbox-input{
-	width: $map-sidebar-width - 20px;
-	height:30px;
-	margin: 10px;
-	position: fixed !important;
+.searchbox-input {
+  width: $map-sidebar-width - 20px;
+  height: 30px;
+  margin: 10px;
+  position: fixed !important;
 }
 
-.plan-box{
-	width: $map-sidebar-width;
-	position: fixed;
-	top: 40px;
-	right: 0px;
-	background: white;
-	height: 100%;
-	overflow: auto;
+.plan-box {
+  width: $map-sidebar-width;
+  position: fixed;
+  top: 40px;
+  right: 0px;
+  background: white;
+  height: 100%;
+  overflow: auto;
 }
 
 .plan-header {
-	h4 {
-		padding: 0px 10px;
-	}
+  h4 {
+    padding: 0px 10px;
+  }
 }
 
-.SingleDatePickerInput{
-	border: none;
-	
+.SingleDatePickerInput {
+  border: none;
 }
-.DateInput{
-	line-height: normal;
-	font-size: inherit;
-	padding: 0px;
-	width: 90px;
+.DateInput {
+  line-height: normal;
+  font-size: inherit;
+  padding: 0px;
+  width: 90px;
 }
 
-
-.time-picker{
-	width: 70px;
-	.rc-time-picker-input{
-		font-size: inherit;
-		border: none;
-		cursor: pointer;
-		font-weight: 200;
+.time-picker {
+  width: 70px;
+  .rc-time-picker-input {
+    font-size: inherit;
+    border: none;
+    cursor: pointer;
+    font-weight: 200;
     vertical-align: middle;
-	}
+  }
 }
-
 
 .activity-item {
-	padding: 15px;
-	border-bottom: 2px solid whitesmoke;
-	position: relative;
+  padding: 15px;
+  border-bottom: 2px solid whitesmoke;
+  position: relative;
 
-	button {
-		position: absolute;
-		right: 20px;
-		top: 20px;
-		background: none;
-		border: none;
-		color: lightgrey;
-		&:hover{
-			color: black;
-		}
-	}
+  button {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    background: none;
+    border: none;
+    color: lightgrey;
+    &:hover {
+      color: black;
+    }
+  }
 
-	.activity-info {
-		padding-left: 10px;
-	}
+  .activity-info {
+    padding-left: 10px;
+  }
 }
 
 .info-box {
-	width: $map-sidebar-width;
+  width: $map-sidebar-width;
 }
 
 .place-header {
-	height: 200px;
-	position: relative;
+  height: 200px;
+  position: relative;
 
-	h4{
-		color: white;
-		text-shadow: #4a4a4a 1px 1px 5px;
-		position: absolute;
-		bottom: 10px;
-		padding: 0px 20px;
-	}
+  h4 {
+    color: white;
+    text-shadow: #4a4a4a 1px 1px 5px;
+    position: absolute;
+    bottom: 10px;
+    padding: 0px 20px;
+  }
 }

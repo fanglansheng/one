@@ -103,10 +103,10 @@ const receiveTrips = (allItems, entities) => ({
   ...entities
 });
 
-const addTrip = trip => ({
-  type: ActionTypes.ADD_TRIP,
-  trip
-});
+// const addTrip = trip => ({
+//   type: ActionTypes.ADD_TRIP,
+//   trip
+// });
 
 export const fetchTripIfNeeded = tripId => (dispatch, getState) => {
   if (shouldFetch(getState(), "trips")) {
@@ -191,6 +191,24 @@ export const fetchDeleteTrip = tripId => dispatch => {
       dispatch({
         type: ActionTypes.DEL_TRIP,
         tripId
+      });
+    });
+};
+
+export const fetchEditTrip = (tripId, postData) => dispatch => {
+  const init = {
+    method: "POST",
+    headers: new Headers({ "Content-Type": "application/json" }),
+    body: JSON.stringify(postData)
+  };
+
+  return fetch(`${Host}/trip/${tripId}`, init)
+    .then(handleResponse)
+    .then(json => {
+      dispatch({
+        type: ActionTypes.EDIT_TRIP,
+        trip: json,
+        tripId: json.id
       });
     });
 };

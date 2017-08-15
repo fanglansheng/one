@@ -29,7 +29,7 @@ export default class SingleSelectButton extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedOption: ""
+      selectedOption: props.defaultOption
     };
   }
 

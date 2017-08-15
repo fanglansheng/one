@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 import {
   selectMarker,
   fetchTripIfNeeded,
+  fetchEditTrip,
   fetchDeleteActivity,
   fetchEditActivity,
   fetchCreateActivity
@@ -42,6 +43,7 @@ class TripPlanContainer extends Component {
           dispatch(fetchEditActivity(tripId, activityId, data))}
         delActivity={activityId =>
           dispatch(fetchDeleteActivity(tripId, activityId))}
+        editItinerary={data => dispatch(fetchEditTrip(tripId, data))}
       />
     );
   }

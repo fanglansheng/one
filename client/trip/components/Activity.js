@@ -37,7 +37,6 @@ export default class ActivityItem extends React.Component {
     super(props);
     let dateTime = null;
     if (props.date) {
-      console.log(props.date);
       dateTime = moment(props.date);
     }
 
@@ -50,8 +49,6 @@ export default class ActivityItem extends React.Component {
   }
 
   handleMemoSubmit = e => {
-    e.preventDefault();
-    e.stopPropagation();
     if (e.charCode !== 13) return;
     this.props.handleEdit({ memo: this.state.memo });
   };
@@ -105,6 +102,7 @@ export default class ActivityItem extends React.Component {
 
   handleTimeChange = time => {
     this.setState({ datetime: time });
+    console.log(time);
 
     // local to utc
     const offset = this.props.place.utc_offset;
@@ -127,7 +125,7 @@ export default class ActivityItem extends React.Component {
           numberOfMonths={1}
           date={datetime}
           focused={dateFocused}
-          onDateChange={this.handleDateSubmit}
+          onDateChange={this.handleTimeChange}
           onFocusChange={({ focused }) =>
             this.setState({ dateFocused: focused })}
         />

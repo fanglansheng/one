@@ -8,7 +8,27 @@
   background: white;
   height: 100%;
   overflow: auto;
-}
+  padding: 10px;
 
-.plan-navbar {
+  .nav.nav-pills {
+    margin: 5px;
+  }
+
+  .tab-menu.active {
+    a {
+      border-radius: 2px;
+      background: cornflowerblue;
+
+      &:hover {
+        padding: 8px 15px;
+      }
+    }
+  }
+
+  .tab-menu {
+    margin-right: 5px;
+    a {
+      padding: 8px 15px;
+    }
+  }
 }

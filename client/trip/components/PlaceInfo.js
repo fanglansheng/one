@@ -1,7 +1,18 @@
 import React from "react";
 import PropTypes from "prop-types";
 
+// components
 import { Carousel } from "react-bootstrap";
+import core from "../../core";
+const { OpenHourTable } = core;
+
+import "./PlaceInfoStyle.scss";
+
+const InfoEntry = ({ icon, info }) =>
+  <p className="place-info-entry">
+    <i className={icon} />
+    {info}
+  </p>;
 
 export default class PlaceInfo extends React.Component {
   static propTypes = {
@@ -30,7 +41,7 @@ export default class PlaceInfo extends React.Component {
     const { place } = this.props;
     if (place.photos) {
       return place.photos.map((photo, keyIndex) => {
-        const imgURL = photo.getUrl({ maxWidth: 380 });
+        const imgURL = photo.getUrl({ maxWidth: 360 });
         return (
           <Carousel.Item key={keyIndex}>
             <img src={imgURL} />
@@ -47,34 +58,30 @@ export default class PlaceInfo extends React.Component {
 
     return (
       <div className="info-box">
-        {/* <div className="place-header">
-            //style={{ backgroundImage: `url(${imgURL})` }}
-            {this.renderPhotos()}
-          </div> */}
         <Carousel
           indicators={false}
           activeIndex={index}
           direction={direction}
-          obSelect={this.handleSelectPhoto}
+          onSelect={this.handleSelectPhoto}
         >
           {this.renderPhotos()}
         </Carousel>
 
         <div className="place-detail">
           <h4>
-            {place.name} <i className="fa fa-star" /> {place.rating}
+            {place.name}
           </h4>
-          <p>
-            <i className="fa fa-map-marker" /> {place.formatted_address}
-          </p>
-          <p>
-            {/* website */}
-            <i className="fa fa-map-marker" /> {place.formatted_address}
-          </p>
-          <p>
-            {/* open hour if exit.*/}
-            <i className="fa fa-clock" /> {place.formatted_address}
-          </p>
+          <InfoEntry icon="fa fa-star" info={`Rating: ${place.rating}`} />
+          <InfoEntry icon="fa fa-map-marker" info={place.formatted_address} />
+
+          {place.website &&
+            <InfoEntry icon="fa fa-globe" info={place.website} />}
+
+          {place.opening_hours &&
+            <OpenHourTable
+              openNow={place.opening_hours.open_now}
+              weekdayText={place.opening_hours.weekday_text}
+            />}
 
           <a href={place.url}>Open in GoogleMap</a>
         </div>

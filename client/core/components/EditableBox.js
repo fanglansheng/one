@@ -11,7 +11,9 @@ const defaultProps = {
   className: "",
   inputType: "text",
   placeholder: "click to edit",
-  autoFocus: false
+  icon: "fa fa-pencil",
+  autoFocus: false,
+  notEmpty: false
 };
 
 export default class EditableBox extends React.Component {
@@ -22,6 +24,7 @@ export default class EditableBox extends React.Component {
     placeholder: PropTypes.string,
     icon: PropTypes.string,
     autoFocus: PropTypes.bool,
+    notEmpty: PropTypes.bool,
 
     // bind the value to show in the input dom element
     value: PropTypes.any.isRequired,
@@ -34,45 +37,56 @@ export default class EditableBox extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      editable: props.autoFocus
+      editable: props.autoFocus,
+      errorMsg: ""
     };
   }
 
-  handleEnableEdit = () => {
+  handleEnableEdit = e => {
     this.setState({ editable: true });
   };
 
-  handleSubmitChanges = e => {
-    e.preventDefault();
-    e.stopPropagation();
+  handleBlur = e => {
+    this.setState({ editable: false });
+    this.props.handleSubmit(e);
+  };
+
+  handleSubmitValue = e => {
     if (e.charCode !== 13) return;
 
     // disable eidt.
     this.setState({ editable: false });
-    this.props.handleSubmit(e.target.value);
+    this.props.handleSubmit(e);
+  };
+
+  validation = () => {
+    if (this.props.notEmpty && this.state.value === "") {
+      this.setState({ errorMsg: "Cannot be empty!" });
+    }
   };
 
   render() {
     const {
       className,
       icon,
+      value,
       inputType,
       placeholder,
-      value,
-      handleChange,
-      handleSubmit
+      handleChange
     } = this.props;
     const { editable } = this.state;
     return (
       <div className={`editable-box ${className}`}>
-        {icon && <i className={icon} />}
+        {icon && <i className={`icon ${icon}`} />}
         {editable
           ? <input
               type={inputType}
               value={value}
               placeholder={placeholder}
               onChange={handleChange}
-              onKeyPress={this.handleSubmitChanges}
+              onKeyPress={this.handleSubmitValue}
+              onBlur={this.handleBlur}
+              autoFocus
             />
           : <span onClick={this.handleEnableEdit}>
               {value || "Click to edit"}

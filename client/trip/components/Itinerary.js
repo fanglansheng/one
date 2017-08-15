@@ -18,6 +18,13 @@ const RouteBox = props =>
     {props.duration.text}
   </div>;
 
+const travelModes = [
+  { value: google.maps.TravelMode.BICYCLING, icon: "fa fa-bicycle" },
+  { value: google.maps.TravelMode.DRIVING, icon: "fa fa-car" },
+  { value: google.maps.TravelMode.TRANSIT, icon: "fa fa-subway" },
+  { value: google.maps.TravelMode.WALKING }
+];
+
 export default class Itinerary extends React.Component {
   static propTypes = {
     // the trip id.
@@ -32,7 +39,7 @@ export default class Itinerary extends React.Component {
     routes: PropTypes.array.isRequired,
 
     handleCalculateRoute: PropTypes.func.isRequired,
-    handleEditItinerary: PropTypes.func.isRequired,
+    editItinerary: PropTypes.func.isRequired,
     // editActivity(activityId, data), tripId already bind
     editActivity: PropTypes.func.isRequired,
     // delActivity(activityId), tripId already bind
@@ -57,28 +64,22 @@ export default class Itinerary extends React.Component {
   }
 
   handleDeleteActivity = (activityId, e) => {
-    e.preventDefault();
-    e.stopPropagation();
     const { id } = this.props;
     this.props.delActivity(id, activityId);
   };
 
   handleSubmitMemo = e => {
-    e.preventDefault();
-    e.stopPropagation();
     if (e.charCode !== 13) return;
-    this.props.handleEditItinerary({ memo: this.state.memo });
+    this.props.editItinerary({ memo: this.state.memo });
   };
 
   handleSubmitTitle = e => {
-    e.preventDefault();
-    e.stopPropagation();
     if (e.charCode !== 13) return;
     if (this.state.title === "") {
       console.error("Title cannot be empty");
       return;
     }
-    this.props.handleEditItinerary({ title: this.state.title });
+    this.props.editItinerary({ title: this.state.title });
   };
 
   getSortedActivities = () => {
@@ -92,25 +93,27 @@ export default class Itinerary extends React.Component {
       addActivity,
       editActivity,
       delActivity,
-      routes
+      routes,
+      handleCalculateRoute
     } = this.props;
 
     const { title, memo } = this.state;
 
     return (
       <div>
-        {activities.length > 2 &&
+        {activities.length > 1 &&
           <SingleSelectButton
             options={travelModes}
             buttonText="Show Route"
             defaultOption="DRIVING"
-            handleSubmit={this.handleCalculateRoute}
+            handleSubmit={handleCalculateRoute}
           />}
 
         <div className="plan-header">
           <EditableBox
             className="title"
             value={title}
+            icon=""
             placeholder="Title"
             handleSubmit={this.handleSubmitTitle}
             handleChange={e => this.setState({ title: e.target.value })}
@@ -130,11 +133,12 @@ export default class Itinerary extends React.Component {
               <ActivityItem
                 {...activity}
                 handleDelete={e => this.handleDeleteActivity(activity.id, e)}
-                handleEdit={data => editActivity(id, activity.id, data)}
+                handleEdit={data => editActivity(activity.id, data)}
               />
               {index < routes.length && <RouteBox {...routes[index]} />}
             </div>
           )}
+          <span>Use the search bar to search a place and add it.</span>
         </div>
       </div>
     );

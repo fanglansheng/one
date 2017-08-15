@@ -16,18 +16,22 @@ export default class TripPlan extends React.Component {
     selectMarker: PropTypes.func.isRequired,
     addActivity: PropTypes.func.isRequired, //addActivity(object)
     editActivity: PropTypes.func.isRequired,
-    delActivity: PropTypes.func.isRequired
+    delActivity: PropTypes.func.isRequired,
+    // editItinerary(data)
+    editItinerary: PropTypes.func.isRequired
   };
 
   constructor(props) {
     super(props);
     this.state = {
       // the route to activity places.
-      directions: null
+      directions: null,
+      currentTab: 1
     };
   }
 
   calculateRoute = travelMode => {
+    console.log(travelMode);
     const { activityPlaces } = this.props;
     const directionsService = new google.maps.DirectionsService();
 
@@ -64,8 +68,12 @@ export default class TripPlan extends React.Component {
     );
   };
 
+  setCurrentTab = tabKey => {
+    this.setState({ currentTab: tabKey });
+  };
+
   render() {
-    const { directions } = this.state;
+    const { directions, currentTab } = this.state;
     const {
       currentTrip,
       activityPlaces,
@@ -73,7 +81,8 @@ export default class TripPlan extends React.Component {
       editActivity,
       delActivity,
       selectedPlace,
-      selectMarker
+      selectMarker,
+      editItinerary
     } = this.props;
 
     const routes = directions ? directions.routes[0].legs : [];
@@ -83,25 +92,36 @@ export default class TripPlan extends React.Component {
         <TripMap
           directions={directions}
           activityPlaces={activityPlaces}
-          selectMarker={selectMarker}
+          selectMarker={place => {
+            selectMarker(place);
+            this.setCurrentTab(2);
+          }}
         />
 
         {/* Information and activity */}
-        <Tabs id="plan-sidebar" defaultActiveKey={1}>
-          <Tab eventKey={1} title="Itinerary">
+        <Tabs
+          id="plan-sidebar"
+          activeKey={currentTab}
+          bsStyle="pills"
+          onSelect={this.setCurrentTab}
+        >
+          <Tab eventKey={1} title="Itinerary" tabClassName="tab-menu">
             <Itinerary
               {...currentTrip}
               routes={routes}
-              handleEditItinerary={() => {}}
+              editItinerary={editItinerary}
               editActivity={editActivity}
               delActivity={delActivity}
               handleCalculateRoute={this.calculateRoute}
             />
           </Tab>
-          <Tab eventKey={2} title="Place Detail">
+          <Tab eventKey={2} title="Place Detail" tabClassName="tab-menu">
             <PlaceInfo
               place={selectedPlace}
-              handleAddPlace={() => addActivity(selectedPlace.place_id)}
+              handleAddPlace={() => {
+                addActivity(selectedPlace.place_id);
+                this.setCurrentTab(1);
+              }}
             />
           </Tab>
         </Tabs>

@@ -12,7 +12,7 @@ const defaultCenter = {
 const PlanBoxWidth = 380;
 const MapWdith = window.innerWidth - PlanBoxWidth;
 
-const compairArray = (a, b) => {
+const compareArray = (a, b) => {
   if (a.length !== b.length) return false;
   for (let i = 0; i < a.length; i++) {
     if (a[i].place_id !== b[i].place_id) {
@@ -40,13 +40,16 @@ export default class TripMapBox extends Component {
       // the search area bound of search box
       bounds: new google.maps.LatLngBounds()
     };
+  }
 
+  componentDidMount() {
     this.initialMapCenter();
+    this.setActivitiesCenter(this.props.activityPlaces);
   }
 
   componentWillReceiveProps(nextProps) {
     const { activityPlaces } = nextProps;
-    if (!compairArray(activityPlaces, this.props.activityPlaces)) {
+    if (!compareArray(activityPlaces, this.props.activityPlaces)) {
       this.setActivitiesCenter(activityPlaces);
     }
   }
@@ -103,14 +106,13 @@ export default class TripMapBox extends Component {
       center: bounds.getCenter().toJSON(),
       zoom: 8
     });
-    console.log(this._mapComponent.getZoom());
   };
 
   // save the map object
   handleMapLoad = map => {
     this._mapComponent = map;
     if (map) {
-      console.log(map.getZoom());
+      console.log("Map loaded");
     }
   };
 

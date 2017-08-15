@@ -127,6 +127,7 @@ def edit_activity(it_id):
 
     if request.method == 'POST':
         data = request.json
+        print(data)
         # check form field
         if 'datetime' in data:
             t = data['datetime']
