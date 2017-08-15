@@ -128,15 +128,12 @@ def edit_activity(it_id):
     if request.method == 'POST':
         data = request.json
         print(data)
-        # check form field
+        # check form field, store utc time in database
         if 'datetime' in data:
             t = data['datetime']
             ret = datetime.strptime(t[0:16], '%Y-%m-%dT%H:%M')
-            if t[18] == '+':
-                ret -= timedelta(hours=int(t[19:22]), minutes=int(t[23:]))
-            elif t[18] == '-':
-                ret += timedelta(hours=int(t[19:22]), minutes=int(t[23:]))
-            activity.date = ret
+            delta = timedelta(hours=int(t[19:22]), minutes=int(t[23:]))
+            activity.date = ret - delta
         if 'memo' in data:
             activity.memo = data['memo']
         if 'duration' in data:

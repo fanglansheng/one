@@ -37,7 +37,9 @@ export default class ActivityItem extends React.Component {
     super(props);
     let dateTime = null;
     if (props.date) {
-      dateTime = moment(props.date);
+      const offset = props.place.utc_offset;
+      dateTime = moment.utc(props.date).utcOffset(offset);
+      console.log(dateTime.format(this.props.format));
     }
 
     this.state = {
@@ -53,56 +55,33 @@ export default class ActivityItem extends React.Component {
     this.props.handleEdit({ memo: this.state.memo });
   };
 
-  // handleDateSubmit = date => {
-  //   // set date of datetime
-  //   const _y = date.year();
-  //   const _m = date.month();
-  //   const _d = date.date();
+  handleDateSubmit = date => {
+    // set date of datetime
+    const _y = date.year();
+    const _m = date.month();
+    const _d = date.date();
 
-  //   const { datetime } = this.state;
-  //   let newDate;
+    const { datetime } = this.state;
+    let newDate;
 
-  //   if (!datetime) {
-  //     this.setState({ datetime: date });
-  //     newDate = date;
-  //   } else {
-  //     newDate = this.state.datetime;
-  //     newDate.set({ year: _y, month: _m, date: _d });
-  //     this.setState({ datetime: newDate });
-  //   }
+    if (!datetime) {
+      this.setState({ datetime: date });
+      newDate = date;
+    } else {
+      newDate = this.state.datetime;
+      newDate.set({ year: _y, month: _m, date: _d });
+      this.setState({ datetime: newDate });
+    }
 
-  //   const offset = this.props.place.utc_offset;
-  //   newDate = newDate.utcOffset(offset).format();
-  //   this.props.handleEdit({ datetime: newDate });
-  // };
-
-  // handleTimeChange = time => {
-  //   // change the time of datetime
-  //   const _h = time.hour();
-  //   const _m = time.minute();
-
-  //   const { datetime } = this.state;
-  //   let newTime;
-
-  //   if (!datetime) {
-  //     this.setState({ datetime: time });
-  //     newTime = time;
-  //   } else {
-  //     newTime = this.state.datetime;
-  //     newTime.set({ hour: _h, minute: _m });
-  //     this.setState({ datetime: newTime });
-  //   }
-
-  //   // local to utc
-  //   const offset = this.props.place.utc_offset;
-  //   newTime = newTime.utcOffset(offset).format();
-
-  //   this.props.handleEdit({ datetime: newTime });
-  // };
+    const offset = this.props.place.utc_offset;
+    newDate = newDate.utcOffset(offset).format();
+    console.log(newDate);
+    this.props.handleEdit({ datetime: newDate });
+  };
 
   handleTimeChange = time => {
     this.setState({ datetime: time });
-    console.log(time);
+    console.log(time && time.format(this.props.format));
 
     // local to utc
     const offset = this.props.place.utc_offset;
@@ -125,7 +104,7 @@ export default class ActivityItem extends React.Component {
           numberOfMonths={1}
           date={datetime}
           focused={dateFocused}
-          onDateChange={this.handleTimeChange}
+          onDateChange={this.handleDateSubmit}
           onFocusChange={({ focused }) =>
             this.setState({ dateFocused: focused })}
         />
