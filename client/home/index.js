@@ -1,13 +1,10 @@
 // import * as action from './fileActions';
 
-// containers
-// import App from './containers/App';
-
 // compontents
-import Home from './components/Home';
-import TripBox from './components/TripBox';
+import HomeContainer from "./containers/HomeContainer";
+import MyTripList from "./components/MyTripList";
 
 export default {
-	Home,
-	TripBox
+  HomeContainer,
+  MyTripList
 };

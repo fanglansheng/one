@@ -32,7 +32,7 @@ export default class OpenHourTable extends React.Component {
     return (
       <div className="open-hour-table">
         <p className="place-info-entry">
-          <i className="fa fa-clock-o" />
+          <i className="material-icons">access_time</i>
           <a onClick={this.toggleExpand}>
             Opening hours: {openNow ? "Open Now" : "Closed"}
           </a>

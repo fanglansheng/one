@@ -6,9 +6,15 @@
 /* Optional: Makes the sample page fill the window. */
 html,
 body {
+  font-family: 'Open Sans', sans-serif;
+  // font-family: 'Roboto', sans-serif;
   height: 100%;
   margin: 0;
   padding: 0;
+}
+
+.inline {
+  display: inline;
 }
 
 .full-height {
@@ -87,7 +93,6 @@ body {
 
 .activity-item {
   padding: 15px;
-  border-bottom: 2px solid whitesmoke;
   position: relative;
 
   button {

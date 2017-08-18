@@ -1,3 +1,17 @@
+/**
+ * How to use:
+ * <SingleSelectButton
+ *    options={travelModes}
+ *    defaultOption="DRIVING"
+ *    handleSubmit={handleCalculateRoute}
+ * />
+ * Render a list of <option_buttons> and a <submit_button>.
+ * Users can only select one option from the button list. 
+ * Click the <submit_button> to submit result.
+ * 1. options {array}: [{value: 'DRIVING', icon:'car'}, {} ...]
+ * 2. defaultOption {string}
+ * 3. handleSubmit {func}
+ */
 import React from "react";
 import PropTypes from "prop-types";
 
@@ -6,6 +20,7 @@ import {
   ToggleButtonGroup,
   ToggleButton
 } from "react-bootstrap";
+
 // import style
 import "./SingleSelectButton.scss";
 
@@ -16,13 +31,18 @@ const defaultProps = {
 
 export default class SingleSelectButton extends React.Component {
   static propTypes = {
+    // class name of SingleSelectButton
     className: PropTypes.string,
+    // button name of the <option_buttons>
     buttonName: PropTypes.string,
+    // the text shows on the <submit_button>
     buttonText: PropTypes.string,
-    defaultOption: PropTypes.string,
-    // options that can select [{value, icon, }]
+
+    // the default option selected when render the button list.
+    defaultOption: PropTypes.string.isRequired,
+    // options that can be [{value: 'DRIVING', icon:'car'}]
     options: PropTypes.array.isRequired,
-    // sumbit the result.
+    // call back function when user click the <submit_button>; handleSubmit(data)
     handleSubmit: PropTypes.func.isRequired
   };
 
@@ -62,7 +82,11 @@ export default class SingleSelectButton extends React.Component {
         >
           {options.map((option, i) =>
             <ToggleButton className="btn-toggle" key={i} value={option.value}>
-              {option.icon ? <i className={option.icon} /> : option.value}
+              {option.icon
+                ? <i className="material-icons">
+                    {option.icon}
+                  </i>
+                : option.value}
             </ToggleButton>
           )}
         </ToggleButtonGroup>

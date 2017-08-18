@@ -1,3 +1,6 @@
+"""
+high level support for doing this and that.
+"""
 import os
 import sys
 import requests
@@ -17,10 +20,9 @@ from trip_planner.models import *
 #		}
 
 
-# GET /trip 	- Get all trips
+# GET /trip - Get all trips
 @app.route('/trip', methods=['POST', 'GET'])
 def trip():
-    print('hah')
     if request.method == 'POST':
         data = request.json
         if not data['title']:
@@ -34,10 +36,8 @@ def trip():
         return jsonify(new_trip.to_json())
 
     trips = Trip.query.all()
-    print trips
     dic = dict()
     dic['trips'] = [t.to_json() for t in trips]
-    print dic
     return jsonify(dic)
 
 
@@ -114,6 +114,12 @@ def activity(trip_id):
     return jsonify(dic)
 
 
+def get_datetime(date_str):
+    ret = datetime.strptime(date_str[0:16], '%Y-%m-%dT%H:%M')
+    delta = timedelta(hours=int(date_str[19:22]), minutes=int(date_str[23:]))
+    return ret - delta
+
+
 # POST /activity/<int:it_id>
 #		edit activity by id.
 #		json : {'date':'20170907', memo: '..', duration: 60}
@@ -127,7 +133,6 @@ def edit_activity(it_id):
 
     if request.method == 'POST':
         data = request.json
-        print(data)
         # check form field, store utc time in database
         if 'datetime' in data:
             t = data['datetime']

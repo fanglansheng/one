@@ -1,5 +1,5 @@
-import { default as React, PropTypes } from "react";
-
+import React from "react";
+import PropTypes from "prop-types";
 import {
   withGoogleMap,
   GoogleMap,
@@ -36,7 +36,7 @@ export default withGoogleMap(props =>
       controlPosition={SearchBarPosition}
       onPlacesChanged={props.onPlacesChanged}
     />
-    {props.resultPlaces.map((place, key) =>
+    {props.resultPlaces.map(place =>
       <Marker
         defaultAnimation={2}
         position={place.geometry.location}
@@ -45,13 +45,13 @@ export default withGoogleMap(props =>
         onRightClick={() => props.onMarkerRightClick(place)}
       />
     )}
-    {props.activityPlaces.map((place, key) =>
+    {props.activityPlaces.map((place, index) =>
       <Marker
         defaultAnimation={2}
         position={place.geometry.location}
         key={place.place_id}
         icon={StarIcon}
-        label={(key + 1).toString()}
+        label={(index + 1).toString()}
         onClick={() => props.onClickMarker(place)}
         onRightClick={() => props.onMarkerRightClick(place)}
       />

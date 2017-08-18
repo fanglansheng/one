@@ -2,16 +2,18 @@ import * as constants from "./constants";
 import * as action from "./defaultActions";
 import * as ReducerFactory from "./reducerFactory";
 
-import EditableBox from "./components/EditableBox";
+import withEditable from "./withEditable";
 import OpenHourTable from "./components/OpenHourTable";
 import SingleSelectButton from "./components/SingleSelectButton";
+import TextLabel from "./components/TextLabel";
+import NumberLabel from "./components/NumberLabel";
 
 export default {
   constants,
   action,
   ReducerFactory,
-
-  EditableBox,
+  EditableTextLabel: withEditable(TextLabel),
+  EditableNumberLabel: withEditable(NumberLabel),
   OpenHourTable,
   SingleSelectButton
 };

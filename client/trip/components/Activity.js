@@ -1,4 +1,21 @@
-/***** component items */
+/**
+ * Activity
+ * Itinieraty is consist of a list of Activities. An activity is an action 
+ * happens in ONE DAY's itinerary.
+ * Activity contains: 
+ * 1. Destination: google place object, 
+ * 2. Start datetime: moment object,
+ * 3. Duration: number of hours which not exceed 24h,
+ * 4. Memo(to do list).
+ * 
+ * How to use:
+ * <ActivityItem
+ *  place={place_object}
+ *  handleDelete={e => deleteActivity(activity.id, e)}
+ *  handleEdit={data => editActivity(activity.id, data)}
+ * />
+ */
+
 import React from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
@@ -7,12 +24,9 @@ import moment from "moment";
 import { SingleDatePicker } from "react-dates";
 import TimePicker from "rc-time-picker";
 import core from "../../core";
-const { EditableBox } = core;
+const { EditableTextLabel, EditableNumberLabel } = core;
 
-const format = "h:mm a";
-const defaultTime = moment().hour(9).minute(0);
-const DatetimeFormat = "YYYYMMDD HH:mm ZZ";
-
+const TimeFormat = "h:mm a";
 const defaultProps = {
   date: null,
   memo: "",
@@ -39,24 +53,28 @@ export default class ActivityItem extends React.Component {
     if (props.date) {
       const offset = props.place.utc_offset;
       dateTime = moment.utc(props.date).utcOffset(offset);
-      console.log(dateTime.format(this.props.format));
+      console.log(dateTime.format());
     }
 
     this.state = {
       datetime: dateTime,
       memo: props.memo,
       duration: props.duration,
+      durationEditable: false,
       dateFocused: false
     };
   }
 
-  handleMemoSubmit = e => {
+  handleSubmit = e => {
     if (e.charCode !== 13) return;
-    this.props.handleEdit({ memo: this.state.memo });
+    this.props.handleEdit({
+      memo: this.state.memo,
+      duration: this.state.duration
+    });
   };
 
+  // update the date when change but keep the time
   handleDateSubmit = date => {
-    // set date of datetime
     const _y = date.year();
     const _m = date.month();
     const _d = date.date();
@@ -65,23 +83,24 @@ export default class ActivityItem extends React.Component {
     let newDate;
 
     if (!datetime) {
-      this.setState({ datetime: date });
       newDate = date;
     } else {
-      newDate = this.state.datetime;
+      // set old datetime to newDate
+      newDate = datetime;
+      // update selected date.
       newDate.set({ year: _y, month: _m, date: _d });
-      this.setState({ datetime: newDate });
     }
+
+    this.setState({ datetime: newDate });
 
     const offset = this.props.place.utc_offset;
     newDate = newDate.utcOffset(offset).format();
-    console.log(newDate);
     this.props.handleEdit({ datetime: newDate });
   };
 
   handleTimeChange = time => {
     this.setState({ datetime: time });
-    console.log(time && time.format(this.props.format));
+    console.log(time && time.format());
 
     // local to utc
     const offset = this.props.place.utc_offset;
@@ -97,7 +116,7 @@ export default class ActivityItem extends React.Component {
     return (
       <div className="activity-item">
         <button onClick={handleDelete}>
-          <i className="fa fa-times" />
+          <i className="material-icons">clear</i>
         </button>
 
         <SingleDatePicker
@@ -115,7 +134,7 @@ export default class ActivityItem extends React.Component {
           showSecond={false}
           value={datetime}
           onChange={this.handleTimeChange}
-          format={format}
+          format={TimeFormat}
           use12Hours
         />
 
@@ -123,11 +142,21 @@ export default class ActivityItem extends React.Component {
           <h5>
             {place.name}
           </h5>
-          <EditableBox
+          <div>
+            Stay
+            <EditableNumberLabel
+              className="inline"
+              value={duration}
+              handleSubmit={this.handleSubmit}
+              handleChange={e => this.setState({ duration: e.target.value })}
+            />
+            hours
+          </div>
+
+          <EditableTextLabel
             value={memo}
-            icon="fa fa-pencil"
             placeholder="edit"
-            handleSubmit={this.handleMemoSubmit}
+            handleSubmit={this.handleSubmit}
             handleChange={e => this.setState({ memo: e.target.value })}
           />
         </div>

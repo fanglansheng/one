@@ -10,7 +10,7 @@ import "./PlaceInfoStyle.scss";
 
 const InfoEntry = ({ icon, info }) =>
   <p className="place-info-entry">
-    <i className={icon} />
+    <i class="material-icons">{icon}</i>>
     {info}
   </p>;
 
@@ -71,11 +71,10 @@ export default class PlaceInfo extends React.Component {
           <h4>
             {place.name}
           </h4>
-          <InfoEntry icon="fa fa-star" info={`Rating: ${place.rating}`} />
-          <InfoEntry icon="fa fa-map-marker" info={place.formatted_address} />
+          <InfoEntry icon="star" info={`Rating: ${place.rating}`} />
+          <InfoEntry icon="place" info={place.formatted_address} />
 
-          {place.website &&
-            <InfoEntry icon="fa fa-globe" info={place.website} />}
+          {place.website && <InfoEntry icon="public" info={place.website} />}
 
           {place.opening_hours &&
             <OpenHourTable
@@ -87,6 +86,9 @@ export default class PlaceInfo extends React.Component {
         </div>
 
         {/* place type */}
+        <select>
+          <option>tour</option>
+        </select>
         <button onClick={handleAddPlace}>Add to trip</button>
       </div>
     );

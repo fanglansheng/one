@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 // components
 import ActivityItem from "./Activity";
 import core from "../../core";
-const { EditableBox, SingleSelectButton } = core;
+const { SingleSelectButton, EditableTextLabel } = core;
 
 // style
 import "./ItineraryStyle.scss";
@@ -14,15 +14,20 @@ import "./ItineraryStyle.scss";
 const sortAscTime = (a, b) => a.datetime - b.datetime;
 
 const RouteBox = props =>
-  <div>
-    {props.duration.text}
+  <div className="route-box">
+    <span>
+      {props.distance.text}
+    </span>
+    <span>
+      {props.duration.text}
+    </span>
   </div>;
 
 const travelModes = [
-  { value: google.maps.TravelMode.BICYCLING, icon: "fa fa-bicycle" },
-  { value: google.maps.TravelMode.DRIVING, icon: "fa fa-car" },
-  { value: google.maps.TravelMode.TRANSIT, icon: "fa fa-subway" },
-  { value: google.maps.TravelMode.WALKING }
+  { value: google.maps.TravelMode.BICYCLING, icon: "directions_bike" },
+  { value: google.maps.TravelMode.DRIVING, icon: "directions_car" },
+  { value: google.maps.TravelMode.TRANSIT, icon: "directions_bus" },
+  { value: google.maps.TravelMode.WALKING, icon: "directions_walk" }
 ];
 
 export default class Itinerary extends React.Component {
@@ -39,6 +44,7 @@ export default class Itinerary extends React.Component {
     routes: PropTypes.array.isRequired,
 
     handleCalculateRoute: PropTypes.func.isRequired,
+    // editItinerary(data)
     editItinerary: PropTypes.func.isRequired,
     // editActivity(activityId, data), tripId already bind
     editActivity: PropTypes.func.isRequired,
@@ -68,18 +74,13 @@ export default class Itinerary extends React.Component {
     this.props.delActivity(id, activityId);
   };
 
-  handleSubmitMemo = e => {
+  handleSubmit = e => {
     if (e.charCode !== 13) return;
-    this.props.editItinerary({ memo: this.state.memo });
-  };
 
-  handleSubmitTitle = e => {
-    if (e.charCode !== 13) return;
-    if (this.state.title === "") {
-      console.error("Title cannot be empty");
-      return;
-    }
-    this.props.editItinerary({ title: this.state.title });
+    this.props.editItinerary({
+      memo: this.state.memo
+      // title: this.state.title
+    });
   };
 
   getSortedActivities = () => {
@@ -101,35 +102,34 @@ export default class Itinerary extends React.Component {
 
     return (
       <div>
-        {activities.length > 1 &&
+        {/* {activities.length > 1 &&
           <SingleSelectButton
             options={travelModes}
             buttonText="Show Route"
             defaultOption="DRIVING"
             handleSubmit={handleCalculateRoute}
-          />}
+          />} */}
 
         <div className="plan-header">
-          <EditableBox
+          {/* <EditableTextLabel
             className="title"
-            value={title}
-            icon=""
             placeholder="Title"
-            handleSubmit={this.handleSubmitTitle}
+            value={title}
+            handleSubmit={this.handleSubmit}
             handleChange={e => this.setState({ title: e.target.value })}
-          />
-          <EditableBox
+          /> */}
+          <EditableTextLabel
             className="description"
+            placeholder="Memo"
             value={memo}
-            placeholder="Click to add memo"
-            handleSubmit={this.handleSubmitMemo}
+            handleSubmit={this.handleSubmit}
             handleChange={e => this.setState({ memo: e.target.value })}
           />
         </div>
 
         <div className="plan-content">
           {activities.map((activity, index) =>
-            <div key={index}>
+            <div key={activity.id}>
               <ActivityItem
                 {...activity}
                 handleDelete={e => this.handleDeleteActivity(activity.id, e)}

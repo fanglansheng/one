@@ -105,7 +105,7 @@ export default class TripPlan extends React.Component {
           bsStyle="pills"
           onSelect={this.setCurrentTab}
         >
-          <Tab eventKey={1} title="Itinerary" tabClassName="tab-menu">
+          <Tab eventKey={1} title={currentTrip.title} tabClassName="tab-menu">
             <Itinerary
               {...currentTrip}
               routes={routes}

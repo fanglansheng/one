@@ -9,7 +9,7 @@ import { Link } from "react-router";
 import trip from "../../trip";
 const { fetchAllTripsIfNeeded } = trip.action;
 
-import Navigation from "./Navigation";
+import Navigation from "../components/Navigation";
 
 class Home extends React.Component {
   static propTypes = {
