@@ -111,13 +111,14 @@ export default class Itinerary extends React.Component {
           />}
 
         <div className="plan-header">
-          {/* <EditableTextLabel
+          <EditableTextLabel
             className="title"
             placeholder="Title"
             value={title}
+            labelText={title}
             handleSubmit={this.handleSubmit}
             handleChange={e => this.setState({ title: e.target.value })}
-          /> */}
+          />
           <EditableTextLabel
             className="description"
             placeholder="Memo"

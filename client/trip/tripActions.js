@@ -16,13 +16,6 @@ export const setActivityFormVisable = visable => ({
   visable
 });
 
-export const selectMarker = place => {
-  return {
-    type: ActionTypes.CLICK_MARKER,
-    place
-  };
-};
-
 const selectActivity = activityId => ({
   type: ActionTypes.SET_CURRENT_ACTIVITY,
   id: activityId

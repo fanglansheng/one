@@ -26,8 +26,7 @@ const compareArray = (a, b) => {
 export default class TripMapBox extends React.Component {
   static propTypes = {
     activityPlaces: PropTypes.array,
-    addActivity: PropTypes.func.isRequired,
-    selectMarker: PropTypes.func.isRequired
+    addActivity: PropTypes.func.isRequired
   };
 
   constructor(props) {
@@ -198,7 +197,6 @@ export default class TripMapBox extends React.Component {
         onMapLoad={this.handleMapLoad}
         onSearchBoxLoad={this.handleSearchBoxLoad}
         onMapClick={this.handleMapClick}
-        onClickMarker={this.props.selectMarker}
         onAddPlace={this.props.addActivity}
         // set search place result
         onPlacesChanged={this.handlePlaceChanged}

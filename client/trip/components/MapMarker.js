@@ -6,9 +6,11 @@ import PlaceInfo from "./PlaceInfo";
 
 export default class MapMarker extends React.Component {
   static propTypes = {
+    icon: PropTypes.any,
+    label: PropTypes.string,
     // the selected place
     place: PropTypes.object,
-    handleAddPlace: PropTypes.func.isRequired
+    handleAddPlace: PropTypes.func
   };
 
   constructor(props) {
@@ -18,6 +20,7 @@ export default class MapMarker extends React.Component {
       showInfo: false
     };
   }
+
   handleShowInfo = () => {
     this.setState({ showInfo: true });
   };
@@ -25,12 +28,15 @@ export default class MapMarker extends React.Component {
   handleHideInfo = () => {
     this.setState({ showInfo: false });
   };
+
   render() {
     const { showInfo } = this.state;
-    const { place, handleAddPlace } = this.props;
+    const { place, handleAddPlace, icon, label } = this.props;
     return (
       <Marker
         defaultAnimation={2}
+        icon={icon}
+        label={label}
         position={place.geometry.location}
         onClick={this.handleShowInfo}
       >

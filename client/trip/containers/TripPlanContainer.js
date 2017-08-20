@@ -4,7 +4,6 @@
 import { default as React, PropTypes, Component } from "react";
 import { connect } from "react-redux";
 import {
-  selectMarker,
   fetchTripIfNeeded,
   fetchEditTrip,
   fetchDeleteActivity,
@@ -37,7 +36,6 @@ class TripPlanContainer extends Component {
     return (
       <TripPlan
         {...this.props}
-        selectMarker={place => dispatch(selectMarker(place))}
         addActivity={placeId => dispatch(fetchCreateActivity(tripId, placeId))}
         editActivity={(activityId, data) =>
           dispatch(fetchEditActivity(tripId, activityId, data))}
@@ -50,8 +48,6 @@ class TripPlanContainer extends Component {
 }
 
 const mapStateToProps = (state, props) => {
-  const { selectedPlace } = state;
-
   // this is current trip id.
   const { tripId } = props.params;
   const { isFetching } = state.trips;
@@ -67,8 +63,7 @@ const mapStateToProps = (state, props) => {
     isFetching,
     tripId,
     currentTrip,
-    activityPlaces,
-    selectedPlace
+    activityPlaces
   };
 };
 

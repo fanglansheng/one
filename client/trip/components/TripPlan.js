@@ -13,7 +13,6 @@ export default class TripPlan extends React.Component {
     currentTrip: PropTypes.object.isRequired,
     activityPlaces: PropTypes.array.isRequired,
     // functions
-    selectMarker: PropTypes.func.isRequired,
     addActivity: PropTypes.func.isRequired, //addActivity(object)
     editActivity: PropTypes.func.isRequired,
     delActivity: PropTypes.func.isRequired,
@@ -76,7 +75,6 @@ export default class TripPlan extends React.Component {
       editActivity,
       delActivity,
       selectedPlace,
-      selectMarker,
       editItinerary
     } = this.props;
 
@@ -87,7 +85,6 @@ export default class TripPlan extends React.Component {
         <TripMap
           directions={directions}
           activityPlaces={activityPlaces}
-          selectMarker={place => selectMarker(place)}
           addActivity={placeId => addActivity(placeId)}
         />
 

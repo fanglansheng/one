@@ -33,7 +33,7 @@ export default withGoogleMap(props =>
       inputClassName="searchbox-input"
       ref={props.onSearchBoxLoad}
       bounds={props.bounds}
-      inputPlaceholder="Customized your placeholder"
+      inputPlaceholder="Search where to go"
       controlPosition={SearchBarPosition}
       onPlacesChanged={props.onPlacesChanged}
     />
@@ -41,18 +41,19 @@ export default withGoogleMap(props =>
       <MapMarker
         place={place}
         key={place.place_id}
-        handleClick={() => props.onClickMarker(place)}
         handleAddPlace={() => props.onAddPlace(place.place_id)}
       />
     )}
     {props.activityPlaces.map((place, index) =>
-      <Marker
-        defaultAnimation={2}
-        position={place.geometry.location}
+      <MapMarker
+        // defaultAnimation={2}
+        // position={place.geometry.location}
+        place={place}
         key={place.place_id}
         icon={StarIcon}
         label={(index + 1).toString()}
-        onClick={() => props.onClickMarker(place)}
+
+        // onClick={() => {}}
       />
     )}
     {props.directions && <DirectionsRenderer directions={props.directions} />}

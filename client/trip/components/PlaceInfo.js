@@ -12,7 +12,7 @@ export default class PlaceInfo extends React.Component {
   static propTypes = {
     // the selected place
     place: PropTypes.object,
-    handleAddPlace: PropTypes.func.isRequired
+    handleAddPlace: PropTypes.func
   };
 
   constructor(props) {
@@ -38,16 +38,27 @@ export default class PlaceInfo extends React.Component {
 
   renderPhotos() {
     const { place } = this.props;
-    if (place.photos) {
-      return place.photos.map((photo, keyIndex) => {
-        const imgURL = photo.getUrl({ maxWidth: 360 });
-        return (
-          <Carousel.Item key={keyIndex}>
-            <img src={imgURL} />
-          </Carousel.Item>
-        );
-      });
-    }
+    const { index, direction } = this.state;
+    const photos = place.photos.filter(p => p.getUrl !== undefined);
+
+    if (!photos.length) return null;
+    return (
+      <Carousel
+        indicators={false}
+        activeIndex={index}
+        direction={direction}
+        onSelect={this.handleSelectPhoto}
+      >
+        {photos.map((photo, keyIndex) => {
+          const imgURL = photo.getUrl({ maxWidth: 360 });
+          return (
+            <Carousel.Item key={keyIndex}>
+              <img src={imgURL} />
+            </Carousel.Item>
+          );
+        })}
+      </Carousel>
+    );
   }
 
   renderRating() {
@@ -88,7 +99,7 @@ export default class PlaceInfo extends React.Component {
 
   render() {
     const { place, handleAddPlace } = this.props;
-    const { index, direction, visitType } = this.state;
+    const { visitType } = this.state;
 
     return (
       <div className="info-box">
@@ -103,7 +114,7 @@ export default class PlaceInfo extends React.Component {
         </div>
 
         <div className="info-box-content">
-          {place.website &&
+          {place.formatted_address &&
             <p>
               <i className="material-icons">place</i>
               {place.formatted_address}
@@ -135,16 +146,10 @@ export default class PlaceInfo extends React.Component {
             handleSelect={this.handleSelectType}
           />*/}
 
-          <button onClick={handleAddPlace}>+ Add to trip</button>
+          {handleAddPlace &&
+            <button onClick={handleAddPlace}>+ Add to trip</button>}
         </div>
-        <Carousel
-          indicators={false}
-          activeIndex={index}
-          direction={direction}
-          onSelect={this.handleSelectPhoto}
-        >
-          {this.renderPhotos()}
-        </Carousel>
+        {this.renderPhotos()}
       </div>
     );
   }
