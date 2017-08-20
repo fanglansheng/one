@@ -1,7 +1,29 @@
 .create-trip-form {
-  button {
-    background-color: white;
-    border: 1px solid black;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  font-size: 24px;
+  i {
+    padding: 6px;
     border-radius: 20px;
+    background-color: #93abfa;
+    color: white;
+    margin-right: 10px;
+  }
+  input {
+    vertical-align: middle;
+    background-color: white;
+    border: 0px;
+    border-bottom: 1px solid white;
+
+    &::placeholder {
+      font-style: italic;
+      color: #bbb;
+      font-family: 'Open Sans', sans-serif;
+      font-weight: 300;
+    }
+    &:focus {
+      outline: none;
+      border-bottom: 1px solid black;
+    }
   }
 }

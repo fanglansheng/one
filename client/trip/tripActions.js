@@ -181,7 +181,7 @@ export const fetchDeleteTrip = tripId => dispatch => {
   return fetch(`${Host}/trip/${tripId}`, init)
     .then(response => {
       if (response.ok) {
-        console.log(`Delete collection ${activityId} success`);
+        console.log(`Delete trip ${tripId} success`);
         return;
       }
       throw new Error("Network response was not ok.");

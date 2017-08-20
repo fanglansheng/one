@@ -42,7 +42,8 @@ class MyTripList extends React.Component {
     };
   }
 
-  handleSubmit = () => {
+  handleSubmit = e => {
+    if (e.charCode !== 13) return;
     const { title } = this.state;
     this.props.addTrip({ title });
     this.setState({ title: "" });
@@ -59,13 +60,14 @@ class MyTripList extends React.Component {
       <div className="content-box">
         {/* Create Form */}
         <div className="create-trip-form">
-          <label>Create Trip</label>
+          <i className="material-icons">add</i>
           <input
             type="text"
             value={title}
+            placeholder="Name your new trip"
+            onKeyPress={this.handleSubmit}
             onChange={e => this.setState({ title: e.target.value })}
           />
-          <button onClick={this.handleSubmit}>Create</button>
         </div>
         <div>
           {trips.map((trip, key) =>

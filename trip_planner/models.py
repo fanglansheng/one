@@ -7,6 +7,7 @@ import requests
 from trip_planner import app
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
+from datetime import time
 
 db = SQLAlchemy(app)
 
@@ -16,11 +17,13 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 PLACE_API = 'https://maps.googleapis.com/maps/api/place/details/json'
 API_KEY = os.environ.get('GOOGLE_API_KEY')
 
-ACTIVITY_TYPE = {
-    'hotel': 'hotel',
+VISIT_TYPE = {
+    'transit': 'transit',
     'dinning': 'dinning',
-    'transition': 'transition',
-    'tour': 'tour'
+    'activity': 'activity',
+    'hotel': 'hotel',
+    'tour': 'tour',
+    'other': 'other'
 }
 
 
@@ -82,7 +85,7 @@ class Trip(db.Model):
         data['title'] = self.title
         data['memo'] = self.memo
         # trips = Trip.query.order_by(desc(File.time)).all()
-        activities = self.activities.order_by(Activity.date.asc()).all()
+        activities = self.activities.order_by(Activity.start_time.asc()).all()
         data['activities'] = [i.to_json() for i in activities]
         return data
 
@@ -93,17 +96,17 @@ class Activity(db.Model):
     # user = db.relationship('User', backref='places' )
     trip_id = db.Column(db.Integer, db.ForeignKey('trip.id'))
 
-    start_datetime = db.Column(db.DateTime, nullable=True)
-    end_datetime = db.Column(db.DateTime, nullable=True)
+    start_time = db.Column(db.DateTime, nullable=True)
+    duration = db.Column(db.Time, default=time(1))
     memo = db.Column(db.String(500), default='')
     place_id = db.Column(db.String(64), default='')  # place_id
     # activity type
-    act_type = db.Column(db.String(64), default='')
+    act_type = db.Column(db.String(64), default='activity')
 
-    def __init__(self, place_id, date=None):
+    def __init__(self, place_id, startTime=None):
         self.place_id = place_id
-        if not date is None:
-            self.date = date
+        if not startTime is None:
+            self.startTime = startTime
 
     def __repr__(self):
         return "<Trip(place='%s',time='%s')>" % (self.place_id, self.date)
@@ -112,9 +115,9 @@ class Activity(db.Model):
         data = dict()
         data['trip_id'] = self.trip_id
         data['id'] = self.id
-        data['start_datetime'] = self.start_datetime
-        data['end_datetime'] = self.end_datetime
-        data['act_type'] = self.act_type
+        data['startTime'] = self.start_time
+        data['duration'] = self.duration.strftime("%H:%M")
+        data['visitType'] = self.act_type
         data['memo'] = self.memo
         data['place'] = get_place_detail(self.place_id)
         return data

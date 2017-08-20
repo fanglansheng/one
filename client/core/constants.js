@@ -29,6 +29,15 @@ export const ActionTypes = keyMirror({
   SHOW_PLACE_SEARCH: null
 });
 
+export const VisitType = {
+  TRANSIT: { value: "transit", icon: "" },
+  DINNGING: { value: "dinning", icon: "" },
+  HOTEL: { value: "hotel", icon: "" },
+  TOUR: { value: "tour", icon: "" },
+  ACTIVITY: { value: "activity", icon: "" },
+  OTHER: { value: "other", icon: "" }
+};
+
 export const DefaultCenter = {
   lat: 39.9375346,
   lng: 115.837023

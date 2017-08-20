@@ -8,6 +8,7 @@ import {
 } from "react-google-maps";
 
 import SearchBox from "react-google-maps/lib/places/SearchBox";
+import MapMarker from "./MapMarker";
 
 const SearchBarPosition = google.maps.ControlPosition.TOP_RIGHT;
 
@@ -37,12 +38,10 @@ export default withGoogleMap(props =>
       onPlacesChanged={props.onPlacesChanged}
     />
     {props.resultPlaces.map(place =>
-      <Marker
-        defaultAnimation={2}
-        position={place.geometry.location}
+      <MapMarker
+        place={place}
         key={place.place_id}
-        onClick={() => props.onClickMarker(place)}
-        onRightClick={() => props.onMarkerRightClick(place)}
+        handleClick={() => props.onClickMarker(place)}
       />
     )}
     {props.activityPlaces.map((place, index) =>

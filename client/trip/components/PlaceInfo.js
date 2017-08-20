@@ -2,15 +2,17 @@ import React from "react";
 import PropTypes from "prop-types";
 
 // components
-import { Carousel } from "react-bootstrap";
+import { Carousel, DropdownButton, MenuItem } from "react-bootstrap";
 import core from "../../core";
-const { OpenHourTable } = core;
+const { OpenHourTable, VisitTypeButton, constants } = core;
 
 import "./PlaceInfoStyle.scss";
 
 const InfoEntry = ({ icon, info }) =>
   <p className="place-info-entry">
-    <i class="material-icons">{icon}</i>>
+    <i className="material-icons">
+      {icon}
+    </i>
     {info}
   </p>;
 
@@ -26,9 +28,14 @@ export default class PlaceInfo extends React.Component {
 
     this.state = {
       index: 0,
-      direction: null
+      direction: null,
+      visitType: constants.VisitType.ACTIVITY.value
     };
   }
+
+  handleSelectType = val => {
+    this.setState({ visitType: val });
+  };
 
   handleSelectPhoto = (selectedIndex, e) => {
     this.setState({
@@ -53,7 +60,7 @@ export default class PlaceInfo extends React.Component {
 
   render() {
     const { place, handleAddPlace } = this.props;
-    const { index, direction } = this.state;
+    const { index, direction, visitType } = this.state;
     if (!place) return <div className="info-box">No place selected</div>;
 
     return (
@@ -86,9 +93,11 @@ export default class PlaceInfo extends React.Component {
         </div>
 
         {/* place type */}
-        <select>
-          <option>tour</option>
-        </select>
+        <VisitTypeButton
+          id="place-visit-type"
+          value={visitType}
+          handleSelect={this.handleSelectType}
+        />
         <button onClick={handleAddPlace}>Add to trip</button>
       </div>
     );

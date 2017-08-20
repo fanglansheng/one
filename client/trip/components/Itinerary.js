@@ -102,13 +102,13 @@ export default class Itinerary extends React.Component {
 
     return (
       <div>
-        {/* {activities.length > 1 &&
+        {activities.length > 1 &&
           <SingleSelectButton
             options={travelModes}
             buttonText="Show Route"
             defaultOption="DRIVING"
             handleSubmit={handleCalculateRoute}
-          />} */}
+          />}
 
         <div className="plan-header">
           {/* <EditableTextLabel
@@ -122,6 +122,7 @@ export default class Itinerary extends React.Component {
             className="description"
             placeholder="Memo"
             value={memo}
+            labelText={memo || "Click to edit memo"}
             handleSubmit={this.handleSubmit}
             handleChange={e => this.setState({ memo: e.target.value })}
           />

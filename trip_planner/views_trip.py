@@ -6,23 +6,17 @@ import sys
 import requests
 from flask import jsonify, render_template, request, make_response
 # from flask_login import login_required, current_user
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 
 from sqlalchemy import and_, or_
 from trip_planner import app
 from trip_planner.models import *
 
-# POST /trip
-#		Create a new trip
-#		json : {
-#			title:'',
-#			days: number,
-#		}
-
 
 # GET /trip - Get all trips
-@app.route('/trip', methods=['POST', 'GET'])
+@app.route('/trip', methods=['GET', 'POST'])
 def trip():
+    print('here')
     if request.method == 'POST':
         data = request.json
         if not data['title']:
@@ -38,6 +32,7 @@ def trip():
     trips = Trip.query.all()
     dic = dict()
     dic['trips'] = [t.to_json() for t in trips]
+    print('get')
     return jsonify(dic)
 
 
@@ -134,15 +129,15 @@ def edit_activity(it_id):
     if request.method == 'POST':
         data = request.json
         # check form field, store utc time in database
-        if 'datetime' in data:
-            t = data['datetime']
-            ret = datetime.strptime(t[0:16], '%Y-%m-%dT%H:%M')
-            delta = timedelta(hours=int(t[19:22]), minutes=int(t[23:]))
-            activity.date = ret - delta
+        if 'startTime' in data:
+            activity.start_time = get_datetime(data['startTime'])
+        if 'endTime' in data:
+            activity.end_time = get_datetime(data['endTime'])
         if 'memo' in data:
             activity.memo = data['memo']
         if 'duration' in data:
-            activity.duration = data['duration']
+            [hour, minute] = data['duration'].split(':')
+            activity.duration = time(int(hour), int(minute))
         if 'place_id' in data:
             activity.place_id = data['place_id']
 

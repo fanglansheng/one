@@ -26,6 +26,7 @@ export default class TextLabel extends React.Component {
 
     // bind the value to show in the input dom element
     value: PropTypes.any.isRequired,
+    labelText: PropTypes.string.isRequired,
     // set value when it changes
     handleChange: PropTypes.func.isRequired,
 
@@ -58,6 +59,7 @@ export default class TextLabel extends React.Component {
     const {
       className,
       value,
+      labelText,
       placeholder,
       handleChange,
 
@@ -65,23 +67,30 @@ export default class TextLabel extends React.Component {
       handleEnableEdit,
       handleDisableEditAndSubmit
     } = this.props;
-    return (
-      <div className={className}>
-        {editable
-          ? <input
-              type="text"
-              value={value}
-              placeholder={placeholder}
-              onChange={handleChange}
-              onBlur={handleDisableEditAndSubmit}
-              onKeyPress={this.handleEnter}
-              autoFocus={true}
-            />
-          : <span className="editable-label" onClick={handleEnableEdit}>
-              {value || "Click to edit"}
-            </span>}
-      </div>
-    );
+
+    if (editable) {
+      return (
+        <input
+          className={className}
+          type="text"
+          value={value}
+          placeholder={placeholder}
+          onChange={handleChange}
+          onBlur={handleDisableEditAndSubmit}
+          onKeyPress={this.handleEnter}
+          autoFocus={true}
+        />
+      );
+    } else {
+      return (
+        <span
+          className={`editable-label ${className}`}
+          onClick={handleEnableEdit}
+        >
+          {labelText}
+        </span>
+      );
+    }
   }
 }
 

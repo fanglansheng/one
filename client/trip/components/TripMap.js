@@ -1,4 +1,5 @@
-import { default as React, Component, PropTypes } from "react";
+import React from "react";
+import PropTypes from "prop-types";
 
 // components
 import GoogleMapInstance from "./GoogleMapInstance";
@@ -22,7 +23,7 @@ const compareArray = (a, b) => {
   return true;
 };
 
-export default class TripMapBox extends Component {
+export default class TripMapBox extends React.Component {
   static propTypes = {
     activityPlaces: PropTypes.array,
 
@@ -144,19 +145,7 @@ export default class TripMapBox extends Component {
     // }
   };
 
-  handleMarkerRightClick = targetMarker => {
-    /*
-     * All you modify is data, and the view is driven by data.
-     * This is so called data-driven-development. (And yes, it's now in
-     * web front end and even with google maps API.)
-     */
-    const nextMarkers = this.state.markers.filter(
-      marker => marker !== targetMarker
-    );
-    this.setState({
-      markers: nextMarkers
-    });
-  };
+  handleMarkerRightClick = targetMarker => {};
 
   handlePlaceChanged = () => {
     const resultPlaces = this._searchBoxComponent.getPlaces();

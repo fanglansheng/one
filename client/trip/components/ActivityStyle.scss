@@ -1,0 +1,23 @@
+.activity-item {
+  padding: 15px;
+  position: relative;
+  .activity-header {
+    button {
+      float: right;
+      background: none;
+      border: none;
+      color: lightgrey;
+      &:hover {
+        color: black;
+      }
+    }
+  }
+
+  .duration-picker {
+    display: block;
+  }
+
+  .activity-content {
+    padding-left: 10px;
+  }
+}
