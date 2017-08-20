@@ -8,14 +8,6 @@ const { OpenHourTable, VisitTypeButton, constants } = core;
 
 import "./PlaceInfoStyle.scss";
 
-const InfoEntry = ({ icon, info }) =>
-  <p className="place-info-entry">
-    <i className="material-icons">
-      {icon}
-    </i>
-    {info}
-  </p>;
-
 export default class PlaceInfo extends React.Component {
   static propTypes = {
     // the selected place
@@ -58,13 +50,93 @@ export default class PlaceInfo extends React.Component {
     }
   }
 
+  renderRating() {
+    const { rating } = this.props.place;
+    if (!rating) return null;
+
+    const ratingNumber = parseFloat(rating);
+    let stars = [];
+
+    for (let i = 0; i < 5; i++) {
+      const diff = ratingNumber - i;
+      let starType;
+      if (diff >= 1) {
+        starType = "star";
+      } else if (diff < 0) {
+        starType = "star_border";
+      } else {
+        starType = "star_half";
+      }
+      stars.push(
+        <i key={i} className="material-icons">
+          {starType}
+        </i>
+      );
+    }
+
+    return (
+      <span className="rating">
+        <span className="rating-text">
+          {rating}
+        </span>
+        <span className="rating-star">
+          {stars}
+        </span>
+      </span>
+    );
+  }
+
   render() {
     const { place, handleAddPlace } = this.props;
     const { index, direction, visitType } = this.state;
-    if (!place) return <div className="info-box">No place selected</div>;
 
     return (
       <div className="info-box">
+        <div className="info-box-title">
+          <h5>
+            {place.name}
+          </h5>
+          <p>
+            {this.renderRating()}
+            <a href={place.url}>Open in GoogleMap</a>
+          </p>
+        </div>
+
+        <div className="info-box-content">
+          {place.website &&
+            <p>
+              <i className="material-icons">place</i>
+              {place.formatted_address}
+            </p>}
+
+          {place.website &&
+            <p>
+              <i className="material-icons">public</i>
+              <a href={place.website}>
+                {place.website}
+              </a>
+            </p>}
+
+          {place.international_phone_number &&
+            <p>
+              <i className="material-icons">phone</i>
+              {place.international_phone_number}
+            </p>}
+
+          {place.opening_hours &&
+            <OpenHourTable
+              openNow={place.opening_hours.open_now}
+              weekdayText={place.opening_hours.weekday_text}
+            />}
+
+          {/* place type <VisitTypeButton
+            id="place-visit-type"
+            value={visitType}
+            handleSelect={this.handleSelectType}
+          />*/}
+
+          <button onClick={handleAddPlace}>+ Add to trip</button>
+        </div>
         <Carousel
           indicators={false}
           activeIndex={index}
@@ -73,32 +145,6 @@ export default class PlaceInfo extends React.Component {
         >
           {this.renderPhotos()}
         </Carousel>
-
-        <div className="place-detail">
-          <h4>
-            {place.name}
-          </h4>
-          <InfoEntry icon="star" info={`Rating: ${place.rating}`} />
-          <InfoEntry icon="place" info={place.formatted_address} />
-
-          {place.website && <InfoEntry icon="public" info={place.website} />}
-
-          {place.opening_hours &&
-            <OpenHourTable
-              openNow={place.opening_hours.open_now}
-              weekdayText={place.opening_hours.weekday_text}
-            />}
-
-          <a href={place.url}>Open in GoogleMap</a>
-        </div>
-
-        {/* place type */}
-        <VisitTypeButton
-          id="place-visit-type"
-          value={visitType}
-          handleSelect={this.handleSelectType}
-        />
-        <button onClick={handleAddPlace}>Add to trip</button>
       </div>
     );
   }

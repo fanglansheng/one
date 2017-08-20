@@ -42,6 +42,7 @@ export default withGoogleMap(props =>
         place={place}
         key={place.place_id}
         handleClick={() => props.onClickMarker(place)}
+        handleAddPlace={() => props.onAddPlace(place.place_id)}
       />
     )}
     {props.activityPlaces.map((place, index) =>
@@ -52,7 +53,6 @@ export default withGoogleMap(props =>
         icon={StarIcon}
         label={(index + 1).toString()}
         onClick={() => props.onClickMarker(place)}
-        onRightClick={() => props.onMarkerRightClick(place)}
       />
     )}
     {props.directions && <DirectionsRenderer directions={props.directions} />}

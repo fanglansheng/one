@@ -13,9 +13,6 @@
   }
 }
 
-.plan-content {
-}
-
 .route-box {
   margin-left: 15px;
   border-left: 2px solid lightseagreen;
@@ -24,4 +21,15 @@
     margin-left: 10px;
     margin-right: 10px;
   }
+}
+
+.itinerary {
+  width: $map-sidebar-width;
+  position: fixed;
+  top: 40px;
+  right: 0px;
+  background: white;
+  height: 100%;
+  overflow: auto;
+  padding: 10px;
 }

@@ -101,7 +101,7 @@ export default class Itinerary extends React.Component {
     const { title, memo } = this.state;
 
     return (
-      <div>
+      <div className="itinerary">
         {activities.length > 1 &&
           <SingleSelectButton
             options={travelModes}

@@ -8,7 +8,7 @@ export default class MapMarker extends React.Component {
   static propTypes = {
     // the selected place
     place: PropTypes.object,
-    handleClick: PropTypes.func.isRequired
+    handleAddPlace: PropTypes.func.isRequired
   };
 
   constructor(props) {
@@ -27,7 +27,7 @@ export default class MapMarker extends React.Component {
   };
   render() {
     const { showInfo } = this.state;
-    const { place } = this.props;
+    const { place, handleAddPlace } = this.props;
     return (
       <Marker
         defaultAnimation={2}
@@ -36,7 +36,7 @@ export default class MapMarker extends React.Component {
       >
         {showInfo &&
           <InfoWindow onCloseClick={this.handleHideInfo}>
-            <PlaceInfo place={place} handleAddPlace={() => {}} />
+            <PlaceInfo place={place} handleAddPlace={handleAddPlace} />
           </InfoWindow>}
       </Marker>
     );

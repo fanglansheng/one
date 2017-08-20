@@ -25,8 +25,7 @@ export default class TripPlan extends React.Component {
     super(props);
     this.state = {
       // the route to activity places.
-      directions: null,
-      currentTab: 1
+      directions: null
     };
   }
 
@@ -68,12 +67,8 @@ export default class TripPlan extends React.Component {
     );
   };
 
-  setCurrentTab = tabKey => {
-    this.setState({ currentTab: tabKey });
-  };
-
   render() {
-    const { directions, currentTab } = this.state;
+    const { directions } = this.state;
     const {
       currentTrip,
       activityPlaces,
@@ -92,39 +87,19 @@ export default class TripPlan extends React.Component {
         <TripMap
           directions={directions}
           activityPlaces={activityPlaces}
-          selectMarker={place => {
-            selectMarker(place);
-            this.setCurrentTab(2);
-          }}
+          selectMarker={place => selectMarker(place)}
+          addActivity={placeId => addActivity(placeId)}
         />
 
         {/* Information and activity */}
-        <Tabs
-          id="plan-sidebar"
-          activeKey={currentTab}
-          bsStyle="pills"
-          onSelect={this.setCurrentTab}
-        >
-          <Tab eventKey={1} title={currentTrip.title} tabClassName="tab-menu">
-            <Itinerary
-              {...currentTrip}
-              routes={routes}
-              editItinerary={editItinerary}
-              editActivity={editActivity}
-              delActivity={delActivity}
-              handleCalculateRoute={this.calculateRoute}
-            />
-          </Tab>
-          <Tab eventKey={2} title="Place Detail" tabClassName="tab-menu">
-            <PlaceInfo
-              place={selectedPlace}
-              handleAddPlace={() => {
-                addActivity(selectedPlace.place_id);
-                this.setCurrentTab(1);
-              }}
-            />
-          </Tab>
-        </Tabs>
+        <Itinerary
+          {...currentTrip}
+          routes={routes}
+          editItinerary={editItinerary}
+          editActivity={editActivity}
+          delActivity={delActivity}
+          handleCalculateRoute={this.calculateRoute}
+        />
       </div>
     );
   }

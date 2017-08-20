@@ -1,11 +1,49 @@
-.place-info-entry {
+.carousel {
+  width: 360px;
+}
+
+.info-box {
   i {
-    margin-right: 10px;
-    width: 12px;
-    text-align: center;
+    font-size: 16px;
+  }
+  &-title {
+    margin-top: 10px;
+    margin-bottom: 20px;
+  }
+
+  &-content {
+    margin-bottom: 10px;
+    i {
+      margin-right: 10px;
+      width: 12px;
+      text-align: center;
+    }
+  }
+
+  button {
+    padding: 5px 15px;
+    background-color: #3abfff;
+    border-radius: 20px;
+    border: 0;
+    color: white;
+    &:hover {
+      background-color: lighten(#3abfff, 5%);
+    }
   }
 }
 
-.carousel {
-  width: 360px;
+.rating {
+  margin-right: 15px;
+  &-text {
+    margin-right: 5px;
+    font-size: 14px;
+    font-weight: 300;
+  }
+  &-star {
+    position: relative;
+    top: -2px;
+    i {
+      color: #ff5555;
+    }
+  }
 }

@@ -26,7 +26,7 @@ const compareArray = (a, b) => {
 export default class TripMapBox extends React.Component {
   static propTypes = {
     activityPlaces: PropTypes.array,
-
+    addActivity: PropTypes.func.isRequired,
     selectMarker: PropTypes.func.isRequired
   };
 
@@ -145,8 +145,6 @@ export default class TripMapBox extends React.Component {
     // }
   };
 
-  handleMarkerRightClick = targetMarker => {};
-
   handlePlaceChanged = () => {
     const resultPlaces = this._searchBoxComponent.getPlaces();
     if (resultPlaces.length == 0) return;
@@ -200,8 +198,8 @@ export default class TripMapBox extends React.Component {
         onMapLoad={this.handleMapLoad}
         onSearchBoxLoad={this.handleSearchBoxLoad}
         onMapClick={this.handleMapClick}
-        onMarkerRightClick={this.handleMarkerRightClick}
         onClickMarker={this.props.selectMarker}
+        onAddPlace={this.props.addActivity}
         // set search place result
         onPlacesChanged={this.handlePlaceChanged}
         // bind google map bound to search range
