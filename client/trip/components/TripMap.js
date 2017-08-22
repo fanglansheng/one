@@ -186,7 +186,7 @@ export default class TripMapBox extends React.Component {
     const style = { height: `100%`, width: `${MapWdith}px` };
     return (
       <GoogleMapInstance
-        containerElement={<div className="map-container" />}
+        containerElement={<div className="full-height" />}
         mapElement={<div style={style} />}
         zoom={this.state.zoom}
         center={this.state.center}

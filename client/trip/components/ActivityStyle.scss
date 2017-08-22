@@ -1,23 +1,78 @@
-.activity-item {
-  padding: 15px;
-  position: relative;
-  .activity-header {
-    button {
-      float: right;
-      background: none;
-      border: none;
-      color: lightgrey;
-      &:hover {
-        color: black;
-      }
-    }
-  }
+$react-dates-width-input: 90px;
+$react-dates-spacing-vertical-picker: 45px;
+$react-dates-color-text-focus: black;
 
-  .duration-picker {
+@import '~react-dates/css/variables.scss';
+@import '~react-dates/css/styles.scss';
+@import "../../scss/variables.scss";
+
+$header-height: 22px;
+$activity-left-margin: 30px;
+
+.btn-delete {
+  float: right;
+  background: none;
+  border: none;
+  color: lightgrey;
+  &:hover {
+    color: black;
+  }
+}
+
+.activity-item {
+  position: relative;
+  padding-bottom: 20px;
+  border-left: 2px solid lavender;
+  margin-left: 10px;
+
+  .memo-label {
     display: block;
   }
+}
 
-  .activity-content {
-    padding-left: 10px;
+.activity-index {
+  display: inline-block;
+  background-color: $col-btn;
+  border-radius: $header-height / 2;
+  width: $header-height;
+  height: $header-height;
+  line-height: $header-height;
+  color: white;
+  text-align: center;
+  margin-right: 5px;
+  position: absolute;
+  z-index: 2;
+  left: -12px;
+}
+
+.activity-header {
+  border-radius: $header-height / 2;
+  margin-left: 20px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.activity-content {
+  margin-left: $activity-left-margin;
+  font-weight: 300;
+  .time-picker {
+    margin-left: 10px;
+    width: 100px;
+    vertical-align: middle;
   }
+}
+
+.SingleDatePickerInput {
+  border: none;
+}
+.DateInput {
+  line-height: normal;
+  font-size: inherit;
+  padding: 0px;
+}
+.DateInput__display-text--focused {
+  background: white;
+  border-radius: 0;
+  border-top: 1px solid white;
+  border-bottom: 1px solid lightgrey;
 }

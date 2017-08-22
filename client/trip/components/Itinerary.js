@@ -36,7 +36,6 @@ export default class Itinerary extends React.Component {
     id: PropTypes.number.isRequired,
     // the name of the trip
     title: PropTypes.string.isRequired,
-    memo: PropTypes.string.isRequired,
     // array of trip activity objects.
     activities: PropTypes.array.isRequired,
     // The routes information between two activity place.
@@ -55,17 +54,13 @@ export default class Itinerary extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      title: props.title,
-      memo: props.memo
+      title: props.title
     };
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.title !== this.props.title) {
       this.setState({ title: nextProps.title });
-    }
-    if (nextProps.memo !== this.props.memo) {
-      this.setState({ memo: nextProps.memo });
     }
   }
 
@@ -78,8 +73,7 @@ export default class Itinerary extends React.Component {
     if (e.charCode !== 13) return;
 
     this.props.editItinerary({
-      memo: this.state.memo
-      // title: this.state.title
+      title: this.state.title
     });
   };
 
@@ -98,42 +92,25 @@ export default class Itinerary extends React.Component {
       handleCalculateRoute
     } = this.props;
 
-    const { title, memo } = this.state;
+    const { title } = this.state;
 
     return (
       <div className="itinerary">
-        {activities.length > 1 &&
-          <SingleSelectButton
-            options={travelModes}
-            buttonText="Show Route"
-            defaultOption="DRIVING"
-            handleSubmit={handleCalculateRoute}
-          />}
-
-        <div className="plan-header">
-          <EditableTextLabel
-            className="title"
-            placeholder="Title"
-            value={title}
-            labelText={title}
-            handleSubmit={this.handleSubmit}
-            handleChange={e => this.setState({ title: e.target.value })}
-          />
-          <EditableTextLabel
-            className="description"
-            placeholder="Memo"
-            value={memo}
-            labelText={memo || "Click to edit memo"}
-            handleSubmit={this.handleSubmit}
-            handleChange={e => this.setState({ memo: e.target.value })}
-          />
-        </div>
+        <EditableTextLabel
+          className="plan-header"
+          placeholder="Title"
+          value={title}
+          labelText={title}
+          handleSubmit={this.handleSubmit}
+          handleChange={e => this.setState({ title: e.target.value })}
+        />
 
         <div className="plan-content">
           {activities.map((activity, index) =>
             <div key={activity.id}>
               <ActivityItem
                 {...activity}
+                index={index + 1}
                 handleDelete={e => this.handleDeleteActivity(activity.id, e)}
                 handleEdit={data => editActivity(activity.id, data)}
               />
@@ -141,6 +118,16 @@ export default class Itinerary extends React.Component {
             </div>
           )}
           <span>Use the search bar to search a place and add it.</span>
+        </div>
+
+        <div className="itinerary-toolbar">
+          {activities.length > 1 &&
+            <SingleSelectButton
+              options={travelModes}
+              buttonText="Show Route"
+              defaultOption="DRIVING"
+              handleSubmit={handleCalculateRoute}
+            />}
         </div>
       </div>
     );

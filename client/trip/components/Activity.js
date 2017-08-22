@@ -24,16 +24,11 @@ import moment from "moment";
 import { SingleDatePicker } from "react-dates";
 import TimePicker from "rc-time-picker";
 import core from "../../core";
-const {
-  EditableTextLabel,
-  EditableNumberLabel,
-  VisitTypeButton,
-  constantss
-} = core;
+const { EditableTextLabel, VisitTypeButton, constantss } = core;
 
 import "./ActivityStyle.scss";
 
-const TimeFormat = "h:mm a";
+const TimeFormat = "hh:mm a";
 const defaultProps = {
   memo: ""
 };
@@ -65,13 +60,16 @@ export default class ActivityItem extends React.Component {
   constructor(props) {
     super(props);
     const offset = props.place.utc_offset;
+    const datetime = utcToLocal(props.startTime, offset);
 
     this.state = {
-      startTime: utcToLocal(props.startTime, offset),
+      startTime: datetime,
+      time: datetime.format(TimeFormat),
       visitType: props.visitType,
       duration: props.duration,
       memo: props.memo,
-      dateFocused: false
+      dateFocused: false,
+      expand: true
     };
   }
 
@@ -106,19 +104,46 @@ export default class ActivityItem extends React.Component {
     this.props.handleEdit({ startTime: newDate });
   };
 
-  handleSetTime = time => {
-    this.setState({ startTime: time });
+  handleSetTime = () => {
+    let [hour, minute, am] = this.state.time.split(/[:\s]/);
+    let { startTime } = this.state;
 
+    if (am[0] === "p" || am[0] === "P") {
+      hour = parseInt(hour) + 12;
+    }
+    minute = parseInt(minute);
+    startTime.set({ hour, minute });
     // local to utc
     const offset = this.props.place.utc_offset;
-    const utcTime = time.utcOffset(offset).format();
-
+    const utcTime = startTime.utcOffset(offset).format();
     this.props.handleEdit({ startTime: utcTime });
   };
 
+  checkTimeInput = e => {
+    const { value } = e.target;
+    const regx = /^(0?[1-9]|1[012])(:[0-5]\d) [APap][mM]$/;
+    const result = regx.exec(value);
+    if (!result) {
+      console.log("invalid input");
+      return;
+    }
+    this.setState({ time: e.target.value });
+  };
+
+  toggleExpand = () => {
+    this.setState({ expand: !this.state.expand });
+  };
+
   render() {
-    const { place, handleDelete, handleEdit } = this.props;
-    const { startTime, duration, memo, visitType, dateFocused } = this.state;
+    const { place, index, handleDelete, handleEdit } = this.props;
+    const {
+      startTime,
+      time,
+      duration,
+      memo,
+      visitType,
+      dateFocused
+    } = this.state;
     const mDuration = moment.duration(duration);
     const hour = mDuration.get("h") ? mDuration.get("h") + "h" : "";
     const min = mDuration.get("m") ? mDuration.get("m") + "min" : "";
@@ -126,35 +151,46 @@ export default class ActivityItem extends React.Component {
 
     return (
       <div className="activity-item">
-        <div className="activity-header">
-          <SingleDatePicker
-            numberOfMonths={1}
-            date={startTime}
-            focused={dateFocused}
-            onDateChange={this.handleSetDate}
-            onFocusChange={({ focused }) =>
-              this.setState({ dateFocused: focused })}
-          />
+        <span className="activity-index">
+          {index}
+        </span>
 
-          <TimePicker
-            className="time-picker"
-            placeholder="Time"
-            showSecond={false}
-            value={startTime}
-            onChange={this.handleSetTime}
-            format={TimeFormat}
-            use12Hours
-          />
-
-          <button onClick={handleDelete}>
+        <div className="activity-header" onClick={this.toggleExpand}>
+          {place.name}
+          <button className="btn-delete" onClick={handleDelete}>
             <i className="material-icons">clear</i>
           </button>
         </div>
 
         <div className="activity-content">
-          <h5>
-            {place.name}
-          </h5>
+          <div>
+            <SingleDatePicker
+              numberOfMonths={1}
+              date={startTime}
+              focused={dateFocused}
+              onDateChange={this.handleSetDate}
+              onFocusChange={({ focused }) =>
+                this.setState({ dateFocused: focused })}
+            />
+
+            <EditableTextLabel
+              value={time}
+              className="time-picker"
+              placeholder="09:30 AM"
+              labelText={time}
+              handleSubmit={this.handleSetTime}
+              handleChange={this.checkTimeInput}
+            />
+
+            <EditableTextLabel
+              className="time-picker"
+              value={duration}
+              placeholder="HH:MM"
+              labelText={durationText}
+              handleSubmit={() => handleEdit({ duration })}
+              handleChange={e => this.setState({ duration: e.target.value })}
+            />
+          </div>
 
           <VisitTypeButton
             id="activity-visit-type"
@@ -167,17 +203,9 @@ export default class ActivityItem extends React.Component {
           />
 
           <EditableTextLabel
-            className="duration-picker"
-            value={duration}
-            placeholder="HH:MM"
-            labelText={durationText}
-            handleSubmit={() => handleEdit({ duration })}
-            handleChange={e => this.setState({ duration: e.target.value })}
-          />
-
-          <EditableTextLabel
             value={memo}
             placeholder="edit"
+            className="memo-label"
             labelText={memo || "Click to edit memo"}
             handleSubmit={() => handleEdit({ memo })}
             handleChange={e => this.setState({ memo: e.target.value })}

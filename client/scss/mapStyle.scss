@@ -17,93 +17,30 @@ body {
   display: inline;
 }
 
-.full-height {
+.app-container {
   height: 100%;
+  display: -webkit-flex;
+  display: flex;
+}
+
+.container {
+  height: 100%;
+  width: 1000px;
 }
 
 .material-icons {
   vertical-align: middle;
 }
 
-.column {
-  display: inline-block;
-  float: left;
+.full-height {
   height: 100%;
-  padding: 10px;
-}
-
-.navigation {
-  @extend .column;
-  width: 20%;
-  .nav-item {
-    margin-bottom: 20px;
-  }
-}
-
-.content-box {
-  @extend .column;
-  width: 80%;
-}
-
-.map-container {
-  height: 100%;
-  width: 80%;
-  display: inline-block;
 }
 
 .searchbox-input {
   width: $map-sidebar-width - 20px;
   height: 30px;
   margin: 10px;
-  position: fixed !important;
-}
-
-.plan-box {
-  width: $map-sidebar-width;
-  position: fixed;
-  top: 40px;
-  right: 0px;
-  background: white;
-  height: 100%;
-  overflow: auto;
-}
-
-.plan-header {
-  h4 {
-    padding: 0px 10px;
-  }
-}
-
-.SingleDatePickerInput {
-  border: none;
-}
-.DateInput {
-  line-height: normal;
-  font-size: inherit;
-  padding: 0px;
-  width: 90px;
-}
-
-.time-picker {
-  width: 70px;
-  .rc-time-picker-input {
-    font-size: inherit;
-    border: none;
-    cursor: pointer;
-    font-weight: 200;
-    vertical-align: middle;
-  }
-}
-
-.place-header {
-  height: 200px;
-  position: relative;
-
-  h4 {
-    color: white;
-    text-shadow: #4a4a4a 1px 1px 5px;
-    position: absolute;
-    bottom: 10px;
-    padding: 0px 20px;
-  }
+  padding: 10px;
+  font-size: 12px;
+  // position: fixed !important;
 }

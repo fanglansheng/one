@@ -1,10 +1,10 @@
 // import * as action from './fileActions';
 
 // compontents
-import HomeContainer from "./containers/HomeContainer";
-import MyTripList from "./components/MyTripList";
+import TripListContainer from "./containers/TripListContainer";
+import Home from "./components/Home";
 
 export default {
-  HomeContainer,
-  MyTripList
+  Home,
+  TripListContainer
 };

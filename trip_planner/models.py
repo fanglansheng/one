@@ -69,6 +69,7 @@ class Trip(db.Model):
     # user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     # user = db.relationship('User', backref='places')
     title = db.Column(db.String(80), nullable=False)
+    ############## no need for memo!!!! #############################################
     memo = db.Column(db.String(500), default='')
     activities = db.relationship('Activity', backref='trip', lazy='dynamic')
 

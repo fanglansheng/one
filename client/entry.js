@@ -17,7 +17,7 @@ import { Provider } from "react-redux";
 import rootReducer from "./core/reducer";
 
 import rootApp from "./home";
-const { HomeContainer, MyTripList } = rootApp;
+const { Home, TripListContainer } = rootApp;
 
 import trip from "./trip";
 const { TripPlanContainer } = trip;
@@ -39,9 +39,9 @@ const store = createStore(
 ReactDOM.render(
   <Provider store={store}>
     <Router history={hashHistory}>
-      <Route path="/" component={HomeContainer}>
-        <IndexRoute component={MyTripList} />
-        <Route path="trip" component={MyTripList} />
+      <Route path="/" component={Home}>
+        <IndexRoute component={TripListContainer} />
+        <Route path="trip" component={TripListContainer} />
         <Route path="map" component={null} />
       </Route>
       <Route path="/trip/:tripId" component={TripPlanContainer} />

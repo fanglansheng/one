@@ -29,7 +29,6 @@ export default class TripPlan extends React.Component {
   }
 
   calculateRoute = travelMode => {
-    console.log(travelMode);
     const { activityPlaces } = this.props;
     const directionsService = new google.maps.DirectionsService();
 
@@ -80,7 +79,7 @@ export default class TripPlan extends React.Component {
 
     const routes = directions ? directions.routes[0].legs : [];
     return (
-      <div className="full-height">
+      <div className="app-container">
         {/* Map */}
         <TripMap
           directions={directions}
