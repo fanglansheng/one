@@ -1,21 +1,22 @@
-import { createSelector } from 'reselect';
+import moment from "moment";
+import { createSelector } from "reselect";
+import { utcToLocal } from "../core/constants";
 
 /////////// Basic Selectors
-const getTripsById = (state) => state.trips.byId;
-const getTripIdList = (state) => state.trips.allItems;
+const getTripsById = state => state.trips.byId;
+const getTripIdList = state => state.trips.allItems;
 
-
-const getActivitiesById = (state) => state.activities.byId;
-const getActivityIdList = (state) => state.activities.allItems;
-const getActivityItem = (state, props) => state.activities.byId[props.activityId]
+const getActivitiesById = state => state.activities.byId;
+const getActivityIdList = state => state.activities.allItems;
+const getActivityItem = (state, props) =>
+  state.activities.byId[props.activityId];
 
 ///////////// Utility Functions
 // construct to map entity ids to object with content
-const mapIdsToObjects = (allItemsSelector, byIdSelector) => createSelector(
-  [ allItemsSelector, byIdSelector],
-  (allItems, byId) => allItems.map(id => byId[id])
-);
-
+const mapIdsToObjects = (allItemsSelector, byIdSelector) =>
+  createSelector([allItemsSelector, byIdSelector], (allItems, byId) =>
+    allItems.map(id => byId[id])
+  );
 
 ///////////// Composed Selectors
 
@@ -26,49 +27,46 @@ export const getAllActivities = mapIdsToObjects(
 );
 
 // get all trips without detail
-export const getAllTrips = mapIdsToObjects(
-  getTripIdList,
-  getTripsById
-);
+export const getAllTrips = mapIdsToObjects(getTripIdList, getTripsById);
 
 // Generate a selector to get a trip by Id
-export const makeGetTrip = (tripId) => createSelector(
-  [ 
-    (state) => state.trips.byId[tripId], 
-    getActivitiesById
-  ],
-  (trip, activitiesById) => {
-    if(!trip) return null;
-    const activities = trip.activities.map(id => activitiesById[id]);
-    return {
-      ...trip,
-      activities
-    };
-  }
-);
-
-// generate the center of map
-export const makeGetCenter = (tripId) => createSelector(
-  makeGetTrip(tripId),
-  (trip) => {
-    if(!trip) return null;
-
-    const locations = trip.activities.map(a => a.place.geometry.location);
-
-    if(!locations.length) return null;
-
-    let newLoc = locations.reduce((sum, location)=>{
+export const makeGetTrip = tripId =>
+  createSelector(
+    [state => state.trips.byId[tripId], getActivitiesById],
+    (trip, activitiesById) => {
+      if (!trip) return null;
+      const activities = trip.activities.map(id => activitiesById[id]);
       return {
-        lat: sum.lat + location.lat,
-        lng: sum.lng + location.lng
-      }
-    }, {lat:0, lng:0});
+        ...trip,
+        activities
+      };
+    }
+  );
 
-    newLoc.lng = newLoc.lng / locations.length;
-    newLoc.lat = newLoc.lat / locations.length;
-    return newLoc;
-  }
-);
+export const makeGetClassifiedActivities = tripId =>
+  createSelector(
+    [state => state.trips.byId[tripId], getActivitiesById],
+    (trip, activitiesById) => {
+      if (!trip) return [];
+      const activities = trip.activities.map(id => activitiesById[id]);
+      let dateDic = { Unassigned: [] };
+      activities.forEach(activity => {
+        const offset = activity.place.utc_offset;
+        const date = utcToLocal(activity.startTime, offset);
 
+        const dateText = date ? date.format("YYYY/MM/DD") : "Unassigned";
+        if (dateText in dateDic) {
+          dateDic[dateText].push(activity);
+        } else {
+          dateDic[dateText] = [activity];
+        }
+      });
 
-
+      const dates = Object.keys(dateDic);
+      let result = dates.map(key => ({
+        date: key,
+        activities: dateDic[key]
+      }));
+      return result;
+    }
+  );

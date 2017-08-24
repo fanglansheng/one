@@ -1,31 +1,8 @@
-@import '../../scss/variables';
-
-.plan-header {
-  display: block;
-  font-size: $font-title-size;
-  font-weight: $font-title-weight;
-  margin: 5px;
-  margin-bottom: 10px;
-}
-
-.route-box {
-  margin-left: 10px;
-  border-left: 2px solid lightseagreen;
-  color: #34c39e;
-  span {
-    margin-left: 10px;
-    margin-right: 10px;
-  }
-}
-
 .itinerary {
-  width: $map-sidebar-width;
-  // position: fixed;
-  display: inline-block;
-  top: 0px;
-  right: 0px;
-  // background: #f5f5f5;
-  height: 100%;
-  overflow: auto;
-  padding: 16px;
+  padding: 10px;
+  padding-right: 0;
+  &-header {
+    margin-top: 5px;
+    font-weight: 600;
+  }
 }

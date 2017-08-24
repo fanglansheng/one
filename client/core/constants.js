@@ -1,4 +1,5 @@
 import keyMirror from "keymirror";
+import moment from "moment";
 
 export const Host = "http://localhost:5002";
 
@@ -35,8 +36,15 @@ export const VisitType = {
   HOTEL: { value: "hotel", icon: "" },
   TOUR: { value: "tour", icon: "" },
   ACTIVITY: { value: "activity", icon: "" },
-  OTHER: { value: "other", icon: "" }
+  STAR: { value: "star", icon: "ic_star.png" }
 };
+
+const travelModes = [
+  { value: google.maps.TravelMode.BICYCLING, icon: "directions_bike" },
+  { value: google.maps.TravelMode.DRIVING, icon: "directions_car" },
+  { value: google.maps.TravelMode.TRANSIT, icon: "directions_bus" },
+  { value: google.maps.TravelMode.WALKING, icon: "directions_walk" }
+];
 
 export const DefaultCenter = {
   lat: 39.9375346,
@@ -64,4 +72,12 @@ export const shouldFetch = (state, type) => {
 export const mapKeysToIds = dic => {
   if (!dic) return [];
   return Object.keys(dic).map(d => parseInt(d));
+};
+
+export const utcToLocal = (datetime, offset) => {
+  if (datetime) {
+    return moment.utc(datetime).utcOffset(offset);
+  } else {
+    return null;
+  }
 };

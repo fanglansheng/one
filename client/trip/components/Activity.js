@@ -21,26 +21,14 @@ import PropTypes from "prop-types";
 import moment from "moment";
 
 // components
-import { SingleDatePicker } from "react-dates";
-import TimePicker from "rc-time-picker";
 import core from "../../core";
-const { EditableTextLabel, VisitTypeButton, constantss } = core;
+const { EditableTextLabel, VisitTypeButton, constants } = core;
 
+// style
 import "./ActivityStyle.scss";
 
 const TimeFormat = "hh:mm a";
-const defaultProps = {
-  memo: ""
-};
-
-function utcToLocal(datetime, offset) {
-  if (datetime) {
-    return moment.utc(datetime).utcOffset(offset);
-    // console.log(dateTime.format());
-  } else {
-    return null;
-  }
-}
+const defaultProps = { memo: "" };
 
 export default class ActivityItem extends React.Component {
   static propTypes = {
@@ -60,11 +48,11 @@ export default class ActivityItem extends React.Component {
   constructor(props) {
     super(props);
     const offset = props.place.utc_offset;
-    const datetime = utcToLocal(props.startTime, offset);
+    const datetime = constants.utcToLocal(props.startTime, offset);
 
     this.state = {
       startTime: datetime,
-      time: datetime.format(TimeFormat),
+      time: datetime ? datetime.format(TimeFormat) : "",
       visitType: props.visitType,
       duration: props.duration,
       memo: props.memo,
@@ -119,6 +107,13 @@ export default class ActivityItem extends React.Component {
     this.props.handleEdit({ startTime: utcTime });
   };
 
+  handleDragStart = e => {
+    const { activityId, startTime, place } = this.props;
+    e.dataTransfer.setData("activityId", activityId);
+    e.dataTransfer.setData("startTime", startTime);
+    e.dataTransfer.setData("utcOffset", place.utc_offset);
+  };
+
   checkTimeInput = e => {
     const { value } = e.target;
     const regx = /^(0?[1-9]|1[012])(:[0-5]\d) [APap][mM]$/;
@@ -134,23 +129,42 @@ export default class ActivityItem extends React.Component {
     this.setState({ expand: !this.state.expand });
   };
 
+  renderUnassignedActivity() {
+    const { place, index, handleDelete } = this.props;
+
+    return (
+      <div
+        className="unassigned-activity"
+        draggable="true"
+        onDragStart={this.handleDragStart}
+      >
+        <span>
+          {place.name}
+        </span>
+        <button className="btn-delete" onClick={handleDelete}>
+          <i className="material-icons">clear</i>
+        </button>
+      </div>
+    );
+  }
+
   render() {
+    if (this.props.startTime === null) return this.renderUnassignedActivity();
+
     const { place, index, handleDelete, handleEdit } = this.props;
-    const {
-      startTime,
-      time,
-      duration,
-      memo,
-      visitType,
-      dateFocused
-    } = this.state;
+    const { time, duration, memo, visitType, dateFocused } = this.state;
+
     const mDuration = moment.duration(duration);
     const hour = mDuration.get("h") ? mDuration.get("h") + "h" : "";
     const min = mDuration.get("m") ? mDuration.get("m") + "min" : "";
     const durationText = `${hour} ${min}`;
 
     return (
-      <div className="activity-item">
+      <div
+        className="activity-item"
+        draggable="true"
+        onDragStart={this.handleDragStart}
+      >
         <span className="activity-index">
           {index}
         </span>
@@ -164,15 +178,6 @@ export default class ActivityItem extends React.Component {
 
         <div className="activity-content">
           <div>
-            <SingleDatePicker
-              numberOfMonths={1}
-              date={startTime}
-              focused={dateFocused}
-              onDateChange={this.handleSetDate}
-              onFocusChange={({ focused }) =>
-                this.setState({ dateFocused: focused })}
-            />
-
             <EditableTextLabel
               value={time}
               className="time-picker"
@@ -183,7 +188,7 @@ export default class ActivityItem extends React.Component {
             />
 
             <EditableTextLabel
-              className="time-picker"
+              className="duration-picker"
               value={duration}
               placeholder="HH:MM"
               labelText={durationText}

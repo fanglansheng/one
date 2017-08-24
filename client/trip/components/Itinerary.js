@@ -7,9 +7,6 @@ import ActivityItem from "./Activity";
 import core from "../../core";
 const { SingleSelectButton, EditableTextLabel } = core;
 
-// style
-import "./ItineraryStyle.scss";
-
 // datetime is moment object.
 const sortAscTime = (a, b) => a.datetime - b.datetime;
 

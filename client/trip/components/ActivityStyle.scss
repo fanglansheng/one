@@ -14,12 +14,21 @@ $activity-left-margin: 30px;
   background: none;
   border: none;
   color: lightgrey;
+  .material-icons {
+    font-size: 18px;
+  }
   &:hover {
     color: black;
   }
 }
+.unassigned-activity {
+  padding: 5px;
+  margin-left: 10px;
+  background: white;
+}
 
 .activity-item {
+  background: white;
   position: relative;
   padding-bottom: 20px;
   border-left: 2px solid lavender;
@@ -48,7 +57,7 @@ $activity-left-margin: 30px;
 .activity-header {
   border-radius: $header-height / 2;
   margin-left: 20px;
-  font-weight: 600;
+  font-weight: 400;
   margin-bottom: 10px;
 }
 
@@ -56,14 +65,20 @@ $activity-left-margin: 30px;
   margin-left: $activity-left-margin;
   font-weight: 300;
   .time-picker {
-    margin-left: 10px;
+    display: inline-block;
     width: 100px;
     vertical-align: middle;
+  }
+  .duration-picker {
+    display: inline-block;
+    width: 100px;
+    vertical-align: middle;
+    margin-left: 10px;
   }
 }
 
 .SingleDatePickerInput {
-  border: none;
+  margin-right: 10px;
 }
 .DateInput {
   line-height: normal;
@@ -72,7 +87,7 @@ $activity-left-margin: 30px;
 }
 .DateInput__display-text--focused {
   background: white;
-  border-radius: 0;
-  border-top: 1px solid white;
-  border-bottom: 1px solid lightgrey;
+}
+.SingleDatePicker__picker--direction-left {
+  z-index: 10;
 }

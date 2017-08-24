@@ -1,101 +1,123 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
 // components
-import TripMap from "./TripMap";
-import Itinerary from "./Itinerary";
-import PlaceInfo from "./PlaceInfo";
+import { SingleDatePicker } from "react-dates";
+import ActivityItem from "./Activity";
+import DayItinerary from "./DayItinerary";
+import core from "../../core";
+const { SingleSelectButton, EditableTextLabel } = core;
+import "./PlanStyle.scss";
 
-import { Tab, Tabs } from "react-bootstrap";
-
-export default class TripPlan extends React.Component {
+export default class Plan extends React.Component {
   static propTypes = {
-    currentTrip: PropTypes.object.isRequired,
-    activityPlaces: PropTypes.array.isRequired,
-    // functions
-    addActivity: PropTypes.func.isRequired, //addActivity(object)
-    editActivity: PropTypes.func.isRequired,
-    delActivity: PropTypes.func.isRequired,
+    // the trip id.
+    id: PropTypes.number.isRequired,
+    // the name of the trip
+    title: PropTypes.string.isRequired,
+    // array of arrays [[date1], [date2] ... ]
+    activities: PropTypes.array.isRequired,
+    // array of objects
+    dayItineraries: PropTypes.array.isRequired,
+
     // editItinerary(data)
-    editItinerary: PropTypes.func.isRequired
+    editItinerary: PropTypes.func.isRequired,
+    // editActivity(activityId, data), tripId already bind
+    editActivity: PropTypes.func.isRequired,
+    // delActivity(activityId), tripId already bind
+    delActivity: PropTypes.func.isRequired
   };
 
   constructor(props) {
     super(props);
     this.state = {
-      // the route to activity places.
-      directions: null
+      title: props.title,
+      dateFocused: false,
+      dateInput: null
     };
   }
 
-  calculateRoute = travelMode => {
-    const { activityPlaces } = this.props;
-    const directionsService = new google.maps.DirectionsService();
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.title !== this.props.title) {
+      this.setState({ title: nextProps.title });
+    }
+  }
 
-    const last = activityPlaces.length - 1;
-    const waypoints = [];
-    activityPlaces.forEach((place, index) => {
-      if (index != 0 && index != last) {
-        waypoints.push({
-          location: place.geometry.location,
-          stopover: true
-        });
-      }
+  handleDeleteActivity = (activityId, e) => {
+    const { id } = this.props;
+    this.props.delActivity(id, activityId);
+  };
+
+  handleSubmit = e => {
+    if (e.charCode !== 13) return;
+
+    this.props.editItinerary({
+      title: this.state.title
     });
+  };
 
-    directionsService.route(
-      {
-        origin: activityPlaces[0].geometry.location,
-        destination: activityPlaces[last].geometry.location,
-        travelMode: travelMode,
-        waypoints: waypoints,
-        optimizeWaypoints: true,
-        provideRouteAlternatives: true
-      },
-      (response, status) => {
-        if (status === google.maps.DirectionsStatus.OK) {
-          console.log(response);
-          this.setState({
-            directions: response
-          });
-        } else {
-          console.error(`error fetching directions ${response.status}`);
-        }
-      }
-    );
+  handleAddDay = () => {
+    this.setState({
+      dayItineraries: [
+        ...this.state.dayItineraries,
+        { date: null, activities: [] }
+      ]
+    });
   };
 
   render() {
-    const { directions } = this.state;
     const {
-      currentTrip,
-      activityPlaces,
+      id,
+      activities,
+      dayItineraries,
       addActivity,
       editActivity,
-      delActivity,
-      selectedPlace,
-      editItinerary
+      delActivity
     } = this.props;
 
-    const routes = directions ? directions.routes[0].legs : [];
-    return (
-      <div className="app-container">
-        {/* Map */}
-        <TripMap
-          directions={directions}
-          activityPlaces={activityPlaces}
-          addActivity={placeId => addActivity(placeId)}
-        />
+    const { title, dateFocused, dateInput } = this.state;
 
-        {/* Information and activity */}
-        <Itinerary
-          {...currentTrip}
-          routes={routes}
-          editItinerary={editItinerary}
-          editActivity={editActivity}
-          delActivity={delActivity}
-          handleCalculateRoute={this.calculateRoute}
-        />
+    return (
+      <div className="plan">
+        <div>
+          <EditableTextLabel
+            className="plan-header"
+            placeholder="Title"
+            value={title}
+            labelText={title}
+            handleSubmit={this.handleSubmit}
+            handleChange={e => this.setState({ title: e.target.value })}
+          />
+          {/* add date buttton */}
+          <div>
+            <SingleDatePicker
+              numberOfMonths={1}
+              placeholder="Add a day"
+              date={dateInput}
+              focused={dateFocused}
+              onDateChange={dateInput => this.setState({ dateInput })}
+              onFocusChange={({ focused }) =>
+                this.setState({ dateFocused: focused })}
+            />
+            <button className="btn-add" onClick={this.handleAddDay}>
+              +
+            </button>
+          </div>
+        </div>
+
+        <div className="plan-content">
+          {dayItineraries.map((itinerary, key) =>
+            <DayItinerary
+              key={key}
+              tripId={id}
+              date={itinerary.date}
+              activities={itinerary.activities}
+              editActivity={editActivity}
+              delActivity={delActivity}
+            />
+          )}
+        </div>
       </div>
     );
   }

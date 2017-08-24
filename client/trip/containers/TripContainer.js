@@ -11,14 +11,14 @@ import {
   fetchCreateActivity
 } from "../tripActions";
 
-import { makeGetTrip, makeGetCenter } from "../selector.js";
+import { makeGetTrip, makeGetClassifiedActivities } from "../selector.js";
 
 // Components
-import TripPlan from "../components/TripPlan";
+import Trip from "../components/Trip";
 
 import "./TripPlanStyle.scss";
 
-class TripPlanContainer extends Component {
+class TripContainer extends Component {
   static propTypes = {
     dispatch: PropTypes.func.isRequired
   };
@@ -34,7 +34,7 @@ class TripPlanContainer extends Component {
     const { dispatch, tripId, isFetching, currentTrip } = this.props;
     if (isFetching || !currentTrip) return null;
     return (
-      <TripPlan
+      <Trip
         {...this.props}
         addActivity={placeId => dispatch(fetchCreateActivity(tripId, placeId))}
         editActivity={(activityId, data) =>
@@ -55,16 +55,15 @@ const mapStateToProps = (state, props) => {
   const getTrip = makeGetTrip(tripId);
   const currentTrip = getTrip(state);
 
-  const activityPlaces = currentTrip
-    ? currentTrip.activities.map(a => a.place)
-    : [];
+  const getClassifiedActivities = makeGetClassifiedActivities(tripId);
+  const dayItineraries = getClassifiedActivities(state);
 
   return {
     isFetching,
     tripId,
     currentTrip,
-    activityPlaces
+    dayItineraries
   };
 };
 
-export default connect(mapStateToProps)(TripPlanContainer);
+export default connect(mapStateToProps)(TripContainer);

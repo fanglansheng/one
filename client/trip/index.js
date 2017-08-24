@@ -5,11 +5,11 @@ import * as selector from "./selector";
 
 // compontents
 // import  from './components/Home';
-import TripPlanContainer from "./containers/TripPlanContainer";
+import TripContainer from "./containers/TripContainer";
 
 export default {
   selector,
   action,
 
-  TripPlanContainer
+  TripContainer
 };

@@ -20,7 +20,7 @@ import rootApp from "./home";
 const { Home, TripListContainer } = rootApp;
 
 import trip from "./trip";
-const { TripPlanContainer } = trip;
+const { TripContainer } = trip;
 
 import "rc-time-picker/assets/index.css";
 import "react-dates/lib/css/_datepicker.css";
@@ -44,7 +44,7 @@ ReactDOM.render(
         <Route path="trip" component={TripListContainer} />
         <Route path="map" component={null} />
       </Route>
-      <Route path="/trip/:tripId" component={TripPlanContainer} />
+      <Route path="/trip/:tripId" component={TripContainer} />
     </Router>
   </Provider>,
   document.getElementById("app")

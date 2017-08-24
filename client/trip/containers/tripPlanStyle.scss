@@ -32,3 +32,16 @@
     }
   }
 }
+
+.btn-add {
+  background: $col-btn-add;
+  display: inline-block;
+  width: 26px;
+  height: 26px;
+  border-radius: 20px;
+  border: 0;
+  color: white;
+  &:hover {
+    background-color: lighten(#3abfff, 5%);
+  }
+}

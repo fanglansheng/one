@@ -50,6 +50,12 @@ const byId = (state = {}, action) => {
         [action.activity.id]: action.activity
       };
 
+    case ActionTypes.EDIT_ACTIVITY:
+      return {
+        ...state,
+        [action.activity.id]: action.activity
+      };
+
     case ActionTypes.DEL_ACTIVITY:
       return Object.keys(state).reduce((result, key) => {
         if (key !== action.activityId.toString()) {

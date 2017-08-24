@@ -41,16 +41,16 @@ export default withGoogleMap(props =>
       <MapMarker
         place={place}
         key={place.place_id}
-        handleAddPlace={() => props.onAddPlace(place.place_id)}
+        addPlace={() => props.onAddPlace(place.place_id)}
       />
     )}
-    {props.activityPlaces.map((place, index) =>
+    {props.activities.map((activity, index) =>
       <MapMarker
         // defaultAnimation={2}
         // position={place.geometry.location}
-        place={place}
-        key={place.place_id}
-        icon={StarIcon}
+        place={activity.place}
+        key={activity.place.place_id}
+        icon={StarIcon} //{`/static/images/${activity.visitType}`}
         label={(index + 1).toString()}
 
         // onClick={() => {}}

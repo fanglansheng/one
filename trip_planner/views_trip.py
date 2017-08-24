@@ -110,6 +110,7 @@ def activity(trip_id):
 
 
 def get_datetime(date_str):
+    if date_str == '': return None
     ret = datetime.strptime(date_str[0:16], '%Y-%m-%dT%H:%M')
     delta = timedelta(hours=int(date_str[19:22]), minutes=int(date_str[23:]))
     return ret - delta
@@ -131,8 +132,6 @@ def edit_activity(it_id):
         # check form field, store utc time in database
         if 'startTime' in data:
             activity.start_time = get_datetime(data['startTime'])
-        if 'endTime' in data:
-            activity.end_time = get_datetime(data['endTime'])
         if 'memo' in data:
             activity.memo = data['memo']
         if 'duration' in data:

@@ -25,7 +25,7 @@ const compareArray = (a, b) => {
 
 export default class TripMapBox extends React.Component {
   static propTypes = {
-    activityPlaces: PropTypes.array,
+    activities: PropTypes.array,
     addActivity: PropTypes.func.isRequired
   };
 
@@ -44,13 +44,13 @@ export default class TripMapBox extends React.Component {
 
   componentDidMount() {
     this.initialMapCenter();
-    this.setActivitiesCenter(this.props.activityPlaces);
+    this.setActivitiesCenter(this.props.activities);
   }
 
   componentWillReceiveProps(nextProps) {
-    const { activityPlaces } = nextProps;
-    if (!compareArray(activityPlaces, this.props.activityPlaces)) {
-      this.setActivitiesCenter(activityPlaces);
+    const { activities } = nextProps;
+    if (!compareArray(activities, this.props.activities)) {
+      this.setActivitiesCenter(activities);
     }
   }
 
@@ -90,14 +90,14 @@ export default class TripMapBox extends React.Component {
     }
   };
 
-  setActivitiesCenter = activityPlaces => {
-    if (activityPlaces.length === 0) return null;
+  setActivitiesCenter = activities => {
+    if (activities.length === 0) return null;
 
     let bounds = new google.maps.LatLngBounds();
 
-    activityPlaces.forEach(place => {
+    activities.forEach(act => {
       // Only geocodes have viewport.
-      const position = place.geometry.location;
+      const position = act.place.geometry.location;
       const location = new google.maps.LatLng(position.lat, position.lng);
       bounds.extend(location);
     });
@@ -193,7 +193,7 @@ export default class TripMapBox extends React.Component {
         bounds={this.state.bounds}
         directions={this.props.directions}
         resultPlaces={this.state.resultPlaces}
-        activityPlaces={this.props.activityPlaces}
+        activities={this.props.activities}
         onMapLoad={this.handleMapLoad}
         onSearchBoxLoad={this.handleSearchBoxLoad}
         onMapClick={this.handleMapClick}
@@ -208,5 +208,5 @@ export default class TripMapBox extends React.Component {
 }
 
 TripMapBox.defaultProps = {
-  activityPlaces: []
+  activities: []
 };
