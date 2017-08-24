@@ -23,8 +23,9 @@ const compareArray = (a, b) => {
   return true;
 };
 
-export default class TripMapBox extends React.Component {
+export default class TripMap extends React.Component {
   static propTypes = {
+    directions: PropTypes.array,
     activities: PropTypes.array,
     addActivity: PropTypes.func.isRequired
   };
@@ -207,6 +208,6 @@ export default class TripMapBox extends React.Component {
   }
 }
 
-TripMapBox.defaultProps = {
+TripMap.defaultProps = {
   activities: []
 };

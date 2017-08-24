@@ -6,8 +6,8 @@
  * EditableTextLabel = withEditable(TextLabel);
  *  <EditableTextLabel
  *    value={value}
- *    handleChange={()=>{}}
- *    handleSubmit={()=>{}}
+ *    onChange={()=>{}}
+ *    onSubmit={()=>{}}
  *  />);
  */
 import React from "react";
@@ -15,7 +15,9 @@ import PropTypes from "prop-types";
 import "./EditableLabelStyle.scss";
 
 const defaultProps = {
+  className: "",
   inputType: "text",
+  errorMsg: "",
   notEmpty: false
 };
 
@@ -23,70 +25,99 @@ export default class TextLabel extends React.Component {
   static propTypes = {
     placeholder: PropTypes.string,
     notEmpty: PropTypes.bool,
+    hint: PropTypes.string,
 
     // bind the value to show in the input dom element
     value: PropTypes.any.isRequired,
     labelText: PropTypes.string.isRequired,
     // set value when it changes
-    handleChange: PropTypes.func.isRequired,
+    onChange: PropTypes.func.isRequired,
+    // validate(value) => return ture / false
+    validate: PropTypes.func,
 
     // pass through props
     editable: PropTypes.bool.isRequired,
-    handleEnableEdit: PropTypes.func.isRequired,
-    handleDisableEditAndSubmit: PropTypes.func.isRequired
+    onEnableEdit: PropTypes.func.isRequired,
+    onDisableEditAndSubmit: PropTypes.func.isRequired
   };
 
   constructor(props) {
     super(props);
     this.state = {
-      errorMsg: ""
+      showHint: false,
+      valid: true
     };
   }
 
-  handleEnter = e => {
+  handleKeyPress = e => {
     if (e.charCode === 13) {
-      this.props.handleDisableEditAndSubmit();
+      this.handleSubmit();
     }
   };
 
-  validation = () => {
-    if (this.props.notEmpty && this.state.value === "") {
-      this.setState({ errorMsg: "Cannot be empty!" });
+  handleSubmit = () => {
+    const { valid } = this.state;
+    if (valid) {
+      this.setState({ showHint: false });
+      this.props.onDisableEditAndSubmit();
+    } else {
+      // show hint
+      this.setState({ showHint: true });
+      this.refs.labelInput.focus();
+    }
+  };
+
+  handleChange = e => {
+    const { value } = e.target;
+    const { notEmpty, validate, onChange } = this.props;
+    // update the input value when there is a change.
+    onChange(value);
+
+    // validate the input
+    if (validate && !validate(value)) {
+      this.setState({ valid: false });
+    } else {
+      this.setState({ valid: true });
     }
   };
 
   render() {
     const {
       className,
+      notEmpty,
       value,
       labelText,
       placeholder,
-      handleChange,
+      onChange,
 
       editable,
-      handleEnableEdit,
-      handleDisableEditAndSubmit
+      onEnableEdit
     } = this.props;
+    const { valid, showHint } = this.state;
+
+    const styleClass = valid ? `valid` : `invalid`;
 
     if (editable) {
       return (
-        <input
-          className={className}
-          type="text"
-          value={value}
-          placeholder={placeholder}
-          onChange={handleChange}
-          onBlur={handleDisableEditAndSubmit}
-          onKeyPress={this.handleEnter}
-          autoFocus={true}
-        />
+        <div className={`form-input ${className}`}>
+          <input
+            ref="labelInput"
+            type="text"
+            value={value}
+            className={styleClass}
+            placeholder={placeholder}
+            onChange={this.handleChange}
+            onKeyPress={this.handleKeyPress}
+            //onBlur={this.handleSubmit}
+            autoFocus
+            required={notEmpty}
+          />
+          {showHint && "hint"}
+        </div>
       );
     } else {
       return (
-        <span
-          className={`editable-label ${className}`}
-          onClick={handleEnableEdit}
-        >
+        <span className={`editable-label ${className}`} onClick={onEnableEdit}>
           {labelText}
         </span>
       );

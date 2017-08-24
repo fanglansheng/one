@@ -3,15 +3,12 @@ import PropTypes from "prop-types";
 
 // components
 import TripMap from "./TripMap";
-import TripPlan from "./TripPlan";
-import Itinerary from "./Itinerary";
+import Plan from "./Plan";
 
 export default class Trip extends React.Component {
   static propTypes = {
     currentTrip: PropTypes.object.isRequired,
     dayItineraries: PropTypes.array.isRequired,
-
-    activityPlaces: PropTypes.array.isRequired,
     // functions
     addActivity: PropTypes.func.isRequired, //addActivity(object)
     editActivity: PropTypes.func.isRequired,
@@ -29,7 +26,7 @@ export default class Trip extends React.Component {
   }
 
   calculateRoute = travelMode => {
-    const { activityPlaces } = this.props;
+    const activityPlaces = this.props.currentTrip.activities.map(a => a.place);
     const directionsService = new google.maps.DirectionsService();
 
     const last = activityPlaces.length - 1;
@@ -85,7 +82,6 @@ export default class Trip extends React.Component {
           addActivity={placeId => addActivity(placeId)}
         />
 
-        {/* Information and activity */}
         {/* <Itinerary
           {...currentTrip}
           routes={routes}
@@ -95,7 +91,7 @@ export default class Trip extends React.Component {
           handleCalculateRoute={this.calculateRoute}
         /> */}
 
-        <TripPlan
+        <Plan
           {...currentTrip}
           dayItineraries={dayItineraries}
           editItinerary={editItinerary}

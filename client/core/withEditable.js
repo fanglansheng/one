@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 export default function withEditable(WrappedComponent) {
   return class extends React.Component {
     static propTypes = {
-      handleSubmit: PropTypes.func.isRequired
+      onSubmit: PropTypes.func.isRequired
     };
     constructor(props) {
       super(props);
@@ -19,7 +19,7 @@ export default function withEditable(WrappedComponent) {
 
     handleDisableEditAndSubmit = e => {
       this.setState({ editable: false });
-      this.props.handleSubmit(e);
+      this.props.onSubmit(e);
     };
 
     render() {
@@ -27,8 +27,8 @@ export default function withEditable(WrappedComponent) {
         <WrappedComponent
           {...this.props}
           editable={this.state.editable}
-          handleEnableEdit={this.handleEnableEdit}
-          handleDisableEditAndSubmit={this.handleDisableEditAndSubmit}
+          onEnableEdit={this.handleEnableEdit}
+          onDisableEditAndSubmit={this.handleDisableEditAndSubmit}
         />
       );
     }

@@ -1,5 +1,22 @@
 .editable-label {
   &:hover {
     cursor: pointer;
+    background: #f5f5f5;
+    &::after {
+      content: 'edit';
+    }
+  }
+}
+
+.form-input:required:invalid {
+  border: 1px solid red;
+}
+
+.form-input {
+  .valid {
+    border: 1px solid green;
+  }
+  .invalid {
+    background: lightcoral;
   }
 }

@@ -52,7 +52,6 @@ export default withGoogleMap(props =>
         key={activity.place.place_id}
         icon={StarIcon} //{`/static/images/${activity.visitType}`}
         label={(index + 1).toString()}
-
         // onClick={() => {}}
       />
     )}

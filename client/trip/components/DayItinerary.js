@@ -48,11 +48,6 @@ export default class DayItinerary extends React.Component {
     this.state = {};
   }
 
-  handleDeleteActivity = activityId => {
-    const { tripId } = this.props;
-    this.props.delActivity(tripId, activityId);
-  };
-
   handleDeleteDay = () => {
     // reset activity time to null.
     this.props.activities.foreach(activity => {
@@ -121,7 +116,7 @@ export default class DayItinerary extends React.Component {
               options={travelModes}
               buttonText="Show Route"
               defaultOption="DRIVING"
-              handleSubmit={handleCalculateRoute}
+              handleSubmit={() => {}}
             />}
         </div>
         <div>
@@ -131,7 +126,7 @@ export default class DayItinerary extends React.Component {
               key={activity.id}
               activityId={activity.id.toString()}
               index={index + 1}
-              handleDelete={() => this.handleDeleteActivity(activity.id)}
+              handleDelete={() => delActivity(activity.id)}
               handleEdit={data => editActivity(activity.id, data)}
             />
           )}

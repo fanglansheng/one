@@ -32,13 +32,14 @@ class TripContainer extends Component {
 
   render() {
     const { dispatch, tripId, isFetching, currentTrip } = this.props;
+    console.log(isFetching); // fetching take too much time!
     if (isFetching || !currentTrip) return null;
     return (
       <Trip
         {...this.props}
         addActivity={placeId => dispatch(fetchCreateActivity(tripId, placeId))}
         editActivity={(activityId, data) =>
-          dispatch(fetchEditActivity(tripId, activityId, data))}
+          dispatch(fetchEditActivity(activityId, data))}
         delActivity={activityId =>
           dispatch(fetchDeleteActivity(tripId, activityId))}
         editItinerary={data => dispatch(fetchEditTrip(tripId, data))}

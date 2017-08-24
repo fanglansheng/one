@@ -44,7 +44,7 @@ export default class Plan extends React.Component {
     }
   }
 
-  handleDeleteActivity = (activityId, e) => {
+  handleDeleteActivity = activityId => {
     const { id } = this.props;
     this.props.delActivity(id, activityId);
   };
@@ -86,8 +86,8 @@ export default class Plan extends React.Component {
             placeholder="Title"
             value={title}
             labelText={title}
-            handleSubmit={this.handleSubmit}
-            handleChange={e => this.setState({ title: e.target.value })}
+            onSubmit={this.handleSubmit}
+            onChange={val => this.setState({ title: val })}
           />
           {/* add date buttton */}
           <div>

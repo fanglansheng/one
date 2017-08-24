@@ -61,12 +61,6 @@ export default class ActivityItem extends React.Component {
     };
   }
 
-  handleSubmit = name => {
-    this.props.handleEdit({
-      [name]: this.state[name]
-    });
-  };
-
   // update the date when change but keep the time
   handleSetDate = date => {
     const _y = date.year();
@@ -93,8 +87,8 @@ export default class ActivityItem extends React.Component {
   };
 
   handleSetTime = () => {
-    let [hour, minute, am] = this.state.time.split(/[:\s]/);
     let { startTime } = this.state;
+    let [hour, minute, am] = this.state.time.split(/[:\s]/);
 
     if (am[0] === "p" || am[0] === "P") {
       hour = parseInt(hour) + 12;
@@ -114,15 +108,16 @@ export default class ActivityItem extends React.Component {
     e.dataTransfer.setData("utcOffset", place.utc_offset);
   };
 
-  checkTimeInput = e => {
-    const { value } = e.target;
+  checkTimeInput = inputValue => {
     const regx = /^(0?[1-9]|1[012])(:[0-5]\d) [APap][mM]$/;
-    const result = regx.exec(value);
-    if (!result) {
-      console.log("invalid input");
-      return;
-    }
-    this.setState({ time: e.target.value });
+    const result = regx.test(inputValue);
+    return result;
+  };
+
+  checkDurationInput = inputValue => {
+    const regx = /^(\d\d)(:[0-5]\d)$/;
+    const result = regx.test(inputValue);
+    return result;
   };
 
   toggleExpand = () => {
@@ -149,7 +144,9 @@ export default class ActivityItem extends React.Component {
   }
 
   render() {
-    if (this.props.startTime === null) return this.renderUnassignedActivity();
+    if (this.props.startTime === null) {
+      return this.renderUnassignedActivity();
+    }
 
     const { place, index, handleDelete, handleEdit } = this.props;
     const { time, duration, memo, visitType, dateFocused } = this.state;
@@ -164,6 +161,7 @@ export default class ActivityItem extends React.Component {
         className="activity-item"
         draggable="true"
         onDragStart={this.handleDragStart}
+        onClick={this.toggleExpand}
       >
         <span className="activity-index">
           {index}
@@ -180,40 +178,43 @@ export default class ActivityItem extends React.Component {
           <div>
             <EditableTextLabel
               value={time}
+              notEmpty
               className="time-picker"
               placeholder="09:30 AM"
               labelText={time}
-              handleSubmit={this.handleSetTime}
-              handleChange={this.checkTimeInput}
+              validate={this.checkTimeInput}
+              onSubmit={this.handleSetTime}
+              onChange={val => this.setState({ time: val })}
             />
-
+            Stay for:
             <EditableTextLabel
               className="duration-picker"
               value={duration}
+              notEmpty
               placeholder="HH:MM"
               labelText={durationText}
-              handleSubmit={() => handleEdit({ duration })}
-              handleChange={e => this.setState({ duration: e.target.value })}
+              validate={this.checkDurationInput}
+              onSubmit={() => handleEdit({ duration })}
+              onChange={val => this.setState({ duration: val })}
             />
           </div>
 
-          <VisitTypeButton
+          {/* <VisitTypeButton
             id="activity-visit-type"
             value={visitType}
             handleSelect={val => {
-              console.log(val);
               this.setState({ visitType: val });
               handleEdit({ visitType: val });
             }}
-          />
+          /> */}
 
           <EditableTextLabel
             value={memo}
             placeholder="edit"
             className="memo-label"
             labelText={memo || "Click to edit memo"}
-            handleSubmit={() => handleEdit({ memo })}
-            handleChange={e => this.setState({ memo: e.target.value })}
+            onSubmit={() => handleEdit({ memo })}
+            onChange={val => this.setState({ memo: val })}
           />
         </div>
       </div>

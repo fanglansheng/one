@@ -66,14 +66,15 @@ $activity-left-margin: 30px;
   font-weight: 300;
   .time-picker {
     display: inline-block;
-    width: 100px;
     vertical-align: middle;
+
+    width: 100px;
+    margin-right: 10px;
   }
   .duration-picker {
     display: inline-block;
     width: 100px;
     vertical-align: middle;
-    margin-left: 10px;
   }
 }
 

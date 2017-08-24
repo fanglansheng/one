@@ -29,6 +29,7 @@ VISIT_TYPE = {
 
 #?placeid=ChIJN1t_tDeuEmsRUsoyG83frY4&key='+
 def get_place_detail(place_id):
+    print "Get", place_id
     url = '{0}?placeid={1}&key={2}'.format(PLACE_API, place_id, API_KEY)
     content = requests.get(url).content
     response = json.loads(content)

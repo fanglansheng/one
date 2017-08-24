@@ -48,16 +48,17 @@ export const fetchCreateActivity = (tripId, placeId) => dispatch => {
     });
 };
 
-export const fetchEditActivity = (tripId, itId, postData) => dispatch => {
+export const fetchEditActivity = (activityId, postData) => dispatch => {
   const init = {
     method: "POST",
     headers: new Headers({ "Content-Type": "application/json" }),
     body: JSON.stringify(postData)
   };
 
-  return fetch(`${Host}/activity/${itId}`, init)
+  return fetch(`${Host}/activity/${activityId}`, init)
     .then(handleResponse)
     .then(json => {
+      const tripId = json.activity.trip_id;
       dispatch(editActivity(tripId, json.activity));
     });
 };
