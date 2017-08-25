@@ -10,9 +10,10 @@ import "./PlaceInfoStyle.scss";
 
 export default class PlaceInfo extends React.Component {
   static propTypes = {
+    inTrip: PropTypes.bool,
     // the selected place
     place: PropTypes.object,
-    handleAddPlace: PropTypes.func
+    handleAddPlace: PropTypes.func.isRequired
   };
 
   constructor(props) {
@@ -20,8 +21,7 @@ export default class PlaceInfo extends React.Component {
 
     this.state = {
       index: 0,
-      direction: null,
-      visitType: constants.VisitType.ACTIVITY.value
+      direction: null
     };
   }
 
@@ -98,7 +98,7 @@ export default class PlaceInfo extends React.Component {
   }
 
   render() {
-    const { place, handleAddPlace } = this.props;
+    const { place, inTrip, handleAddPlace } = this.props;
     const { visitType } = this.state;
 
     return (
@@ -140,14 +140,7 @@ export default class PlaceInfo extends React.Component {
               weekdayText={place.opening_hours.weekday_text}
             />}
 
-          {/* place type <VisitTypeButton
-            id="place-visit-type"
-            value={visitType}
-            handleSelect={this.handleSelectType}
-          />*/}
-
-          {handleAddPlace &&
-            <button onClick={handleAddPlace}>+ Add to trip</button>}
+          {!inTrip && <button onClick={handleAddPlace}>+ Add to trip</button>}
         </div>
         {this.renderPhotos()}
       </div>

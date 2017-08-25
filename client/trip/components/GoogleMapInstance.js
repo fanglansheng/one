@@ -48,6 +48,7 @@ export default withGoogleMap(props =>
       <MapMarker
         // defaultAnimation={2}
         // position={place.geometry.location}
+        inTrip
         place={activity.place}
         key={activity.place.place_id}
         icon={StarIcon} //{`/static/images/${activity.visitType}`}

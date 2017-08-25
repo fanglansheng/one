@@ -103,7 +103,7 @@ class Activity(db.Model):
     memo = db.Column(db.String(500), default='')
     place_id = db.Column(db.String(64), default='')  # place_id
     # activity type
-    act_type = db.Column(db.String(64), default='activity')
+    act_type = db.Column(db.String(64), default='star')
 
     def __init__(self, place_id, startTime=None):
         self.place_id = place_id

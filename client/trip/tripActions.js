@@ -6,14 +6,15 @@ import * as schema from "./schema";
 import core from "../core";
 const { ActionTypes, Host, handleResponse, shouldFetch } = core.constants;
 
-export const setTravelMode = mode => ({
-  type: ActionTypes.SET_TRAVEL_MODE,
-  mode
+export const addDirection = (date, routes) => ({
+  type: ActionTypes.ADD_DIRECTION,
+  date,
+  routes
 });
 
-export const setActivityFormVisable = visable => ({
-  type: ActionTypes.SHOW_PLACE_SEARCH,
-  visable
+export const delDirection = date => ({
+  type: ActionTypes.RMV_DIRECTION,
+  date
 });
 
 const selectActivity = activityId => ({
@@ -96,11 +97,6 @@ const receiveTrips = (allItems, entities) => ({
   allItems,
   ...entities
 });
-
-// const addTrip = trip => ({
-//   type: ActionTypes.ADD_TRIP,
-//   trip
-// });
 
 export const fetchTripIfNeeded = tripId => (dispatch, getState) => {
   if (shouldFetch(getState(), "trips")) {

@@ -25,8 +25,42 @@ export default class Trip extends React.Component {
     };
   }
 
-  calculateRoute = travelMode => {
-    const activityPlaces = this.props.currentTrip.activities.map(a => a.place);
+  // calculateRoute = travelMode => {
+  //   const activityPlaces = this.props.currentTrip.activities.map(a => a.place);
+  //   const directionsService = new google.maps.DirectionsService();
+
+  //   const last = activityPlaces.length - 1;
+  //   const waypoints = [];
+  //   activityPlaces.forEach((place, index) => {
+  //     if (index != 0 && index != last) {
+  //       waypoints.push({
+  //         location: place.geometry.location,
+  //         stopover: true
+  //       });
+  //     }
+  //   });
+
+  //   directionsService.route(
+  //     {
+  //       origin: activityPlaces[0].geometry.location,
+  //       destination: activityPlaces[last].geometry.location,
+  //       travelMode: travelMode,
+  //       waypoints: waypoints,
+  //       optimizeWaypoints: true,
+  //       provideRouteAlternatives: true
+  //     },
+  //     (response, status) => {
+  //       if (status === google.maps.DirectionsStatus.OK) {
+  //         console.log(response);
+  //         this.setState({ directions: response });
+  //       } else {
+  //         console.error(`error fetching directions ${response.status}`);
+  //       }
+  //     }
+  //   );
+  // };
+
+  calculateRoute = (travelMode, activityPlaces) => {
     const directionsService = new google.maps.DirectionsService();
 
     const last = activityPlaces.length - 1;
@@ -82,17 +116,9 @@ export default class Trip extends React.Component {
           addActivity={placeId => addActivity(placeId)}
         />
 
-        {/* <Itinerary
-          {...currentTrip}
-          routes={routes}
-          editItinerary={editItinerary}
-          editActivity={editActivity}
-          delActivity={delActivity}
-          handleCalculateRoute={this.calculateRoute}
-        /> */}
-
         <Plan
           {...currentTrip}
+          routes={routes}
           dayItineraries={dayItineraries}
           editItinerary={editItinerary}
           editActivity={editActivity}

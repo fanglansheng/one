@@ -99,7 +99,7 @@ export default class DayItinerary extends React.Component {
       routes,
       handleCalculateRoute
     } = this.props;
-
+    const places = activities.map(a => a.place);
     return (
       <div
         className="itinerary"
@@ -116,7 +116,7 @@ export default class DayItinerary extends React.Component {
               options={travelModes}
               buttonText="Show Route"
               defaultOption="DRIVING"
-              handleSubmit={() => {}}
+              handleSubmit={mode => handleCalculateRoute(mode, places)}
             />}
         </div>
         <div>

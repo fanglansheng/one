@@ -73,7 +73,8 @@ export default class Plan extends React.Component {
       dayItineraries,
       addActivity,
       editActivity,
-      delActivity
+      delActivity,
+      handleCalculateRoute
     } = this.props;
 
     const { title, dateFocused, dateInput } = this.state;
@@ -115,6 +116,7 @@ export default class Plan extends React.Component {
               activities={itinerary.activities}
               editActivity={editActivity}
               delActivity={delActivity}
+              handleCalculateRoute={handleCalculateRoute}
             />
           )}
         </div>

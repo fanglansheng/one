@@ -2,6 +2,7 @@ import { combineReducers } from "redux";
 import { ActionTypes } from "./constants";
 import tripReducer from "../trip/reducers/tripReducer";
 import activityReducer from "../trip/reducers/activityReducer";
+import directionReducer from "../trip/reducers/directionReducer";
 
 const selectedPlace = (state = null, action) => {
   const { type } = action;
@@ -16,5 +17,6 @@ const selectedPlace = (state = null, action) => {
 export default combineReducers({
   trips: tripReducer,
   activities: activityReducer,
+  directions: directionReducer,
   selectedPlace
 });

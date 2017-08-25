@@ -27,7 +27,8 @@ export const ActionTypes = keyMirror({
   DEL_ACTIVITY: null,
   EDIT_ACTIVITY: null,
 
-  SHOW_PLACE_SEARCH: null
+  ADD_DIRECTION: null,
+  RMV_DIRECTION: null
 });
 
 export const VisitType = {
@@ -36,15 +37,15 @@ export const VisitType = {
   HOTEL: { value: "hotel", icon: "" },
   TOUR: { value: "tour", icon: "" },
   ACTIVITY: { value: "activity", icon: "" },
-  STAR: { value: "star", icon: "ic_star.png" }
+  STAR: { value: "star", icon: "ic_star.png" } // defalut
 };
 
-const travelModes = [
-  { value: google.maps.TravelMode.BICYCLING, icon: "directions_bike" },
-  { value: google.maps.TravelMode.DRIVING, icon: "directions_car" },
-  { value: google.maps.TravelMode.TRANSIT, icon: "directions_bus" },
-  { value: google.maps.TravelMode.WALKING, icon: "directions_walk" }
-];
+// const travelModes = [
+//   { value: google.maps.TravelMode.BICYCLING, icon: "directions_bike" },
+//   { value: google.maps.TravelMode.DRIVING, icon: "directions_car" },
+//   { value: google.maps.TravelMode.TRANSIT, icon: "directions_bus" },
+//   { value: google.maps.TravelMode.WALKING, icon: "directions_walk" }
+// ];
 
 export const DefaultCenter = {
   lat: 39.9375346,

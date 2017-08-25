@@ -25,7 +25,7 @@ const compareArray = (a, b) => {
 
 export default class TripMap extends React.Component {
   static propTypes = {
-    directions: PropTypes.array,
+    directions: PropTypes.object,
     activities: PropTypes.array,
     addActivity: PropTypes.func.isRequired
   };
