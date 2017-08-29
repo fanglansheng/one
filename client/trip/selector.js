@@ -11,6 +11,9 @@ const getActivityIdList = state => state.activities.allItems;
 const getActivityItem = (state, props) =>
   state.activities.byId[props.activityId];
 
+const getDirectionsById = state => state.directions.byDates;
+const getDirectionIdList = state => state.directions.allItems;
+
 ///////////// Utility Functions
 // construct to map entity ids to object with content
 const mapIdsToObjects = (allItemsSelector, byIdSelector) =>
@@ -28,6 +31,11 @@ export const getAllActivities = mapIdsToObjects(
 
 // get all trips without detail
 export const getAllTrips = mapIdsToObjects(getTripIdList, getTripsById);
+
+export const getAllDirections = mapIdsToObjects(
+  getDirectionIdList,
+  getDirectionsById
+);
 
 // Generate a selector to get a trip by Id
 export const makeGetTrip = tripId =>

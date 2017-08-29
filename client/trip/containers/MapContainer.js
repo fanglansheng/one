@@ -1,8 +1,18 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
 // components
-import GoogleMapInstance from "./GoogleMapInstance";
+import GoogleMapInstance from "../components/GoogleMapInstance";
+
+// functions
+import { fetchCreateActivity } from "../tripActions";
+
+import {
+  makeGetTrip,
+  makeGetClassifiedActivities,
+  getAllDirections
+} from "../selector.js";
 
 // set default location
 const defaultCenter = {
@@ -23,16 +33,14 @@ const compareArray = (a, b) => {
   return true;
 };
 
-export default class TripMap extends React.Component {
+class TripMap extends React.Component {
   static propTypes = {
-    directions: PropTypes.object,
-    activities: PropTypes.array,
-    addActivity: PropTypes.func.isRequired
+    directions: PropTypes.array,
+    activities: PropTypes.array
   };
 
   constructor(props) {
     super(props);
-
     this.state = {
       zoom: 8,
       center: defaultCenter,
@@ -48,6 +56,7 @@ export default class TripMap extends React.Component {
     this.setActivitiesCenter(this.props.activities);
   }
 
+  // update map center when activity has change.
   componentWillReceiveProps(nextProps) {
     const { activities } = nextProps;
     if (!compareArray(activities, this.props.activities)) {
@@ -169,10 +178,7 @@ export default class TripMap extends React.Component {
       }
     });
 
-    this.setState({
-      resultPlaces,
-      zoom: 14
-    });
+    this.setState({ resultPlaces, zoom: 14 });
     this._mapComponent.fitBounds(bounds);
   };
 
@@ -181,6 +187,10 @@ export default class TripMap extends React.Component {
   handleBoundChanged = () => {
     const bounds = this._mapComponent.getBounds();
     this.setState({ bounds });
+  };
+
+  handleAddPlace = placeId => {
+    this.props.dispatch(fetchCreateActivity(this.props.tripId, placeId));
   };
 
   render() {
@@ -198,7 +208,7 @@ export default class TripMap extends React.Component {
         onMapLoad={this.handleMapLoad}
         onSearchBoxLoad={this.handleSearchBoxLoad}
         onMapClick={this.handleMapClick}
-        onAddPlace={this.props.addActivity}
+        onAddPlace={this.handleAddPlace}
         // set search place result
         onPlacesChanged={this.handlePlaceChanged}
         // bind google map bound to search range
@@ -208,6 +218,24 @@ export default class TripMap extends React.Component {
   }
 }
 
-TripMap.defaultProps = {
-  activities: []
+const mapStateToProps = (state, props) => {
+  // this is current trip id.
+  const { tripId } = props;
+  const { isFetching } = state.trips;
+
+  // get activities
+  const getTrip = makeGetTrip(tripId);
+  const currentTrip = getTrip(state);
+  const { activities } = currentTrip;
+
+  const directions = getAllDirections(state);
+
+  return {
+    isFetching,
+    tripId,
+    directions,
+    activities
+  };
 };
+
+export default connect(mapStateToProps)(TripMap);

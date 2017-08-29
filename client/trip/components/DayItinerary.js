@@ -5,20 +5,14 @@ import moment from "moment";
 
 // components
 import ActivityItem from "./Activity";
-import core from "../../core";
-const { SingleSelectButton } = core;
+import RouteButton from "./RouteButton";
 
 // style
 import "./ItineraryStyle.scss";
 
 // datetime is moment object.
 const sortAscTime = (a, b) => a.datetime - b.datetime;
-const travelModes = [
-  { value: google.maps.TravelMode.BICYCLING, icon: "directions_bike" },
-  { value: google.maps.TravelMode.DRIVING, icon: "directions_car" },
-  { value: google.maps.TravelMode.TRANSIT, icon: "directions_bus" },
-  { value: google.maps.TravelMode.WALKING, icon: "directions_walk" }
-];
+
 const RouteBox = props =>
   <div className="route-box">
     <span>
@@ -40,7 +34,9 @@ export default class DayItinerary extends React.Component {
     // editActivity(activityId, data), tripId already bind
     editActivity: PropTypes.func.isRequired,
     // delActivity(activityId), tripId already bind
-    delActivity: PropTypes.func.isRequired
+    delActivity: PropTypes.func.isRequired,
+    addDirection: PropTypes.func.isRequired,
+    delDirection: PropTypes.func.isRequired
   };
 
   constructor(props) {
@@ -88,6 +84,47 @@ export default class DayItinerary extends React.Component {
     const sorted = this.props.activities.sort(sortAscTime);
   };
 
+  calculateRoute = travelMode => {
+    const { activities, date, addDirection } = this.props;
+
+    const directionsService = new google.maps.DirectionsService();
+
+    const last = activities.length - 1;
+    const waypoints = [];
+    activities.forEach((activity, index) => {
+      if (index != 0 && index != last) {
+        waypoints.push({
+          location: activity.place.geometry.location,
+          stopover: true
+        });
+      }
+    });
+
+    directionsService.route(
+      {
+        origin: activities[0].place.geometry.location,
+        destination: activities[last].place.geometry.location,
+        travelMode: travelMode,
+        waypoints: waypoints,
+        optimizeWaypoints: true,
+        provideRouteAlternatives: true
+      },
+      (response, status) => {
+        if (status === google.maps.DirectionsStatus.OK) {
+          console.log(response);
+          addDirection(date, response);
+        } else {
+          console.error(`error fetching directions ${response.status}`);
+        }
+      }
+    );
+  };
+
+  clearRoute = () => {
+    const { date, delDirection } = this.props;
+    delDirection(date);
+  };
+
   render() {
     const {
       id,
@@ -96,10 +133,10 @@ export default class DayItinerary extends React.Component {
       addActivity,
       editActivity,
       delActivity,
-      routes,
-      handleCalculateRoute
+      routes
     } = this.props;
-    const places = activities.map(a => a.place);
+    // const routes = d ? d.routes[0].legs : [];
+
     return (
       <div
         className="itinerary"
@@ -112,11 +149,9 @@ export default class DayItinerary extends React.Component {
         </h4>
         <div className="itinerary-toolbar">
           {activities.length > 1 &&
-            <SingleSelectButton
-              options={travelModes}
-              buttonText="Show Route"
-              defaultOption="DRIVING"
-              handleSubmit={mode => handleCalculateRoute(mode, places)}
+            <RouteButton
+              onCalculateDirection={this.calculateRoute}
+              onClearDirection={this.clearRoute}
             />}
         </div>
         <div>

@@ -56,6 +56,8 @@ export default withGoogleMap(props =>
         // onClick={() => {}}
       />
     )}
-    {props.directions && <DirectionsRenderer directions={props.directions} />}
+    {props.directions.map((d, key) =>
+      <DirectionsRenderer key={key} directions={d} />
+    )}
   </GoogleMap>
 );

@@ -26,7 +26,10 @@ export default class Plan extends React.Component {
     // editActivity(activityId, data), tripId already bind
     editActivity: PropTypes.func.isRequired,
     // delActivity(activityId), tripId already bind
-    delActivity: PropTypes.func.isRequired
+    delActivity: PropTypes.func.isRequired,
+
+    addDirection: PropTypes.func.isRequired,
+    delDirection: PropTypes.func.isRequired
   };
 
   constructor(props) {
@@ -74,7 +77,9 @@ export default class Plan extends React.Component {
       addActivity,
       editActivity,
       delActivity,
-      handleCalculateRoute
+      handleCalculateRoute,
+      addDirection,
+      delDirection
     } = this.props;
 
     const { title, dateFocused, dateInput } = this.state;
@@ -116,6 +121,8 @@ export default class Plan extends React.Component {
               activities={itinerary.activities}
               editActivity={editActivity}
               delActivity={delActivity}
+              addDirection={addDirection}
+              delDirection={delDirection}
               handleCalculateRoute={handleCalculateRoute}
             />
           )}
