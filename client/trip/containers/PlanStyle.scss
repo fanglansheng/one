@@ -1,0 +1,66 @@
+@import '../../scss/variables';
+
+$react-dates-width-input: 100px;
+$react-dates-color-text-focus: black;
+$react-dates-color-border: #a6d4c4;
+$react-dates-color-placeholder-text: #a6d4c4;
+$react-dates-color-text: #57c7a0;
+$react-dates-color-text-focus: #57c7a0;
+$react-dates-color-focus: white;
+$react-dates-z-index: 1;
+
+@import '~react-dates/css/variables.scss';
+@import '~react-dates/css/styles.scss';
+
+.route-box {
+  margin-left: 10px;
+  border-left: 2px solid lightseagreen;
+  color: #34c39e;
+  span {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+}
+
+.plan {
+  width: $map-sidebar-width;
+  display: inline-block;
+  // background: #f5f5f5;
+  height: 100%;
+  overflow: auto;
+  padding: 16px;
+  .plan-header {
+    display: block;
+    font-size: $font-title-size;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+}
+
+.btn-add-day {
+  text-align: center;
+  padding: 20px;
+}
+
+.SingleDatePickerInput {
+  border-radius: $btn-radius;
+  cursor: pointer;
+  &:hover {
+    border-color: $react-dates-color-text-focus;
+  }
+  .DateInput {
+    line-height: normal;
+    font-size: inherit;
+    padding: 3px 5px;
+    border-radius: $btn-radius;
+    input {
+      border-radius: $btn-radius;
+      cursor: pointer;
+    }
+    &:hover {
+      color: $react-dates-color-text-focus;
+    }
+  }
+}

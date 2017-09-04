@@ -1,9 +1,57 @@
-.btn-toggle {
+@import "../../scss/variables";
+
+.direction-selection {
+  margin-bottom: 10px;
+  span {
+    margin-right: 5px;
+    color: #455077;
+  }
+  .direction-button-group {
+    display: inline-block;
+  }
 }
-.btn-submit {
-  background: white;
-  border: 1px solid lightgray;
-  border-radius: 4px;
-  height: 34px;
+
+.direction-btn-selected {
+  color: $col-icon-text-active;
+  background-color: $col-btn-icon-bg;
+}
+
+.btn-toggle {
+  border: 0;
   margin-left: 5px;
+  margin-right: 5px;
+  padding: 7px;
+  border-radius: 20px;
+  width: 34px;
+  height: 34px;
+  color: $col-icon-text;
+
+  &:hover {
+    @extend .direction-btn-selected;
+  }
+  i {
+    font-size: 20px;
+  }
+}
+
+.btn-toggle.active {
+  @extend .direction-btn-selected;
+  box-shadow: none;
+  &:hover {
+    @extend .direction-btn-selected;
+  }
+}
+
+.btn-clear {
+  background-color: #ff564c;
+  color: white;
+  border: 0;
+  border-radius: 3px;
+  margin-left: 10px;
+  &:hover {
+    background-color: lighten(#ff564c, 5%);
+  }
+  &:focus {
+    outline: none;
+  }
 }

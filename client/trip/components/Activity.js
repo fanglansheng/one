@@ -175,7 +175,8 @@ export default class ActivityItem extends React.Component {
         </div>
 
         <div className="activity-content">
-          <div>
+          <div className="content-item">
+            <label>Time</label>
             <EditableTextLabel
               value={time}
               notEmpty
@@ -186,9 +187,10 @@ export default class ActivityItem extends React.Component {
               onSubmit={this.handleSetTime}
               onChange={val => this.setState({ time: val })}
             />
-            Stay for:
+          </div>
+          {/* <div className="time-picker">
+            <span>Stay</span>
             <EditableTextLabel
-              className="duration-picker"
               value={duration}
               notEmpty
               placeholder="HH:MM"
@@ -197,21 +199,23 @@ export default class ActivityItem extends React.Component {
               onSubmit={() => handleEdit({ duration })}
               onChange={val => this.setState({ duration: val })}
             />
+          </div> */}
+
+          <div className="content-item">
+            <label>Map icon</label>
+            <VisitTypeButton
+              id={`activity-visit-type-${index}`}
+              value={visitType}
+              handleSelect={val => {
+                this.setState({ visitType: val });
+                handleEdit({ visitType: val });
+              }}
+            />
           </div>
-
-          {/* <VisitTypeButton
-            id="activity-visit-type"
-            value={visitType}
-            handleSelect={val => {
-              this.setState({ visitType: val });
-              handleEdit({ visitType: val });
-            }}
-          /> */}
-
           <EditableTextLabel
             value={memo}
             placeholder="edit"
-            className="memo-label"
+            className="content-item memo-label"
             labelText={memo || "Click to edit memo"}
             onSubmit={() => handleEdit({ memo })}
             onChange={val => this.setState({ memo: val })}

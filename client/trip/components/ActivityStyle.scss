@@ -1,16 +1,12 @@
-$react-dates-width-input: 90px;
-$react-dates-spacing-vertical-picker: 45px;
-$react-dates-color-text-focus: black;
-
-@import '~react-dates/css/variables.scss';
-@import '~react-dates/css/styles.scss';
 @import "../../scss/variables.scss";
 
-$header-height: 22px;
-$activity-left-margin: 30px;
+$header-height: 20px;
+$activity-left-margin: 20px;
 
 .btn-delete {
-  float: right;
+  position: absolute;
+  right: 0px;
+  top: -2px;
   background: none;
   border: none;
   color: lightgrey;
@@ -24,15 +20,18 @@ $activity-left-margin: 30px;
 .unassigned-activity {
   padding: 5px;
   margin-left: 10px;
+  margin-right: 10px;
   background: white;
+  position: relative;
 }
 
 .activity-item {
   background: white;
   position: relative;
-  padding-bottom: 20px;
+  padding-bottom: 15px;
   border-left: 2px solid lavender;
   margin-left: 10px;
+  margin-right: 10px;
 
   .memo-label {
     display: block;
@@ -41,6 +40,7 @@ $activity-left-margin: 30px;
 
 .activity-index {
   display: inline-block;
+  font-size: 12px;
   background-color: $col-btn;
   border-radius: $header-height / 2;
   width: $header-height;
@@ -55,40 +55,35 @@ $activity-left-margin: 30px;
 }
 
 .activity-header {
-  border-radius: $header-height / 2;
-  margin-left: 20px;
   font-weight: 400;
+  margin-left: 20px;
+  margin-right: 30px;
   margin-bottom: 10px;
 }
 
 .activity-content {
   margin-left: $activity-left-margin;
   font-weight: 300;
-  .time-picker {
-    display: inline-block;
-    vertical-align: middle;
-
-    width: 100px;
-    margin-right: 10px;
-  }
-  .duration-picker {
-    display: inline-block;
-    width: 100px;
-    vertical-align: middle;
+  .content-item {
+    margin-bottom: 5px;
+    label {
+      padding-left: 10px;
+      padding-right: 5px;
+      font-weight: 300;
+    }
   }
 }
 
-.SingleDatePickerInput {
+.time-picker {
+  display: inline-block;
+  vertical-align: middle;
+  width: 130px;
   margin-right: 10px;
-}
-.DateInput {
-  line-height: normal;
-  font-size: inherit;
-  padding: 0px;
-}
-.DateInput__display-text--focused {
-  background: white;
-}
-.SingleDatePicker__picker--direction-left {
-  z-index: 10;
+
+  span {
+    margin-right: 5px;
+  }
+  .editable-label {
+    width: 95px;
+  }
 }

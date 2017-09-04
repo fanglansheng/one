@@ -132,6 +132,8 @@ def edit_activity(it_id):
         # check form field, store utc time in database
         if 'startTime' in data:
             activity.start_time = get_datetime(data['startTime'])
+        if 'visitType' in data:
+            activity.act_type = data['visitType']
         if 'memo' in data:
             activity.memo = data['memo']
         if 'duration' in data:

@@ -3,27 +3,13 @@
  */
 import { default as React, PropTypes, Component } from "react";
 import { connect } from "react-redux";
-import {
-  fetchTripIfNeeded,
-  fetchEditTrip,
-  fetchDeleteActivity,
-  fetchEditActivity,
-  fetchCreateActivity,
-  addDirection,
-  delDirection
-} from "../tripActions";
-
-import {
-  makeGetTrip,
-  makeGetClassifiedActivities,
-  getAllDirections
-} from "../selector.js";
+// functions
+import { fetchTripIfNeeded } from "../tripActions";
+import { makeGetTrip } from "../selector.js";
 
 // Components
-import Trip from "../components/Trip";
 import MapContainer from "./MapContainer";
-
-import "./TripPlanStyle.scss";
+import PlanContainer from "./PlanContainer";
 
 class TripContainer extends Component {
   static propTypes = {
@@ -44,16 +30,7 @@ class TripContainer extends Component {
     return (
       <div className="app-container">
         <MapContainer tripId={tripId} />
-        <Trip
-          {...this.props}
-          editActivity={(activityId, data) =>
-            dispatch(fetchEditActivity(activityId, data))}
-          delActivity={activityId =>
-            dispatch(fetchDeleteActivity(tripId, activityId))}
-          editItinerary={data => dispatch(fetchEditTrip(tripId, data))}
-          addDirection={(date, route) => dispatch(addDirection(date, route))}
-          delDirection={date => dispatch(delDirection(date))}
-        />
+        <PlanContainer tripId={tripId} />
       </div>
     );
   }
@@ -67,17 +44,10 @@ const mapStateToProps = (state, props) => {
   const getTrip = makeGetTrip(tripId);
   const currentTrip = getTrip(state);
 
-  const getClassifiedActivities = makeGetClassifiedActivities(tripId);
-  const dayItineraries = getClassifiedActivities(state);
-
-  const directions = getAllDirections(state);
-
   return {
     isFetching,
     tripId,
-    directions,
-    currentTrip,
-    dayItineraries
+    currentTrip
   };
 };
 

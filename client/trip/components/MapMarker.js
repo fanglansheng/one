@@ -38,10 +38,20 @@ export default class MapMarker extends React.Component {
   render() {
     const { showInfo } = this.state;
     const { place, icon, label, inTrip } = this.props;
+
+    const image = {
+      url: icon,
+      size: new google.maps.Size(20, 20),
+      origin: new google.maps.Point(0, 0),
+      scaledSize: new google.maps.Size(20, 20),
+      // The anchor for this image is the base of the flagpole at (0, 32).
+      anchor: new google.maps.Point(10, 5),
+      labelOrigin: new google.maps.Point(10, -8)
+    };
     return (
       <Marker
         defaultAnimation={2}
-        icon={icon}
+        icon={image}
         label={label}
         position={place.geometry.location}
         onClick={this.handleShowInfo}

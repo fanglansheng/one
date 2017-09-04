@@ -44,6 +44,7 @@ export default class TextLabel extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      hover: false,
       showHint: false,
       valid: true
     };
@@ -93,13 +94,13 @@ export default class TextLabel extends React.Component {
       editable,
       onEnableEdit
     } = this.props;
-    const { valid, showHint } = this.state;
+    const { valid, hover, showHint } = this.state;
 
     const styleClass = valid ? `valid` : `invalid`;
 
     if (editable) {
       return (
-        <div className={`form-input ${className}`}>
+        <div className={`editable-label ${className}`}>
           <input
             ref="labelInput"
             type="text"
@@ -117,9 +118,17 @@ export default class TextLabel extends React.Component {
       );
     } else {
       return (
-        <span className={`editable-label ${className}`} onClick={onEnableEdit}>
-          {labelText}
-        </span>
+        <div
+          className={`editable-label ${className}`}
+          onClick={onEnableEdit}
+          onMouseEnter={() => this.setState({ hover: true })}
+          onMouseLeave={() => this.setState({ hover: false })}
+        >
+          <span>
+            {labelText}
+          </span>
+          {hover && <i className="material-icons">edit</i>}
+        </div>
       );
     }
   }

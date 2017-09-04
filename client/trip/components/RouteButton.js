@@ -35,7 +35,7 @@ export default class RouteButton extends React.Component {
   }
 
   handleChange = val => {
-    this.setState({ selected: true });
+    this.setState({ selected: true, value: [val] });
     this.props.onCalculateDirection(val);
   };
 
@@ -47,10 +47,11 @@ export default class RouteButton extends React.Component {
   render() {
     const { selected, value } = this.state;
     return (
-      <div className="btn-route">
+      <div className="direction-selection">
         <span>Directions</span>
         <ToggleButtonGroup
           name="toggleButtonGroup"
+          bsClass="direction-button-group"
           type="radio"
           value={value}
           onChange={this.handleChange}
@@ -63,7 +64,10 @@ export default class RouteButton extends React.Component {
             </ToggleButton>
           )}
         </ToggleButtonGroup>
-        {selected && <button onClick={this.handleClear}>clear</button>}
+        {selected &&
+          <button className="btn-clear" onClick={this.handleClear}>
+            clear
+          </button>}
       </div>
     );
   }

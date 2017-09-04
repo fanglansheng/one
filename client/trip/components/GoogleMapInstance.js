@@ -51,7 +51,7 @@ export default withGoogleMap(props =>
         inTrip
         place={activity.place}
         key={activity.place.place_id}
-        icon={StarIcon} //{`/static/images/${activity.visitType}`}
+        icon={`/static/images/${activity.visitType}.png`}
         label={(index + 1).toString()}
         // onClick={() => {}}
       />

@@ -24,7 +24,7 @@ const { TripContainer } = trip;
 
 import "rc-time-picker/assets/index.css";
 import "react-dates/lib/css/_datepicker.css";
-import "./scss/mapStyle.scss";
+import "./scss/main.scss";
 
 const loggerMiddleware = createLogger();
 

@@ -8,7 +8,7 @@ import ActivityItem from "./Activity";
 import RouteButton from "./RouteButton";
 
 // style
-import "./ItineraryStyle.scss";
+import "./DayItineraryStyle.scss";
 
 // datetime is moment object.
 const sortAscTime = (a, b) => a.datetime - b.datetime;
@@ -125,6 +125,28 @@ export default class DayItinerary extends React.Component {
     delDirection(date);
   };
 
+  renderActivities() {
+    const { activities } = this.props;
+    if (activities.length === 0) {
+      return (
+        <div className="no-content">
+          <i>No content</i>
+        </div>
+      );
+    } else {
+      return activities.map((activity, index) =>
+        <ActivityItem
+          {...activity}
+          key={activity.id}
+          activityId={activity.id.toString()}
+          index={index + 1}
+          handleDelete={() => delActivity(activity.id)}
+          handleEdit={data => editActivity(activity.id, data)}
+        />
+      );
+    }
+  }
+
   render() {
     const {
       id,
@@ -136,7 +158,7 @@ export default class DayItinerary extends React.Component {
       routes
     } = this.props;
     // const routes = d ? d.routes[0].legs : [];
-
+    const showRoute = date !== "Unassigned" && activities.length > 1;
     return (
       <div
         className="itinerary"
@@ -148,23 +170,14 @@ export default class DayItinerary extends React.Component {
           {date}
         </h4>
         <div className="itinerary-toolbar">
-          {activities.length > 1 &&
+          {showRoute &&
             <RouteButton
               onCalculateDirection={this.calculateRoute}
               onClearDirection={this.clearRoute}
             />}
         </div>
-        <div>
-          {activities.map((activity, index) =>
-            <ActivityItem
-              {...activity}
-              key={activity.id}
-              activityId={activity.id.toString()}
-              index={index + 1}
-              handleDelete={() => delActivity(activity.id)}
-              handleEdit={data => editActivity(activity.id, data)}
-            />
-          )}
+        <div className="itinerary-content">
+          {this.renderActivities()}
         </div>
       </div>
     );

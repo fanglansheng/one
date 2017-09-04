@@ -1,3 +1,47 @@
+@import '../../scss/variables';
+
 .btn-visit-type {
   background-color: white;
+  padding: 4px 10px;
+  border: 0;
+  i {
+    font-size: $icon-size - 2px;
+    color: $col-icon-text;
+  }
+  &:hover,
+  &:focus {
+    background-color: #f5f5f5;
+  }
+}
+
+.dropdown-menu {
+  border: 0;
+  border-radius: 0;
+  margin-top: 4px;
+  padding: 5px 4px;
+  -webkit-box-shadow: 0 0px 12px rgba(0, 0, 0, .175);
+  box-shadow: 0 0px 12px rgba(0, 0, 0, .175);
+  .menu-icon {
+    display: inline-block;
+    padding: 2px;
+    a {
+      padding: 8px;
+      color: $col-icon-text;
+      border-radius: 20px;
+      line-height: 1;
+      &:hover {
+        background: $col-btn-icon-bg;
+        color: $col-icon-text-active;
+      }
+      i {
+        font-size: $icon-size;
+      }
+    }
+  }
+}
+
+.dropdown.open .btn-visit-type {
+  box-shadow: none;
+  color: $col-icon-text-active;
+  background-color: $col-btn-icon-bg;
 }

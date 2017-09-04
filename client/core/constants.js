@@ -32,12 +32,14 @@ export const ActionTypes = keyMirror({
 });
 
 export const VisitType = {
-  TRANSIT: { value: "transit", icon: "" },
-  DINNGING: { value: "dinning", icon: "" },
-  HOTEL: { value: "hotel", icon: "" },
-  TOUR: { value: "tour", icon: "" },
-  ACTIVITY: { value: "activity", icon: "" },
-  STAR: { value: "star", icon: "ic_star.png" } // defalut
+  FLIGHT: { value: "flight", icon: "ic_flight.png" },
+  TRAIN: { value: "train", icon: "ic_train.png" },
+  DINNGING: { value: "restaurant", icon: "ic_restaurant.png" },
+  CAMERA: { value: "camera", icon: "ic_camera.png" },
+  HOTEL: { value: "hotel", icon: "ic_hotel.png" },
+  TOUR: { value: "landscape", icon: "ic_landscape.png" },
+  SHOPPING: { value: "shopping_cart", icon: "ic_shopping.png" },
+  STAR: { value: "star", img: "ic_star.png" } // defalut
 };
 
 // const travelModes = [
