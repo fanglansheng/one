@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { Marker, InfoWindow } from "react-google-maps";
 
 import PlaceInfo from "./PlaceInfo";
+const IconSize = 18;
 
 export default class MapMarker extends React.Component {
   static propTypes = {
@@ -39,15 +40,18 @@ export default class MapMarker extends React.Component {
     const { showInfo } = this.state;
     const { place, icon, label, inTrip } = this.props;
 
-    const image = {
-      url: icon,
-      size: new google.maps.Size(20, 20),
-      origin: new google.maps.Point(0, 0),
-      scaledSize: new google.maps.Size(20, 20),
-      // The anchor for this image is the base of the flagpole at (0, 32).
-      anchor: new google.maps.Point(10, 5),
-      labelOrigin: new google.maps.Point(10, -8)
-    };
+    const image = icon
+      ? {
+          url: icon,
+          size: new google.maps.Size(IconSize, IconSize),
+          origin: new google.maps.Point(0, 0),
+          scaledSize: new google.maps.Size(IconSize, IconSize),
+          // The anchor for this image is position
+          anchor: new google.maps.Point(IconSize / 2, IconSize / 2),
+          labelOrigin: new google.maps.Point(IconSize / 2, -8)
+        }
+      : null;
+
     return (
       <Marker
         defaultAnimation={2}
@@ -56,14 +60,15 @@ export default class MapMarker extends React.Component {
         position={place.geometry.location}
         onClick={this.handleShowInfo}
       >
-        {showInfo &&
+        {showInfo && (
           <InfoWindow onCloseClick={this.handleHideInfo}>
             <PlaceInfo
               inTrip={inTrip}
               place={place}
               handleAddPlace={this.handleAddPlace}
             />
-          </InfoWindow>}
+          </InfoWindow>
+        )}
       </Marker>
     );
   }

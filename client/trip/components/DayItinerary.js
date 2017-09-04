@@ -13,15 +13,12 @@ import "./DayItineraryStyle.scss";
 // datetime is moment object.
 const sortAscTime = (a, b) => a.datetime - b.datetime;
 
-const RouteBox = props =>
+const RouteBox = props => (
   <div className="route-box">
-    <span>
-      {props.distance.text}
-    </span>
-    <span>
-      {props.duration.text}
-    </span>
-  </div>;
+    <span>{props.distance.text}</span>
+    <span>{props.duration.text}</span>
+  </div>
+);
 
 export default class DayItinerary extends React.Component {
   static propTypes = {
@@ -126,7 +123,7 @@ export default class DayItinerary extends React.Component {
   };
 
   renderActivities() {
-    const { activities } = this.props;
+    const { activities, delActivity, editActivity } = this.props;
     if (activities.length === 0) {
       return (
         <div className="no-content">
@@ -134,7 +131,7 @@ export default class DayItinerary extends React.Component {
         </div>
       );
     } else {
-      return activities.map((activity, index) =>
+      return activities.map((activity, index) => (
         <ActivityItem
           {...activity}
           key={activity.id}
@@ -143,20 +140,12 @@ export default class DayItinerary extends React.Component {
           handleDelete={() => delActivity(activity.id)}
           handleEdit={data => editActivity(activity.id, data)}
         />
-      );
+      ));
     }
   }
 
   render() {
-    const {
-      id,
-      date,
-      activities,
-      addActivity,
-      editActivity,
-      delActivity,
-      routes
-    } = this.props;
+    const { id, date, activities, routes } = this.props;
     // const routes = d ? d.routes[0].legs : [];
     const showRoute = date !== "Unassigned" && activities.length > 1;
     return (
@@ -166,19 +155,16 @@ export default class DayItinerary extends React.Component {
         onDragEnter={this.handleDragover}
         onDragOver={this.handleDragover}
       >
-        <h4 className="itinerary-header">
-          {date}
-        </h4>
+        <h4 className="itinerary-header">{date}</h4>
         <div className="itinerary-toolbar">
-          {showRoute &&
+          {showRoute && (
             <RouteButton
               onCalculateDirection={this.calculateRoute}
               onClearDirection={this.clearRoute}
-            />}
+            />
+          )}
         </div>
-        <div className="itinerary-content">
-          {this.renderActivities()}
-        </div>
+        <div className="itinerary-content">{this.renderActivities()}</div>
       </div>
     );
   }

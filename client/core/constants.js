@@ -35,7 +35,7 @@ export const VisitType = {
   FLIGHT: { value: "flight", icon: "ic_flight.png" },
   TRAIN: { value: "train", icon: "ic_train.png" },
   DINNGING: { value: "restaurant", icon: "ic_restaurant.png" },
-  CAMERA: { value: "camera", icon: "ic_camera.png" },
+  CAMERA: { value: "photo_camera", icon: "ic_camera.png" },
   HOTEL: { value: "hotel", icon: "ic_hotel.png" },
   TOUR: { value: "landscape", icon: "ic_landscape.png" },
   SHOPPING: { value: "shopping_cart", icon: "ic_shopping.png" },

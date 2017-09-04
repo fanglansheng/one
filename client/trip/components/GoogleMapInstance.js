@@ -21,7 +21,7 @@ const StarIcon = {
   strokeWeight: 1
 };
 
-export default withGoogleMap(props =>
+export default withGoogleMap(props => (
   <GoogleMap
     ref={props.onMapLoad}
     zoom={props.zoom}
@@ -37,14 +37,14 @@ export default withGoogleMap(props =>
       controlPosition={SearchBarPosition}
       onPlacesChanged={props.onPlacesChanged}
     />
-    {props.resultPlaces.map(place =>
+    {props.resultPlaces.map(place => (
       <MapMarker
         place={place}
         key={place.place_id}
         addPlace={() => props.onAddPlace(place.place_id)}
       />
-    )}
-    {props.activities.map((activity, index) =>
+    ))}
+    {props.activities.map((activity, index) => (
       <MapMarker
         // defaultAnimation={2}
         // position={place.geometry.location}
@@ -55,9 +55,9 @@ export default withGoogleMap(props =>
         label={(index + 1).toString()}
         // onClick={() => {}}
       />
-    )}
-    {props.directions.map((d, key) =>
+    ))}
+    {props.directions.map((d, key) => (
       <DirectionsRenderer key={key} directions={d} />
-    )}
+    ))}
   </GoogleMap>
-);
+));
