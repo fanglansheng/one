@@ -1,4 +1,4 @@
-@import '../../scss/variables';
+@import "../../scss/variables";
 
 $react-dates-width-input: 100px;
 $react-dates-color-text-focus: black;
@@ -9,18 +9,8 @@ $react-dates-color-text-focus: #57c7a0;
 $react-dates-color-focus: white;
 $react-dates-z-index: 1;
 
-@import '~react-dates/css/variables.scss';
-@import '~react-dates/css/styles.scss';
-
-.route-box {
-  margin-left: 10px;
-  border-left: 2px solid lightseagreen;
-  color: #34c39e;
-  span {
-    margin-left: 10px;
-    margin-right: 10px;
-  }
-}
+@import "~react-dates/css/variables.scss";
+@import "~react-dates/css/styles.scss";
 
 .plan {
   width: $map-sidebar-width;

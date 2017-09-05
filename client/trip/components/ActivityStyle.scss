@@ -37,7 +37,8 @@ $activity-left-margin: 20px;
 .activity-item {
   background: white;
   position: relative;
-  padding-bottom: 15px;
+  padding-bottom: 6px;
+  padding-top: 6px;
   border-left: 2px solid lavender;
   margin-left: 10px;
   margin-right: 10px;
@@ -60,7 +61,7 @@ $activity-left-margin: 20px;
   margin-right: 5px;
   position: absolute;
   z-index: 2;
-  left: -12px;
+  left: -11px;
 }
 
 .activity-header {

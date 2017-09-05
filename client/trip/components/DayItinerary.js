@@ -15,8 +15,9 @@ const sortAscTime = (a, b) => a.datetime - b.datetime;
 
 const RouteBox = props => (
   <div className="route-box">
-    <span>{props.distance.text}</span>
-    <span>{props.duration.text}</span>
+    <span>
+      {props.distance.text} - {props.duration.text}
+    </span>
   </div>
 );
 
@@ -38,7 +39,7 @@ export default class DayItinerary extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = { routes: {} };
   }
 
   handleDeleteDay = () => {
@@ -108,8 +109,8 @@ export default class DayItinerary extends React.Component {
       },
       (response, status) => {
         if (status === google.maps.DirectionsStatus.OK) {
-          console.log(response);
           addDirection(date, response);
+          this.setState({ routes: response.routes[0].legs });
         } else {
           console.error(`error fetching directions ${response.status}`);
         }
@@ -120,10 +121,12 @@ export default class DayItinerary extends React.Component {
   clearRoute = () => {
     const { date, delDirection } = this.props;
     delDirection(date);
+    this.setState({ routes: [] });
   };
 
   renderActivities() {
     const { activities, delActivity, editActivity } = this.props;
+    const { routes } = this.state;
     if (activities.length === 0) {
       return (
         <div className="no-content">
@@ -132,14 +135,16 @@ export default class DayItinerary extends React.Component {
       );
     } else {
       return activities.map((activity, index) => (
-        <ActivityItem
-          {...activity}
-          key={activity.id}
-          activityId={activity.id.toString()}
-          index={index + 1}
-          handleDelete={() => delActivity(activity.id)}
-          handleEdit={data => editActivity(activity.id, data)}
-        />
+        <div key={activity.id}>
+          <ActivityItem
+            {...activity}
+            activityId={activity.id.toString()}
+            index={index + 1}
+            handleDelete={() => delActivity(activity.id)}
+            handleEdit={data => editActivity(activity.id, data)}
+          />
+          {index < routes.length && <RouteBox {...routes[index]} />}
+        </div>
       ));
     }
   }

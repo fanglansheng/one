@@ -44,6 +44,7 @@ export default class TextLabel extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      labelClass: "editable-label",
       hover: false,
       showHint: false,
       valid: true
@@ -82,6 +83,16 @@ export default class TextLabel extends React.Component {
     }
   };
 
+  renderValidationStatus() {
+    if (!this.props.validate) {
+      return null;
+    } else if (this.state.valid) {
+      return <i className="material-icons valid">check</i>;
+    } else {
+      return <i className="material-icons invalid">priority_high</i>;
+    }
+  }
+
   render() {
     const {
       className,
@@ -96,16 +107,14 @@ export default class TextLabel extends React.Component {
     } = this.props;
     const { valid, hover, showHint } = this.state;
 
-    const styleClass = valid ? `valid` : `invalid`;
-
     if (editable) {
       return (
-        <div className={`editable-label ${className}`}>
+        <div className={`editable-label-focused ${className}`}>
           <input
+            className="editable-label-input"
             ref="labelInput"
             type="text"
             value={value}
-            className={styleClass}
             placeholder={placeholder}
             onChange={this.handleChange}
             onKeyPress={this.handleKeyPress}
@@ -113,7 +122,8 @@ export default class TextLabel extends React.Component {
             autoFocus
             required={notEmpty}
           />
-          {showHint && "hint"}
+          {showHint && "required"}
+          {this.renderValidationStatus()}
         </div>
       );
     } else {
@@ -124,9 +134,7 @@ export default class TextLabel extends React.Component {
           onMouseEnter={() => this.setState({ hover: true })}
           onMouseLeave={() => this.setState({ hover: false })}
         >
-          <span>
-            {labelText}
-          </span>
+          <span>{labelText}</span>
           {hover && <i className="material-icons">edit</i>}
         </div>
       );

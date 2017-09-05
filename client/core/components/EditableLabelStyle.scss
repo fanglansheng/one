@@ -1,13 +1,37 @@
+@import "../../scss/variables";
+
+.validation-icon {
+  font-weight: 800;
+  font-size: 16px;
+  position: absolute;
+  line-height: inherit;
+}
+
+.editable-label-focused {
+  display: inline-block;
+  padding: 4px 22px 4px 10px;
+  background: #f5f5f5;
+  border-radius: $btn-radius;
+  border-bottom: 1px solid #ececec;
+
+  .valid {
+    @extend .validation-icon;
+    color: #00dca3;
+  }
+  .invalid {
+    @extend .validation-icon;
+    color: #ff5e5e;
+  }
+}
+
 .editable-label {
   display: inline-block;
   padding: 4px 10px;
   border-bottom: 1px solid white;
 
   &:hover {
+    @extend .editable-label-focused;
     cursor: pointer;
-    background: #f5f5f5;
-    border-radius: 3px;
-    border-bottom: 1px solid #ececec;
   }
 
   i {
@@ -15,26 +39,16 @@
     color: darkgray;
     margin-left: 5px;
   }
+}
 
-  input {
-    width: inherit;
-    padding: 0px 5px;
-    border: none;
-    border-radius: 3px;
-    background: #f5f5f5;
-    border-bottom: 1px solid #ececec;
-    &:focus {
-      outline: none;
-    }
-  }
-  .valid {
-    border-bottom: 1px solid #b4e4c6;
-    background-color: #e4ffee;
-  }
-  .invalid {
-    background-color: lightcoral;
-  }
-  &:required:invalid {
-    border-bottom: 1px solid red;
+.editable-label-input {
+  border: none;
+  background: none;
+  width: -webkit-fill-available;
+  &:focus {
+    outline: none;
   }
 }
+// &:required:invalid {
+//   border-bottom: 1px solid red;
+// }

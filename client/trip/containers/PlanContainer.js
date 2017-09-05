@@ -88,6 +88,7 @@ class Plan extends React.Component {
   render() {
     const {
       id,
+      directions,
       dayItineraries,
       editActivity,
       delActivity,
@@ -139,7 +140,7 @@ class Plan extends React.Component {
               numberOfMonths={2}
               placeholder="+ Add date"
               withPortal
-              daySize={46}
+              daySize={50}
               focused={dateFocused}
               onDateChange={this.handleAddDay}
               onFocusChange={({ focused }) =>
@@ -163,8 +164,6 @@ const mapStateToProps = (state, props) => {
 
   const getClassifiedActivities = makeGetClassifiedActivities(tripId);
   const dayItineraries = getClassifiedActivities(state);
-
-  const directions = getAllDirections(state);
 
   return {
     ...currentTrip,

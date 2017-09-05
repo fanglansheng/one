@@ -7,6 +7,23 @@
   }
 }
 
+.route-box {
+  margin-left: 10px;
+  border-left: 2px dotted lavender;
+  padding-top: 5px 28px;
+  color: #224fbb;
+  font-weight: 300;
+  span {
+    width: 100%;
+    display: inline-block;
+    padding: 5px 20px;
+    background: -webkit-linear-gradient(left, #fcfffa 60%, white); /* Safari */
+    background: -o-linear-gradient(right, #fafaff 60%, white); /* Opera */
+    background: -moz-linear-gradient(right, #fafaff 60%, white); /*Firefox*/
+    background: linear-gradient(to right, #fafaff 60%, white);
+  }
+}
+
 .no-content {
   color: lightgrey;
   font-size: 12px;
