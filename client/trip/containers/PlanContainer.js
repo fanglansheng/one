@@ -10,7 +10,11 @@ import {
   addDirection,
   delDirection
 } from "../tripActions";
-import { makeGetTrip, makeGetClassifiedActivities } from "../selector.js";
+import {
+  makeGetTrip,
+  getAllDirections,
+  makeGetClassifiedActivities
+} from "../selector.js";
 
 // components
 import { SingleDatePicker } from "react-dates";
@@ -45,10 +49,9 @@ class Plan extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      dayItineraries: props.dayItineraries,
+      tempItineraries: [],
       title: props.title,
-      dateFocused: false,
-      dateInput: null
+      dateFocused: false
     };
   }
 
@@ -56,6 +59,10 @@ class Plan extends React.Component {
     if (nextProps.title !== this.props.title) {
       this.setState({ title: nextProps.title });
     }
+    const updatedDates = nextProps.dayItineraries.map(it => it.date);
+    const allDates = [...this.state.tempItineraries, ...updatedDates];
+    const filtered = allDates.filter(date => !updatedDates.includes(date));
+    this.setState({ tempItineraries: filtered });
   }
 
   handleEditTitle = e => {
@@ -65,10 +72,9 @@ class Plan extends React.Component {
 
   handleAddDay = dateInput => {
     this.setState({
-      dateInput,
-      dayItineraries: [
-        ...this.state.dayItineraries,
-        { date: dateInput.format("YYYY/MM/DD"), activities: [] }
+      tempItineraries: [
+        ...this.state.tempItineraries,
+        dateInput.format("YYYY/MM/DD")
       ]
     });
   };
@@ -82,19 +88,14 @@ class Plan extends React.Component {
   render() {
     const {
       id,
+      dayItineraries,
       editActivity,
       delActivity,
       addDirection,
       delDirection
     } = this.props;
 
-    const {
-      title,
-      dayItineraries,
-      dateFocused,
-      dateInput,
-      showAddDay
-    } = this.state;
+    const { title, tempItineraries, dateFocused, showAddDay } = this.state;
 
     return (
       <div className="plan">
@@ -108,7 +109,7 @@ class Plan extends React.Component {
         />
 
         <div className="plan-content">
-          {dayItineraries.map((itinerary, key) =>
+          {dayItineraries.map((itinerary, key) => (
             <DayItinerary
               key={key}
               tripId={id}
@@ -119,7 +120,19 @@ class Plan extends React.Component {
               addDirection={addDirection}
               delDirection={delDirection}
             />
-          )}
+          ))}
+          {tempItineraries.map((date, key) => (
+            <DayItinerary
+              key={`empty-itinerary-${key}`}
+              tripId={id}
+              date={date}
+              activities={[]}
+              editActivity={editActivity}
+              delActivity={delActivity}
+              addDirection={addDirection}
+              delDirection={delDirection}
+            />
+          ))}
 
           <div className="btn-add-day">
             <SingleDatePicker
@@ -150,6 +163,8 @@ const mapStateToProps = (state, props) => {
 
   const getClassifiedActivities = makeGetClassifiedActivities(tripId);
   const dayItineraries = getClassifiedActivities(state);
+
+  const directions = getAllDirections(state);
 
   return {
     ...currentTrip,

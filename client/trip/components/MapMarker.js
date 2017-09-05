@@ -56,7 +56,7 @@ export default class MapMarker extends React.Component {
       <Marker
         defaultAnimation={2}
         icon={image}
-        label={label}
+        //label={label}
         position={place.geometry.location}
         onClick={this.handleShowInfo}
       >

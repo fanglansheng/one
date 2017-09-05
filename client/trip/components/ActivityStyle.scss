@@ -6,7 +6,7 @@ $activity-left-margin: 20px;
 .btn-delete {
   position: absolute;
   right: 0px;
-  top: -2px;
+  top: -3px;
   background: none;
   border: none;
   color: lightgrey;
@@ -18,11 +18,20 @@ $activity-left-margin: 20px;
   }
 }
 .unassigned-activity {
-  padding: 5px;
-  margin-left: 10px;
+  position: relative;
   margin-right: 10px;
+  margin-bottom: 10px;
   background: white;
   position: relative;
+  i {
+    font-size: 18px;
+    margin-right: 5px;
+    color: lightgray;
+    &:hover {
+      color: darkgrey;
+      cursor: -webkit-grab;
+    }
+  }
 }
 
 .activity-item {

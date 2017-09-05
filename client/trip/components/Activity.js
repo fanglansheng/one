@@ -133,9 +133,8 @@ export default class ActivityItem extends React.Component {
         draggable="true"
         onDragStart={this.handleDragStart}
       >
-        <span>
-          {place.name}
-        </span>
+        <i className="material-icons">drag_handle</i>
+        <span>{place.name}</span>
         <button className="btn-delete" onClick={handleDelete}>
           <i className="material-icons">clear</i>
         </button>
@@ -163,9 +162,7 @@ export default class ActivityItem extends React.Component {
         onDragStart={this.handleDragStart}
         onClick={this.toggleExpand}
       >
-        <span className="activity-index">
-          {index}
-        </span>
+        <span className="activity-index">{index}</span>
 
         <div className="activity-header" onClick={this.toggleExpand}>
           {place.name}
