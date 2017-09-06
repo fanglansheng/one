@@ -2,7 +2,7 @@ const path = require("path");
 const webpack = require("webpack");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
-const outputPath = "dist";
+const outputPath = "trip_planner/static/dist";
 
 module.exports = {
   // absolute path, for resolving entry points and loaders from configuration.
@@ -28,16 +28,6 @@ module.exports = {
     path: path.resolve(__dirname, outputPath),
     filename: "[name].bundle.js",
     publicPath: "/"
-  },
-
-  devServer: {
-    // enable HMR on the server
-    hot: true,
-    // match the output path
-    contentBase: path.resolve(__dirname, outputPath),
-    // match the output `publicPath`
-    publicPath: "/",
-    historyApiFallback: true
   },
 
   module: {
@@ -82,8 +72,6 @@ module.exports = {
     }),
     new ExtractTextPlugin("style/style.css")
   ],
-
-  devtool: "source-maps",
 
   resolve: {
     extensions: [".js", ".jsx"]

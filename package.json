@@ -4,10 +4,9 @@
   "private": true,
   "main": "client/index.js",
   "scripts": {
-    "start": "nodemon render_server/app.js --exec babel-node --presets es2015,stage-2",
-    "webpack-dev-server": "webpack-dev-server",
-    "build": "webpack -p",
-    "dev": "webpack -d",
+    "start": "webpack-dev-server --config webpack.dev.js",
+    "build": "webpack --config webpack.prod.js",
+    "dev": "nodemon render_server/app.js --exec babel-node --presets es2015,stage-2",
     "test": "jest",
     "test:watch": "npm test -- --watch"
   },
@@ -63,7 +62,9 @@
     "react-svg-loader": "^1.1.1",
     "sass-loader": "^6.0.6",
     "style-loader": "^0.13.2",
+    "uglifyjs-webpack-plugin": "^0.4.6",
     "webpack": "^3.0.0",
-    "webpack-dev-server": "^2.5.0"
+    "webpack-dev-server": "^2.5.0",
+    "webpack-merge": "^4.1.0"
   }
 }
