@@ -4,3 +4,6 @@
 .DS_Store?
 *.pyc
 app.config.js
+npm-debug.log
+myprojectenv
+trip_planner.ini
