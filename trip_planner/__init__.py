@@ -1,7 +1,7 @@
 import os, sqlite3, json, random, datetime
 from flask import Flask
 
-AWS_DEPLOY = False
+AWS_DEPLOY = os.environ.get('AWS_DEPLOY')
 app = Flask(__name__)
 
 # load the config from this file.
