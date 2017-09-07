@@ -4,7 +4,7 @@ import { normalize } from "normalizr";
 import * as schema from "./schema";
 
 import core from "../core";
-const { ActionTypes, Host, handleResponse, shouldFetch } = core.constants;
+const { ActionTypes, handleResponse, shouldFetch } = core.constants;
 
 export const addDirection = (date, routes) => ({
   type: ActionTypes.ADD_DIRECTION,
@@ -42,7 +42,7 @@ export const fetchCreateActivity = (tripId, placeId) => dispatch => {
     body: JSON.stringify({ place_id: placeId })
   };
 
-  return fetch(`${Host}/trip/${tripId}/activity`, init)
+  return fetch(`trip/${tripId}/activity`, init)
     .then(handleResponse)
     .then(json => {
       dispatch(addActivity(tripId, json.activity));
@@ -56,7 +56,7 @@ export const fetchEditActivity = (activityId, postData) => dispatch => {
     body: JSON.stringify(postData)
   };
 
-  return fetch(`${Host}/activity/${activityId}`, init)
+  return fetch(`activity/${activityId}`, init)
     .then(handleResponse)
     .then(json => {
       const tripId = json.activity.trip_id;
@@ -67,7 +67,7 @@ export const fetchEditActivity = (activityId, postData) => dispatch => {
 export const fetchDeleteActivity = (tripId, activityId) => dispatch => {
   const init = { method: "DELETE" };
 
-  return fetch(`${Host}/activity/${activityId}`, init)
+  return fetch(`activity/${activityId}`, init)
     .then(response => {
       if (response.ok) {
         console.log(`Delete collection ${activityId} success`);
@@ -109,7 +109,7 @@ export const fetchTripIfNeeded = tripId => (dispatch, getState) => {
 const fetchTrip = tripId => dispatch => {
   dispatch({ type: ActionTypes.REQUEST_TRIPS });
 
-  return fetch(`${Host}/trip/${tripId}/activity`, {})
+  return fetch(`trip/${tripId}/activity`, {})
     .then(handleResponse)
     .then(json => {
       const data = normalize(json.trip, schema.trip);
@@ -132,7 +132,7 @@ export const fetchAllTripsIfNeeded = () => (dispatch, getState) => {
 // GET /trip : get all trips
 const fetchAllTrips = () => dispatch => {
   dispatch({ type: ActionTypes.REQUEST_TRIPS });
-  return fetch(`${Host}/trip`, {}).then(handleResponse).then(json => {
+  return fetch(`trip`, {}).then(handleResponse).then(json => {
     const data = normalize(json.trips, schema.tripList);
     if (!data.result.length) {
       dispatch(
@@ -157,7 +157,7 @@ export const fetchCreateTrip = postData => dispatch => {
     body: JSON.stringify(postData)
   };
 
-  return fetch(`${Host}/trip`, init).then(handleResponse).then(json => {
+  return fetch(`trip`, init).then(handleResponse).then(json => {
     dispatch({
       type: ActionTypes.ADD_TRIP,
       trip: json,
@@ -168,7 +168,7 @@ export const fetchCreateTrip = postData => dispatch => {
 
 export const fetchDeleteTrip = tripId => dispatch => {
   const init = { method: "DELETE" };
-  return fetch(`${Host}/trip/${tripId}`, init)
+  return fetch(`trip/${tripId}`, init)
     .then(response => {
       if (response.ok) {
         console.log(`Delete trip ${tripId} success`);
@@ -192,13 +192,11 @@ export const fetchEditTrip = (tripId, postData) => dispatch => {
     body: JSON.stringify(postData)
   };
 
-  return fetch(`${Host}/trip/${tripId}`, init)
-    .then(handleResponse)
-    .then(json => {
-      dispatch({
-        type: ActionTypes.EDIT_TRIP,
-        trip: json,
-        tripId: json.id
-      });
+  return fetch(`trip/${tripId}`, init).then(handleResponse).then(json => {
+    dispatch({
+      type: ActionTypes.EDIT_TRIP,
+      trip: json,
+      tripId: json.id
     });
+  });
 };

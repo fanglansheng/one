@@ -1,8 +1,6 @@
 import keyMirror from "keymirror";
 import moment from "moment";
 
-export const Host = "http://localhost:5002";
-
 export const ActionTypes = keyMirror({
   // place
   ADD_PLACE: null,
